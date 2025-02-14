@@ -30,3 +30,16 @@
 *.exe
 *.out
 *.app
+
+raylib-master
+_build
+_bin
+.vs
+/bin
+/build
+Makefile
+obj
+*.vcxproj
+*.filters
+*.user
+/*.sln
