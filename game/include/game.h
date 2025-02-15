@@ -1,27 +1,24 @@
-/*
-Raylib example file.
-This is an example main file for a simple raylib project.
-Use this as a starting point or replace it with your code.
+#pragma once
 
--- Copyright (c) 2020-2024 Jeffery Myers
---
---This software is provided "as-is", without any express or implied warranty. In no event
---will the authors be held liable for any damages arising from the use of this software.
+#define APPLE_SOURCE_WIDTH 75
+#define APPLE_SOURCE_HEIGHT 75
+#define APPLE_MAX_COUNT 8
+#define APPLE_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, APPLE_SOURCE_WIDTH, APPLE_SOURCE_HEIGHT}
 
---Permission is granted to anyone to use this software for any purpose, including commercial
---applications, and to alter it and redistribute it freely, subject to the following restrictions:
+#define BASKET_SOURCE_WIDTH 100
+#define BASKET_SOURCE_HEIGHT 100
+#define BASKET_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, BASKET_SOURCE_WIDTH, BASKET_SOURCE_HEIGHT}
 
---  1. The origin of this software must not be misrepresented; you must not claim that you
---  wrote the original software. If you use this software in a product, an acknowledgment
---  in the product documentation would be appreciated but is not required.
---
---  2. Altered source versions must be plainly marked as such, and must not be misrepresented
---  as being the original software.
---
---  3. This notice may not be removed or altered from any source distribution.
+#define FALL_SPEED_MIN 150
+#define FALL_SPEED_MAX 250
 
-*/
+#define TIME_BETWEEN_APPLES 1.0f
+#define INITIAL_LIVES 3
+#define APPLE_SCORE 100
 
+#define GAME_OVER_TEXT "Game Over"
+#define RESTART_MESSAGE "Press R to restart"
 
-static constexpr int InitalWidth = 1200;
-static constexpr int InitalHeight = 800;
+static constexpr int screenWidth = 800;
+static constexpr int screenHeight = 600;
+static constexpr Vector2 screenSize = { screenWidth, screenHeight };

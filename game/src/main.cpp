@@ -7,29 +7,6 @@
 #include "game.h"
 #include "lib.h"
 
-#define APPLE_SOURCE_WIDTH 75
-#define APPLE_SOURCE_HEIGHT 75
-#define APPLE_MAX_COUNT 8
-#define APPLE_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, APPLE_SOURCE_WIDTH, APPLE_SOURCE_HEIGHT}
-
-#define BASKET_SOURCE_WIDTH 100
-#define BASKET_SOURCE_HEIGHT 100
-#define BASKET_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, BASKET_SOURCE_WIDTH, BASKET_SOURCE_HEIGHT}
-
-#define FALL_SPEED_MIN 150
-#define FALL_SPEED_MAX 250
-
-#define TIME_BETWEEN_APPLES 1.0f
-#define INITIAL_LIVES 3
-#define APPLE_SCORE 100
-
-#define GAME_OVER_TEXT "Game Over"
-#define RESTART_MESSAGE "Press R to restart"
-
-const int screenWidth = 800;
-const int screenHeight = 600;
-const Vector2 screenSize = { screenWidth, screenHeight };
-
 typedef struct Apple {
     Vector2 position;
     int fallSpeed;
@@ -136,7 +113,7 @@ Vector2 GetBasketPosition(void) {
         _basketXPosition = GetMousePosition().x;
     }
     
-    return (Vector2){ _basketXPosition, screenHeight - (BASKET_SOURCE_HEIGHT * 0.75) };
+    return { _basketXPosition, screenHeight - (BASKET_SOURCE_HEIGHT * 0.75) };
 }
 
 void DrawBasket(void) {
@@ -192,7 +169,7 @@ void SpawnApple(void) {
     int fallSpeed = GetRandomValue(FALL_SPEED_MIN, FALL_SPEED_MAX);
     int posX = GetRandomValue(APPLE_SOURCE_WIDTH / 2, screenWidth - (APPLE_SOURCE_WIDTH / 2));
     
-    SetAppleAt(availableIndex, (Vector2){posX, -APPLE_SOURCE_HEIGHT}, fallSpeed);
+    SetAppleAt(availableIndex, { float(posX), -APPLE_SOURCE_HEIGHT}, fallSpeed);
 }
 
 void GameEnd(void) {
