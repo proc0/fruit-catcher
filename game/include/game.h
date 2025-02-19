@@ -1,24 +1,41 @@
 #pragma once
 
-#define APPLE_SOURCE_WIDTH 75
-#define APPLE_SOURCE_HEIGHT 75
-#define APPLE_MAX_COUNT 8
-#define APPLE_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, APPLE_SOURCE_WIDTH, APPLE_SOURCE_HEIGHT}
+#include "apple.h"
+#include "basket.h"
 
-#define BASKET_SOURCE_WIDTH 100
-#define BASKET_SOURCE_HEIGHT 100
-#define BASKET_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, BASKET_SOURCE_WIDTH, BASKET_SOURCE_HEIGHT}
-
-#define FALL_SPEED_MIN 150
-#define FALL_SPEED_MAX 250
-
-#define TIME_BETWEEN_APPLES 1.0f
 #define INITIAL_LIVES 3
 #define APPLE_SCORE 100
 
 #define GAME_OVER_TEXT "Game Over"
 #define RESTART_MESSAGE "Press R to restart"
 
-static constexpr int screenWidth = 800;
-static constexpr int screenHeight = 600;
-static constexpr Vector2 screenSize = { screenWidth, screenHeight };
+typedef enum GameState {
+    PLAYING,
+    END
+} GameState;
+
+class FruitCatcher {
+    int _score;
+    int _lives;
+    float _startTime;
+    float _endTime;
+    GameState _state;
+    Fruit _fruit;
+    Basket _basket;
+
+    public:
+        FruitCatcher(Fruit& fruit, Basket& basket) :
+        _score(0), 
+        _lives(INITIAL_LIVES),
+        _startTime(0.),
+        _endTime(0.),
+        _state(END),
+        _fruit(fruit),
+        _basket(basket)
+        {}
+
+        void EndGame(void);
+        void InitGame(void);
+        void Update(void);
+        void Render(void);
+};
