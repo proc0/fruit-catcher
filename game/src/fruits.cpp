@@ -1,5 +1,6 @@
 #include "fruits.hpp"
 
+#define ATLAS_FRUIT_URI "resources/applesprites.png"
 #define APPLE_SOURCE_WIDTH 75
 #define APPLE_SOURCE_HEIGHT 75
 #define APPLE_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, APPLE_SOURCE_WIDTH, APPLE_SOURCE_HEIGHT}
@@ -11,7 +12,7 @@
 using namespace std;
 
 void Fruits::Init() {
-    atlasFruit = LoadTexture("resources/applesprites.png");
+    atlasFruit = LoadTexture(ATLAS_FRUIT_URI);
     timeNextFruit = TIME_BETWEEN_APPLES;
     for(int i=0; i < APPLE_MAX_COUNT; i++){
         Remove(&fruits[i]);
@@ -80,7 +81,7 @@ tuple<int, int> Fruits::Update(Basket &basket) {
 
        fruits[i].position.y += fruits[i].speed * GetFrameTime();
     }
-    
+
     return make_tuple(lives, score);
 }
 

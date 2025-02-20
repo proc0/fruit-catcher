@@ -1,5 +1,6 @@
 #include "basket.hpp"
 
+#define ATLAS_BASKET_URI "resources/basket.png"
 #define BASKET_SOURCE_WIDTH 100
 #define BASKET_SOURCE_HEIGHT 100
 #define BASKET_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, BASKET_SOURCE_WIDTH, BASKET_SOURCE_HEIGHT}
@@ -7,7 +8,7 @@
 using namespace std;
 
 void Basket::Init(){
-    atlasBasket = LoadTexture("resources/basket.png");
+    atlasBasket = LoadTexture(ATLAS_BASKET_URI);
 }
 
 void Basket::SetPosition(void) {
