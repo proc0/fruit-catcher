@@ -1,5 +1,3 @@
-#include <tuple>
-
 #include "basket.hpp"
 
 #define BASKET_SOURCE_WIDTH 100

@@ -1,7 +1,3 @@
-#include <stdlib.h>
-#include <stdint.h>
-#include <assert.h>
-
 #include "arena.hpp"
 
 Arena arena_init(size_t capacity) {

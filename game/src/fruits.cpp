@@ -1,4 +1,3 @@
-#include <tuple>
 #include "fruits.hpp"
 
 #define APPLE_SOURCE_WIDTH 75
