@@ -1,30 +1,25 @@
 #pragma once
 
+#include "lib.h"
 #include "fruits.hpp"
 #include "basket.hpp"
 
-#define INITIAL_LIVES 3
-#define APPLE_SCORE 100
-
-#define GAME_OVER_TEXT "Game Over"
-#define RESTART_MESSAGE "Press R to restart"
-
-typedef enum GameState {
+typedef enum State {
     PLAYING,
     END
-} GameState;
+} State;
 
-class FruitCatcher {
+class Game {
     int score;
     int lives;
     float timeStart;
     float timeEnd;
-    GameState state;
+    State state;
     Fruits fruits;
     Basket basket;
 
     public:
-        FruitCatcher(Fruits& _fruits, Basket& _basket) :
+        Game(Fruits& _fruits, Basket& _basket) :
         score(0), 
         lives(INITIAL_LIVES),
         timeStart(0.),

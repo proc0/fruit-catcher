@@ -15,20 +15,20 @@ int main() {
 
   Fruits _Fruit;
   Basket _Basket;
-  FruitCatcher Game(_Fruit, _Basket);
+  Game FruitCatcher(_Fruit, _Basket);
 
   InitWindow(screenWidth, screenHeight, "Fruits Catcher");
   SetTargetFPS(60);
 
-  Game.Begin();
+  FruitCatcher.Begin();
 
   while (!WindowShouldClose()) {
-    Game.Update();
+    FruitCatcher.Update();
 
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
-    Game.Render();
+    FruitCatcher.Render();
     
     EndDrawing();
   }

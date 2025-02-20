@@ -5,7 +5,7 @@
 #include "arena.hpp"
 
 Arena arena_init(size_t capacity) {
-    void *data = malloc(sizeof(uint8_t) * capacity);
+    void *data = malloc(sizeof(uint8_t) *capacity);
     Arena arena {
         .capacity = capacity,
         .size = 0,

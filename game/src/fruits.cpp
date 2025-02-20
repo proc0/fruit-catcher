@@ -1,4 +1,15 @@
+#include <tuple>
 #include "fruits.hpp"
+
+#define APPLE_SOURCE_WIDTH 75
+#define APPLE_SOURCE_HEIGHT 75
+#define APPLE_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, APPLE_SOURCE_WIDTH, APPLE_SOURCE_HEIGHT}
+
+#define TIME_BETWEEN_APPLES 1.0f
+#define FALL_SPEED_MIN 150
+#define FALL_SPEED_MAX 250
+
+using namespace std;
 
 void Fruits::Init() {
     _atlasFruits = LoadTexture("resources/applesprites.png");
@@ -8,11 +19,11 @@ void Fruits::Init() {
     }
 }
 
-void Fruits::RemoveFruit(Apple* fruit) {
+void Fruits::RemoveFruit(Apple *fruit) {
     fruit->_active = false;
 }
 
-void Fruits::AddFruit(Apple* fruit, Vector2 position, int fallSpeed) {
+void Fruits::AddFruit(Apple *fruit, Vector2 position, int fallSpeed) {
     fruit->position = position;
     fruit->fallSpeed = fallSpeed;
     fruit->_active = true;
@@ -37,7 +48,7 @@ void Fruits::Spawn(void) {
     AddFruit(&fruits[availableIndex], { float(posX), -APPLE_SOURCE_HEIGHT}, fallSpeed);
 }
 
-std::tuple<int, int> Fruits::Update(Basket& basket) {
+tuple<int, int> Fruits::Update(Basket &basket) {
     int lives = 0;
     int score = 0;
 
@@ -59,7 +70,10 @@ std::tuple<int, int> Fruits::Update(Basket& basket) {
        }
        
        Vector2 basketPosition = basket.GetPosition();
-       if(fabsf(fruits[i].position.x - basketPosition.x) < BASKET_SOURCE_WIDTH && fabsf(fruits[i].position.y - basketPosition.y) < BASKET_SOURCE_HEIGHT / 4 ) {
+       tuple<int, int> basketDimensions = basket.GetDimensions();
+       int basketWidth = get<0>(basketDimensions);
+       int basketHeight = get<1>(basketDimensions);
+       if(fabsf(fruits[i].position.x - basketPosition.x) < basketWidth && fabsf(fruits[i].position.y - basketPosition.y) < basketHeight / 4 ) {
             score++;
             RemoveFruit(&fruits[i]);
             continue;
@@ -68,7 +82,7 @@ std::tuple<int, int> Fruits::Update(Basket& basket) {
        float offset = fruits[i].fallSpeed * GetFrameTime();
        fruits[i].position.y += offset;
     }
-    return std::make_tuple(lives, score);
+    return make_tuple(lives, score);
 }
 
 void Fruits::Render(void) {
