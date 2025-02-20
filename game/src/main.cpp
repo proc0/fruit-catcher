@@ -8,27 +8,27 @@
 #include "arena.hpp"
 
 #include "game.hpp"
-#include "fruit.hpp"
+#include "fruits.hpp"
 #include "basket.hpp"
 
 int main() {
 
-  Fruit _Fruit;
+  Fruits _Fruit;
   Basket _Basket;
-  FruitCatcher _Game(_Fruit, _Basket);
+  FruitCatcher Game(_Fruit, _Basket);
 
-  InitWindow(screenWidth, screenHeight, "Fruit Catcher");
+  InitWindow(screenWidth, screenHeight, "Fruits Catcher");
   SetTargetFPS(60);
 
-  _Game.InitGame();
+  Game.Begin();
 
   while (!WindowShouldClose()) {
-    _Game.Update();
+    Game.Update();
 
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
-    _Game.Render();
+    Game.Render();
     
     EndDrawing();
   }

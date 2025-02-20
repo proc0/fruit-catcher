@@ -17,15 +17,17 @@
 #define FALL_SPEED_MIN 150
 #define FALL_SPEED_MAX 250
 
+using namespace std;
+
 typedef struct Apple {
     Vector2 position;
     int fallSpeed;
     bool _active;
 } Apple;
 
-class Fruit {
+class Fruits {
     float _nextFruitTimer;
-    Apple _fruits[APPLE_MAX_COUNT];
+    Apple fruits[APPLE_MAX_COUNT];
     Texture2D _atlasFruits;
 
     public:
@@ -33,6 +35,6 @@ class Fruit {
         void RemoveFruit(Apple*);
         void AddFruit(Apple*, Vector2, int);
         void Spawn(void);
-        std::tuple<int, int> Update(Basket &);
+        tuple<int, int> Update(Basket &);
         void Render(void);
 };

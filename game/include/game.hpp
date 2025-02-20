@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fruit.hpp"
+#include "fruits.hpp"
 #include "basket.hpp"
 
 #define INITIAL_LIVES 3
@@ -15,27 +15,27 @@ typedef enum GameState {
 } GameState;
 
 class FruitCatcher {
-    int _score;
-    int _lives;
-    float _startTime;
-    float _endTime;
-    GameState _state;
-    Fruit _fruit;
-    Basket _basket;
+    int score;
+    int lives;
+    float timeStart;
+    float timeEnd;
+    GameState state;
+    Fruits fruits;
+    Basket basket;
 
     public:
-        FruitCatcher(Fruit& fruit, Basket& basket) :
-        _score(0), 
-        _lives(INITIAL_LIVES),
-        _startTime(0.),
-        _endTime(0.),
-        _state(END),
-        _fruit(fruit),
-        _basket(basket)
+        FruitCatcher(Fruits& _fruits, Basket& _basket) :
+        score(0), 
+        lives(INITIAL_LIVES),
+        timeStart(0.),
+        timeEnd(0.),
+        state(END),
+        fruits(_fruits),
+        basket(_basket)
         {}
 
-        void EndGame(void);
-        void InitGame(void);
+        void End(void);
+        void Begin(void);
         void Update(void);
         void Render(void);
 };
