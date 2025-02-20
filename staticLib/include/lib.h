@@ -1,18 +1,20 @@
 #pragma once
 
 #include "raylib.h"
+#include "raymath.h"
 
-#define GAME_OVER_TEXT "Game Over"
-#define RESTART_MESSAGE "Press R to restart"
+#define TEXT_GAME_TITLE "Fruits Catcher"
+#define TEXT_GAME_OVER "Game Over"
+#define TEXT_RESTART "Press R to restart"
 #define TEXT_TIME_PLAYED "Time Played: %d minutes and %d seconds"
 #define TEXT_SCORE "SCORE: %d"
 #define TEXT_LIVES "LIVES: %d"
 
-#define INITIAL_LIVES 3
-#define APPLE_SCORE 100
-#define APPLE_MAX_COUNT 8
+#define GAME_LIVES 3
+#define GAME_SCORE_UNIT 100
+#define GAME_FRUITS_MAX 8
 
-static constexpr int screenWidth = 800;
-static constexpr int screenHeight = 600;
+static constexpr int SCREEN_WIDTH = 800;
+static constexpr int SCREEN_HEIGHT = 600;
 
 Color GetTextColor();

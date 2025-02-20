@@ -1,34 +1,25 @@
-#include <stdlib.h>
-// #include <time.h>
-
-#include "raylib.h"
-#include "raymath.h"
-
-#include "lib.h"
 #include "arena.hpp"
-
 #include "game.hpp"
-#include "fruits.hpp"
-#include "basket.hpp"
 
 int main() {
 
   Fruits _Fruit;
   Basket _Basket;
-  Game FruitCatcher(_Fruit, _Basket);
+  Display _Display;
+  Game _Game(_Fruit, _Basket, _Display);
 
-  InitWindow(screenWidth, screenHeight, "Fruits Catcher");
+  InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_GAME_TITLE);
   SetTargetFPS(60);
 
-  FruitCatcher.Begin();
+  _Game.Begin();
 
   while (!WindowShouldClose()) {
-    FruitCatcher.Update();
+    _Game.Update();
 
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
-    FruitCatcher.Render();
+    _Game.Render();
     
     EndDrawing();
   }

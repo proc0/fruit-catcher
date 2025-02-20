@@ -16,7 +16,7 @@ void Basket::SetPosition(void) {
 }
 
 Vector2 Basket::GetPosition(void) {
-    return { x, screenHeight - (BASKET_SOURCE_HEIGHT * 0.75) };
+    return { x, SCREEN_HEIGHT - (BASKET_SOURCE_HEIGHT * 0.75) };
 }
 
 tuple<int, int> Basket::GetDimensions(void) {

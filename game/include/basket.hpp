@@ -1,7 +1,6 @@
 #pragma once
 
 #include <tuple>
-#include "raylib.h"
 
 #include "lib.h"
 

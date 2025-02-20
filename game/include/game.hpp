@@ -3,6 +3,7 @@
 #include "lib.h"
 #include "fruits.hpp"
 #include "basket.hpp"
+#include "display.hpp"
 
 typedef enum State {
     PLAYING,
@@ -17,11 +18,13 @@ class Game {
     State state;
     Fruits fruits;
     Basket basket;
+    Display display;
 
     public:
-        Game(Fruits& _fruits, Basket& _basket) :
+        Game(Fruits& _fruits, Basket& _basket, Display& _display) :
         fruits(_fruits),
-        basket(_basket)
+        basket(_basket),
+        display(_display)
         {}
 
         void End(void);

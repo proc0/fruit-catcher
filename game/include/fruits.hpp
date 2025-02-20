@@ -1,8 +1,6 @@
 #pragma once
 
 #include <tuple>
-#include "raylib.h"
-#include "raymath.h"
 
 #include "lib.h"
 #include "basket.hpp"
@@ -18,7 +16,7 @@ typedef struct Movable {
 class Fruits {
     float timeNextFruit;
     Texture2D atlasFruit;
-    Movable fruits[APPLE_MAX_COUNT];
+    Movable fruits[GAME_FRUITS_MAX];
 
     public:
         void Init(void);
