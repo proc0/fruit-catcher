@@ -4,10 +4,12 @@
 #include "raylib.h"
 #include "raymath.h"
 
-#include "game.h"
-#include "apple.h"
-#include "basket.h"
 #include "lib.h"
+#include "arena.hpp"
+
+#include "game.hpp"
+#include "fruit.hpp"
+#include "basket.hpp"
 
 int main() {
 

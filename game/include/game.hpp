@@ -1,7 +1,7 @@
 #pragma once
 
-#include "apple.h"
-#include "basket.h"
+#include "fruit.hpp"
+#include "basket.hpp"
 
 #define INITIAL_LIVES 3
 #define APPLE_SCORE 100

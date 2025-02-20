@@ -1,6 +1,6 @@
 using namespace std;
 
-#include "game.h"
+#include "game.hpp"
 
 void FruitCatcher::EndGame() {
     this->_state = END;

@@ -1,4 +1,4 @@
-#include "apple.h"
+#include "fruit.hpp"
 
 void Fruit::Init() {
     this->_atlasFruits = LoadTexture("resources/applesprites.png");

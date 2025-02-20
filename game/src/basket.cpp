@@ -1,6 +1,7 @@
-#include "basket.h"
 #include "raylib.h"
 #include "lib.h"
+
+#include "basket.hpp"
 
 void Basket::Init(){
     this->_atlasBasket = LoadTexture("resources/basket.png");
