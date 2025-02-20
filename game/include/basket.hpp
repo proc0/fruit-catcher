@@ -8,9 +8,9 @@
 using namespace std;
 
 class Basket {
-    Texture2D _atlasBasket;
-    float _x;
-
+    float x;
+    Texture2D atlasBasket;
+    
     public:
         void Init(void);
         Vector2 GetPosition(void);

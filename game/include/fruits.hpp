@@ -9,21 +9,21 @@
 
 using namespace std;
 
-typedef struct Apple {
+typedef struct Movable {
     Vector2 position;
-    int fallSpeed;
-    bool _active;
-} Apple;
+    bool active;
+    int speed;
+} Movable;
 
 class Fruits {
-    float _nextFruitTimer;
-    Apple fruits[APPLE_MAX_COUNT];
-    Texture2D _atlasFruits;
+    float timeNextFruit;
+    Texture2D atlasFruit;
+    Movable fruits[APPLE_MAX_COUNT];
 
     public:
         void Init(void);
-        void RemoveFruit(Apple*);
-        void AddFruit(Apple*, Vector2, int);
+        void Remove(Movable*);
+        void Add(Movable*, Vector2, int);
         void Spawn(void);
         tuple<int, int> Update(Basket &);
         void Render(void);

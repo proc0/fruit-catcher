@@ -20,11 +20,6 @@ class Game {
 
     public:
         Game(Fruits& _fruits, Basket& _basket) :
-        score(0), 
-        lives(INITIAL_LIVES),
-        timeStart(0.),
-        timeEnd(0.),
-        state(END),
         fruits(_fruits),
         basket(_basket)
         {}

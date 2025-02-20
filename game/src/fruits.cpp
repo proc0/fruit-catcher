@@ -11,27 +11,27 @@
 using namespace std;
 
 void Fruits::Init() {
-    _atlasFruits = LoadTexture("resources/applesprites.png");
-    _nextFruitTimer = TIME_BETWEEN_APPLES;
+    atlasFruit = LoadTexture("resources/applesprites.png");
+    timeNextFruit = TIME_BETWEEN_APPLES;
     for(int i=0; i < APPLE_MAX_COUNT; i++){
-        RemoveFruit(&fruits[i]);
+        Remove(&fruits[i]);
     }
 }
 
-void Fruits::RemoveFruit(Apple *fruit) {
-    fruit->_active = false;
+void Fruits::Remove(Movable *fruit) {
+    fruit->active = false;
 }
 
-void Fruits::AddFruit(Apple *fruit, Vector2 position, int fallSpeed) {
+void Fruits::Add(Movable *fruit, Vector2 position, int speed) {
+    fruit->active = true;
     fruit->position = position;
-    fruit->fallSpeed = fallSpeed;
-    fruit->_active = true;
+    fruit->speed = speed;
 }
 
 void Fruits::Spawn(void) {
     int availableIndex = -1;
-    for(int i=0; i < APPLE_MAX_COUNT; i++){
-        if(!fruits[i]._active){
+    for(int i=0; i<APPLE_MAX_COUNT; i++){
+        if(!fruits[i].active){
            availableIndex = i;
            break;
         }
@@ -41,30 +41,30 @@ void Fruits::Spawn(void) {
         return;
     }
     
-    int fallSpeed = GetRandomValue(FALL_SPEED_MIN, FALL_SPEED_MAX);
-    int posX = GetRandomValue(APPLE_SOURCE_WIDTH / 2, screenWidth - (APPLE_SOURCE_WIDTH / 2));
+    int speed = GetRandomValue(FALL_SPEED_MIN, FALL_SPEED_MAX);
+    int posX = GetRandomValue(APPLE_SOURCE_WIDTH/2, screenWidth - (APPLE_SOURCE_WIDTH/2));
     
-    AddFruit(&fruits[availableIndex], { float(posX), -APPLE_SOURCE_HEIGHT}, fallSpeed);
+    Add(&fruits[availableIndex], { float(posX), -APPLE_SOURCE_HEIGHT}, speed);
 }
 
 tuple<int, int> Fruits::Update(Basket &basket) {
     int lives = 0;
     int score = 0;
 
-    _nextFruitTimer -= GetFrameTime();
-    if(_nextFruitTimer <= 0) {
-        _nextFruitTimer = TIME_BETWEEN_APPLES;
+    timeNextFruit -= GetFrameTime();
+    if(timeNextFruit <= 0) {
+        timeNextFruit = TIME_BETWEEN_APPLES;
         Spawn();
     }
 
-    for(int i=0; i < APPLE_MAX_COUNT; i++){
-       if(!fruits[i]._active){
+    for(int i=0; i<APPLE_MAX_COUNT; i++){
+       if(!fruits[i].active){
             continue;
        }
         
        if(fruits[i].position.y > screenHeight) {
             lives--;
-            RemoveFruit(&fruits[i]);
+            Remove(&fruits[i]);
             continue;
        }
        
@@ -72,26 +72,26 @@ tuple<int, int> Fruits::Update(Basket &basket) {
        tuple<int, int> basketDimensions = basket.GetDimensions();
        int basketWidth = get<0>(basketDimensions);
        int basketHeight = get<1>(basketDimensions);
-       if(fabsf(fruits[i].position.x - basketPosition.x) < basketWidth && fabsf(fruits[i].position.y - basketPosition.y) < basketHeight / 4 ) {
+       if(fabsf(fruits[i].position.x - basketPosition.x) < basketWidth && fabsf(fruits[i].position.y - basketPosition.y) < basketHeight/4) {
             score++;
-            RemoveFruit(&fruits[i]);
+            Remove(&fruits[i]);
             continue;
        }
-       
-       float offset = fruits[i].fallSpeed * GetFrameTime();
-       fruits[i].position.y += offset;
+
+       fruits[i].position.y += fruits[i].speed * GetFrameTime();
     }
+    
     return make_tuple(lives, score);
 }
 
 void Fruits::Render(void) {
-    for(int i=0; i < APPLE_MAX_COUNT; i++){
-       if(!fruits[i]._active){
+    for(int i=0; i<APPLE_MAX_COUNT; i++){
+       if(!fruits[i].active){
            continue;
        }
        Vector2 position = fruits[i].position;
-       position.x -= APPLE_SOURCE_WIDTH / 2;
-       position.y -= APPLE_SOURCE_HEIGHT / 2;
-       DrawTextureRec(_atlasFruits, APPLE_SOURCE_RECTANGLE, position, WHITE);
+       position.x -= APPLE_SOURCE_WIDTH/2;
+       position.y -= APPLE_SOURCE_HEIGHT/2;
+       DrawTextureRec(atlasFruit, APPLE_SOURCE_RECTANGLE, position, WHITE);
     }
 }
