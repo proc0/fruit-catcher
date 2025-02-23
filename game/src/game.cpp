@@ -2,25 +2,28 @@
 
 using namespace std;
 
-void Game::End() {
+void Game::Over() {
     state = END;
     timeEnd = GetTime();
 }
 
-void Game::Begin() {
+void Game::Load() {
     score = 0;
     lives = GAME_LIVES;
     state = PLAYING;
     timeStart = GetTime();
 
-    fruits.Init();
-    basket.Init();
+    stage.Load();
+    fruits.Load();
+    basket.Load();
 }
 
 void Game::Update() {
+    stage.Update();
+
     if(state == END) {
         if(IsKeyPressed(KEY_R)){
-            Begin();
+            Load();
         }
     }
     
@@ -32,12 +35,13 @@ void Game::Update() {
         score += get<1>(result);
 
         if(lives <= 0) {
-            End();
+            Over();
         }
     }
 }
 
 void Game::Render() {
+    stage.Render();
     basket.Render();
     fruits.Render();
 
@@ -48,4 +52,10 @@ void Game::Render() {
     if(state == PLAYING) {
         display.Playing(lives, score);
     }
+}
+
+void Game::Unload() {
+    fruits.Unload();
+    basket.Unload();
+    stage.Unload();
 }

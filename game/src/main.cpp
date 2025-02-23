@@ -3,27 +3,21 @@
 
 int main() {
 
-  Fruits _Fruit;
-  Basket _Basket;
-  Display _Display;
-  Game _Game(_Fruit, _Basket, _Display);
+  Game Game;
 
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_GAME_TITLE);
   SetTargetFPS(60);
 
-  _Game.Begin();
+  Game.Load();
 
   while (!WindowShouldClose()) {
-    _Game.Update();
-
+    Game.Update();
     BeginDrawing();
-    ClearBackground(RAYWHITE);
-
-    _Game.Render();
-    
+    Game.Render();
     EndDrawing();
   }
-  
+
+  Game.Unload();
   CloseWindow();
   
   return 0;

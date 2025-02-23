@@ -11,10 +11,11 @@ class Basket {
     Texture2D atlasBasket;
     
     public:
-        void Init(void);
+        void Load(void);
         Vector2 GetPosition(void);
         void SetPosition(void);
         tuple<int, int> GetDimensions(void);
         void Update(void);
         void Render(void);
+        void Unload(void);
 };
