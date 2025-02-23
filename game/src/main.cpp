@@ -12,16 +12,12 @@ int main() {
 
   while (!WindowShouldClose()) {
     Game.Update();
-
     BeginDrawing();
-
     Game.Render();
-    
     EndDrawing();
   }
 
   Game.Unload();
-
   CloseWindow();
   
   return 0;
