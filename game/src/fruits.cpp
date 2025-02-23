@@ -12,7 +12,7 @@
 
 using namespace std;
 
-void Fruits::Init() {
+void Fruits::Load() {
     atlasFruit = LoadTexture(ATLAS_FRUIT_URI);
     timeNextFruit = TIME_BETWEEN_APPLES;
     for(int i=0; i < GAME_FRUITS_MAX; i++){
@@ -99,4 +99,8 @@ void Fruits::Render(void) {
        
        DrawTextureRec(atlasFruit, ATLAS_FRUIT_RECT(fruits[i].atlasPosition), position, WHITE);
     }
+}
+
+void Fruits::Unload() {
+    UnloadTexture(atlasFruit);
 }

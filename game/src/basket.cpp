@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void Basket::Init(){
+void Basket::Load(){
     atlasBasket = LoadTexture(ATLAS_BASKET_URI);
 }
 
@@ -34,4 +34,8 @@ void Basket::Render(void) {
     position.y -= atlasBasket.height/2;
     
     DrawTextureRec(atlasBasket, BASKET_SOURCE_RECTANGLE, position, WHITE);
+}
+
+void Basket::Unload() {
+    UnloadTexture(atlasBasket);
 }

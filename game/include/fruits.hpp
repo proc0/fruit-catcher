@@ -20,10 +20,11 @@ class Fruits {
     Movable fruits[GAME_FRUITS_MAX];
 
     public:
-        void Init(void);
+        void Load(void);
         void Remove(Movable*);
         void Add(Movable*, Vector2, int);
         void Spawn(void);
         tuple<int, int> Update(Basket &);
         void Render(void);
+        void Unload(void);
 };
