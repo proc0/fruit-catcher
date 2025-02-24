@@ -1,10 +1,10 @@
 #include "fruits.hpp"
 
-#define ATLAS_FRUIT_URI "resources/applesprites.png"
-#define ATLAS_FRUIT_WIDTH 75
-#define ATLAS_FRUIT_HEIGHT 75
-#define ATLAS_FRUIT_TYPES 4
-#define ATLAS_FRUIT_RECT(xPos) CLITERAL(Rectangle){xPos, 0, ATLAS_FRUIT_WIDTH, ATLAS_FRUIT_HEIGHT}
+#define ATLAS_FRUIT_URI "resources/atlas_fruits.png"
+#define ATLAS_FRUIT_WIDTH 100
+#define ATLAS_FRUIT_HEIGHT 100
+#define ATLAS_FRUIT_TYPES 5
+#define ATLAS_FRUIT_RECT(xPos, yPos) CLITERAL(Rectangle){xPos, yPos, ATLAS_FRUIT_WIDTH, ATLAS_FRUIT_HEIGHT}
 
 #define TIME_BETWEEN_APPLES 1.0f
 #define FALL_SPEED_MIN 150
@@ -28,8 +28,10 @@ void Fruits::Add(Movable *fruit, Vector2 position, int speed) {
     fruit->active = true;
     fruit->position = position;
     fruit->speed = speed;
-    float fruitTexturePos = GetRandomValue(0, ATLAS_FRUIT_TYPES-1) * ATLAS_FRUIT_WIDTH;
-    fruit->atlasPosition = fruitTexturePos;
+    float xPos = GetRandomValue(0, ATLAS_FRUIT_TYPES-1) * ATLAS_FRUIT_WIDTH;
+    float yPos = GetRandomValue(0, ATLAS_FRUIT_TYPES-1) * ATLAS_FRUIT_HEIGHT;
+    fruit->atlasXPos = xPos;
+    fruit->atlasYPos = yPos;
 }
 
 void Fruits::Spawn(void) {
@@ -97,7 +99,7 @@ void Fruits::Render(void) {
        position.x -= ATLAS_FRUIT_WIDTH/2;
        position.y -= ATLAS_FRUIT_HEIGHT/2;
        
-       DrawTextureRec(atlasFruit, ATLAS_FRUIT_RECT(fruits[i].atlasPosition), position, WHITE);
+       DrawTextureRec(atlasFruit, ATLAS_FRUIT_RECT(fruits[i].atlasXPos, fruits[i].atlasYPos), position, WHITE);
     }
 }
 

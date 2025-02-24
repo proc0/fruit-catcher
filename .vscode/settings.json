@@ -117,7 +117,9 @@
     "xtree": "cpp",
     "xutility": "cpp",
     "*.tcc": "cpp",
-    "*.m": "cpp"
+    "*.m": "cpp",
+    "string_view": "cpp",
+    "text_encoding": "cpp"
   },
   "C_Cpp.default.compilerPath": "C:/w64devkit/bin/gcc.exe"
 }

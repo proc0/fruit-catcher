@@ -11,7 +11,8 @@ typedef struct Movable {
     Vector2 position;
     bool active;
     int speed;
-    float atlasPosition;
+    float atlasXPos;
+    float atlasYPos;
 } Movable;
 
 class Fruits {
