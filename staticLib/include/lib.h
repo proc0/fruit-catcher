@@ -14,7 +14,7 @@
 #define GAME_SCORE_UNIT 100
 #define GAME_FRUITS_MAX 8
 
-static constexpr int SCREEN_WIDTH = 800;
-static constexpr int SCREEN_HEIGHT = 600;
+static constexpr int SCREEN_WIDTH = 1280;
+static constexpr int SCREEN_HEIGHT = 720;
 
 Color GetTextColor();

@@ -1,9 +1,9 @@
 #include "fruits.hpp"
 
 #define ATLAS_FRUIT_URI "resources/atlas_fruits.png"
-#define ATLAS_FRUIT_WIDTH 100
-#define ATLAS_FRUIT_HEIGHT 100
-#define ATLAS_FRUIT_TYPES 5
+#define ATLAS_FRUIT_WIDTH 150
+#define ATLAS_FRUIT_HEIGHT 150
+#define ATLAS_FRUIT_TYPES 4
 #define ATLAS_FRUIT_RECT(xPos, yPos) CLITERAL(Rectangle){xPos, yPos, ATLAS_FRUIT_WIDTH, ATLAS_FRUIT_HEIGHT}
 
 #define TIME_BETWEEN_APPLES 1.0f
