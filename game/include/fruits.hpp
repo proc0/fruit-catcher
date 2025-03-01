@@ -22,11 +22,11 @@ class Fruits {
     Fruit fruits[GAME_FRUITS_MAX];
 
     public:
-        void Load(void);
+        Fruits(void);
+        ~Fruits(void);
         void Remove(Fruit*);
         void Add(Fruit*, Vector2, int);
         void Spawn(void);
         tuple<int, int> Update(Basket &);
         void Render(void);
-        void Unload(void);
 };

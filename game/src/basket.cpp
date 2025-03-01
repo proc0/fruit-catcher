@@ -7,11 +7,15 @@
 
 using namespace std;
 
-void Basket::Load(){
+Basket::Basket(){
     atlasBasket = LoadTexture(ATLAS_BASKET_URI);
     Vector2 collPos = GetPosition();
     collision = { collPos.x, collPos.y, BASKET_SOURCE_WIDTH, BASKET_SOURCE_HEIGHT };
     SetPosition();
+}
+
+Basket::~Basket() {
+    UnloadTexture(atlasBasket);
 }
 
 void Basket::SetPosition(void) {
@@ -45,8 +49,4 @@ void Basket::Render(void) {
     
     DrawTextureRec(atlasBasket, BASKET_SOURCE_RECTANGLE, position, WHITE);
     // DrawRectangleRec(collision, GREEN);
-}
-
-void Basket::Unload() {
-    UnloadTexture(atlasBasket);
 }

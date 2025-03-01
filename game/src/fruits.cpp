@@ -12,12 +12,16 @@
 
 using namespace std;
 
-void Fruits::Load() {
+Fruits::Fruits() {
     atlasFruit = LoadTexture(ATLAS_FRUIT_URI);
     timeNextFruit = TIME_BETWEEN_APPLES;
     for(int i=0; i < GAME_FRUITS_MAX; i++){
         Remove(&fruits[i]);
     }
+}
+
+Fruits::~Fruits() {
+    UnloadTexture(atlasFruit);
 }
 
 void Fruits::Remove(Fruit *fruit) {
@@ -104,8 +108,4 @@ void Fruits::Render(void) {
         DrawTextureRec(atlasFruit, ATLAS_FRUIT_RECT(fruits[i].atlasXPos, fruits[i].atlasYPos), fruits[i].position, WHITE);
         // DrawRectangleRec(fruits[i].collision, BLUE);
     }
-}
-
-void Fruits::Unload() {
-    UnloadTexture(atlasFruit);
 }

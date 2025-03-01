@@ -13,9 +13,9 @@ void Game::Load() {
     state = PLAYING;
     timeStart = GetTime();
 
-    stage.Load();
-    fruits.Load();
-    basket.Load();
+    // stage.Load();
+    // fruits.Load();
+    // basket.Load();
 }
 
 void Game::Update() {
@@ -54,8 +54,8 @@ void Game::Render() {
     }
 }
 
-void Game::Unload() {
-    fruits.Unload();
-    basket.Unload();
-    stage.Unload();
-}
+// void Game::Unload() {
+//     fruits.Unload();
+//     // basket.Unload();
+//     stage.Unload();
+// }

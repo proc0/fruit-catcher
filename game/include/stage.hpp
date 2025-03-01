@@ -10,8 +10,8 @@ class Stage {
     Texture2D backgroundAnimated;
 
     public:
-        void Load(void);
+        Stage(void);
+        ~Stage(void);
         void Update(void);
         void Render(void);
-        void Unload(void);
 };

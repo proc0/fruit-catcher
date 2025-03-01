@@ -1,6 +1,6 @@
 #include "stage.hpp"
 
-void Stage::Load() {
+Stage::Stage() {
     backgroundAnimated = LoadTexture("resources/sky.png");
     // backgroundImage = LoadImageAnim("resources/bg_anim.gif", &frameTracker);
     // backgroundAnimated = LoadTextureFromImage(backgroundImage);
@@ -8,6 +8,12 @@ void Stage::Load() {
     // frameOffset = 0; 
     // frameCurrent = 0;
     // frameCounter = 0;
+}
+
+Stage::~Stage() {
+    // UnloadTexture(backgroundAnimated);
+    // UnloadImage(backgroundImage);
+    UnloadTexture(backgroundAnimated);
 }
 
 void Stage::Update() {
@@ -29,10 +35,4 @@ void Stage::Update() {
 void Stage::Render() {
     DrawTexture(backgroundAnimated, 0, 0, RAYWHITE);
     // DrawTexturePro(backgroundAnimated, {0, 0, (float)backgroundImage.width, (float)backgroundImage.height}, {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT}, {0, 0}, 0, RAYWHITE);
-}
-
-void Stage::Unload() {
-    // UnloadTexture(backgroundAnimated);
-    // UnloadImage(backgroundImage);
-    UnloadTexture(backgroundAnimated);
 }

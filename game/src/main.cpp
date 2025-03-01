@@ -3,11 +3,10 @@
 
 int main() {
 
-  Game Game;
-
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_GAME_TITLE);
   SetTargetFPS(60);
-
+  
+  Game Game;
   Game.Load();
 
   while (!WindowShouldClose()) {
@@ -17,7 +16,6 @@ int main() {
     EndDrawing();
   }
 
-  Game.Unload();
   CloseWindow();
   
   return 0;

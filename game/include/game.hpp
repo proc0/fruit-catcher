@@ -36,5 +36,4 @@ class Game {
         void Update(void);
         void Render(void);
         void Over(void);
-        void Unload(void);
 };
