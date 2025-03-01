@@ -7,23 +7,24 @@
 
 using namespace std;
 
-typedef struct Movable {
+typedef struct Fruit {
     Vector2 position;
-    bool active;
-    int speed;
+    Rectangle collision;
     float atlasXPos;
     float atlasYPos;
-} Movable;
+    int speed;
+    bool active;
+} Fruit;
 
 class Fruits {
     float timeNextFruit;
     Texture2D atlasFruit;
-    Movable fruits[GAME_FRUITS_MAX];
+    Fruit fruits[GAME_FRUITS_MAX];
 
     public:
         void Load(void);
-        void Remove(Movable*);
-        void Add(Movable*, Vector2, int);
+        void Remove(Fruit*);
+        void Add(Fruit*, Vector2, int);
         void Spawn(void);
         tuple<int, int> Update(Basket &);
         void Render(void);

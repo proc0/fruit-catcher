@@ -20,11 +20,11 @@ void Fruits::Load() {
     }
 }
 
-void Fruits::Remove(Movable *fruit) {
+void Fruits::Remove(Fruit *fruit) {
     fruit->active = false;
 }
 
-void Fruits::Add(Movable *fruit, Vector2 position, int speed) {
+void Fruits::Add(Fruit *fruit, Vector2 position, int speed) {
     fruit->active = true;
     fruit->position = position;
     fruit->speed = speed;
@@ -32,6 +32,7 @@ void Fruits::Add(Movable *fruit, Vector2 position, int speed) {
     float yPos = GetRandomValue(0, ATLAS_FRUIT_TYPES-1) * ATLAS_FRUIT_HEIGHT;
     fruit->atlasXPos = xPos;
     fruit->atlasYPos = yPos;
+    fruit->collision = { position.x, position.y, ATLAS_FRUIT_WIDTH/2, ATLAS_FRUIT_HEIGHT/2 };
 }
 
 void Fruits::Spawn(void) {
@@ -73,18 +74,22 @@ tuple<int, int> Fruits::Update(Basket &basket) {
             Remove(&fruits[i]);
             continue;
        }
-       
-       Vector2 basketPosition = basket.GetPosition();
-       tuple<int, int> basketDimensions = basket.GetDimensions();
-       int basketWidth = get<0>(basketDimensions);
-       int basketHeight = get<1>(basketDimensions);
-       if(fabsf(fruits[i].position.x - basketPosition.x) < basketWidth && fabsf(fruits[i].position.y - basketPosition.y) < basketHeight/4) {
-            score++;
-            Remove(&fruits[i]);
-            continue;
-       }
 
-       fruits[i].position.y += fruits[i].speed * GetFrameTime();
+       Rectangle basketColl = basket.GetCollision();
+       if(CheckCollisionRecs(fruits[i].collision, basketColl)) {
+            tuple<int, int> basketDimensions = basket.GetDimensions();
+            int basketWidth = get<0>(basketDimensions);
+            Rectangle collRect = GetCollisionRec(fruits[i].collision, basketColl);
+            if(collRect.width > basketWidth/4 && collRect.height < 20){
+                score++;
+                Remove(&fruits[i]);
+                continue;
+            }
+        }
+
+       float fruitY = fruits[i].speed * GetFrameTime();
+       fruits[i].position.y += fruitY;
+       fruits[i].collision.y += fruitY;
     }
 
     return make_tuple(lives, score);
@@ -92,14 +97,12 @@ tuple<int, int> Fruits::Update(Basket &basket) {
 
 void Fruits::Render(void) {
     for(int i=0; i<GAME_FRUITS_MAX; i++){
-       if(!fruits[i].active){
-           continue;
-       }
-       Vector2 position = fruits[i].position;
-       position.x -= ATLAS_FRUIT_WIDTH/2;
-       position.y -= ATLAS_FRUIT_HEIGHT/2;
-       
-       DrawTextureRec(atlasFruit, ATLAS_FRUIT_RECT(fruits[i].atlasXPos, fruits[i].atlasYPos), position, WHITE);
+        if(!fruits[i].active){
+            continue;
+        }
+
+        DrawTextureRec(atlasFruit, ATLAS_FRUIT_RECT(fruits[i].atlasXPos, fruits[i].atlasYPos), fruits[i].position, WHITE);
+        // DrawRectangleRec(fruits[i].collision, BLUE);
     }
 }
 

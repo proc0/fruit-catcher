@@ -9,14 +9,24 @@ using namespace std;
 
 void Basket::Load(){
     atlasBasket = LoadTexture(ATLAS_BASKET_URI);
+    Vector2 collPos = GetPosition();
+    collision = { collPos.x, collPos.y, BASKET_SOURCE_WIDTH, BASKET_SOURCE_HEIGHT };
+    SetPosition();
 }
 
 void Basket::SetPosition(void) {
-    this->x = GetMousePosition().x;
+    float xPos = GetMousePosition().x;
+    this->x = xPos;
+    collision.x = xPos - atlasBasket.width/2;
+    
+}
+
+Rectangle Basket::GetCollision() {
+    return collision;
 }
 
 Vector2 Basket::GetPosition(void) {
-    return { x, SCREEN_HEIGHT - (BASKET_SOURCE_HEIGHT * 0.75) };
+    return { x - atlasBasket.width/2, SCREEN_HEIGHT - (BASKET_SOURCE_HEIGHT * 1.25) };
 }
 
 tuple<int, int> Basket::GetDimensions(void) {
@@ -30,10 +40,11 @@ void Basket::Update(void) {
 void Basket::Render(void) {
     Vector2 position = GetPosition();
     
-    position.x -= atlasBasket.width/2;
-    position.y -= atlasBasket.height/2;
+    // position.x -= atlasBasket.width/2;
+    // position.y -= atlasBasket.height/2;
     
     DrawTextureRec(atlasBasket, BASKET_SOURCE_RECTANGLE, position, WHITE);
+    // DrawRectangleRec(collision, GREEN);
 }
 
 void Basket::Unload() {

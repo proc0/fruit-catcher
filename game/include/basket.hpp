@@ -7,14 +7,16 @@
 using namespace std;
 
 class Basket {
-    float x;
     Texture2D atlasBasket;
+    Rectangle collision;
+    float x;
     
     public:
-        void Load(void);
         Vector2 GetPosition(void);
-        void SetPosition(void);
+        Rectangle GetCollision(void);
         tuple<int, int> GetDimensions(void);
+        void Load(void);
+        void SetPosition(void);
         void Update(void);
         void Render(void);
         void Unload(void);
