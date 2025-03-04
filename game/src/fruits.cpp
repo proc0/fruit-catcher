@@ -1,22 +1,22 @@
 #include "fruits.hpp"
 
-#define ATLAS_FRUIT_URI "resources/atlas_fruits.png"
-#define ATLAS_FRUIT_WIDTH 150
-#define ATLAS_FRUIT_HEIGHT 150
-#define ATLAS_FRUIT_TYPES 4
-#define ATLAS_FRUIT_RECT(xPos, yPos) CLITERAL(Rectangle){xPos, yPos, ATLAS_FRUIT_WIDTH, ATLAS_FRUIT_HEIGHT}
+#define FRUIT_ATLAS_URI "resources/atlas_fruits.png"
+#define FRUIT_ATLAS_WIDTH 150
+#define FRUIT_ATLAS_HEIGHT 150
+#define FRUIT_ATLAS_TYPES 4
+#define FRUIT_ATLAS_RECT(xPos, yPos) CLITERAL(Rectangle){xPos, yPos, FRUIT_ATLAS_WIDTH, FRUIT_ATLAS_HEIGHT}
 
-#define TIME_BETWEEN_APPLES 1.0f
-#define FALL_SPEED_MIN 150
-#define FALL_SPEED_MAX 250
+#define FRUIT_TIME_INTERVAL 1.0f
+#define FRUIT_FALL_SPEED_MIN 150
+#define FRUIT_FALL_SPEED_MAX 250
 
 using namespace std;
 
 Fruits::Fruits() {
-    atlasFruit = LoadTexture(ATLAS_FRUIT_URI);
-    timeNextFruit = TIME_BETWEEN_APPLES;
+    atlasFruit = LoadTexture(FRUIT_ATLAS_URI);
+    timeNextFruit = FRUIT_TIME_INTERVAL;
     for(int i=0; i < GAME_FRUITS_MAX; i++){
-        Remove(&fruits[i]);
+        Remove(fruits[i]);
     }
 }
 
@@ -24,19 +24,20 @@ Fruits::~Fruits() {
     UnloadTexture(atlasFruit);
 }
 
-void Fruits::Remove(Fruit *fruit) {
-    fruit->active = false;
+void Fruits::Remove(Fruit &fruit) {
+    fruit.active = false;
 }
 
-void Fruits::Add(Fruit *fruit, Vector2 position, int speed) {
-    fruit->active = true;
-    fruit->position = position;
-    fruit->speed = speed;
-    float xPos = GetRandomValue(0, ATLAS_FRUIT_TYPES-1) * ATLAS_FRUIT_WIDTH;
-    float yPos = GetRandomValue(0, ATLAS_FRUIT_TYPES-1) * ATLAS_FRUIT_HEIGHT;
-    fruit->atlasXPos = xPos;
-    fruit->atlasYPos = yPos;
-    fruit->collision = { position.x, position.y, ATLAS_FRUIT_WIDTH/2, ATLAS_FRUIT_HEIGHT/2 };
+void Fruits::Add(Fruit &fruit, Vector2 position, int speed) {
+    fruit.active = true;
+    fruit.position = position;
+    fruit.speed = speed;
+    
+    float xPos = GetRandomValue(0, FRUIT_ATLAS_TYPES-1) * FRUIT_ATLAS_WIDTH;
+    float yPos = GetRandomValue(0, FRUIT_ATLAS_TYPES-1) * FRUIT_ATLAS_HEIGHT;
+    fruit.atlasXPos = xPos;
+    fruit.atlasYPos = yPos;
+    fruit.collision = { position.x, position.y, FRUIT_ATLAS_WIDTH/2, FRUIT_ATLAS_HEIGHT/2 };
 }
 
 void Fruits::Spawn(void) {
@@ -52,10 +53,10 @@ void Fruits::Spawn(void) {
         return;
     }
     
-    int speed = GetRandomValue(FALL_SPEED_MIN, FALL_SPEED_MAX);
-    int posX = GetRandomValue(ATLAS_FRUIT_WIDTH/2, SCREEN_WIDTH - (ATLAS_FRUIT_WIDTH/2));
+    int speed = GetRandomValue(FRUIT_FALL_SPEED_MIN, FRUIT_FALL_SPEED_MAX);
+    int posX = GetRandomValue(FRUIT_ATLAS_WIDTH/2, SCREEN_WIDTH - (FRUIT_ATLAS_WIDTH/2));
     
-    Add(&fruits[availableIndex], { float(posX), -ATLAS_FRUIT_HEIGHT}, speed);
+    Add(fruits[availableIndex], { float(posX), -FRUIT_ATLAS_HEIGHT}, speed);
 }
 
 tuple<int, int> Fruits::Update(Basket &basket) {
@@ -64,7 +65,7 @@ tuple<int, int> Fruits::Update(Basket &basket) {
 
     timeNextFruit -= GetFrameTime();
     if(timeNextFruit <= 0) {
-        timeNextFruit = TIME_BETWEEN_APPLES;
+        timeNextFruit = FRUIT_TIME_INTERVAL;
         Spawn();
     }
 
@@ -75,7 +76,7 @@ tuple<int, int> Fruits::Update(Basket &basket) {
         
        if(fruits[i].position.y > SCREEN_HEIGHT) {
             lives--;
-            Remove(&fruits[i]);
+            Remove(fruits[i]);
             continue;
        }
 
@@ -86,7 +87,7 @@ tuple<int, int> Fruits::Update(Basket &basket) {
             Rectangle collRect = GetCollisionRec(fruits[i].collision, basketColl);
             if(collRect.width > basketWidth/4 && collRect.height < 20){
                 score++;
-                Remove(&fruits[i]);
+                Remove(fruits[i]);
                 continue;
             }
         }
@@ -105,7 +106,7 @@ void Fruits::Render(void) {
             continue;
         }
 
-        DrawTextureRec(atlasFruit, ATLAS_FRUIT_RECT(fruits[i].atlasXPos, fruits[i].atlasYPos), fruits[i].position, WHITE);
+        DrawTextureRec(atlasFruit, FRUIT_ATLAS_RECT(fruits[i].atlasXPos, fruits[i].atlasYPos), fruits[i].position, WHITE);
         // DrawRectangleRec(fruits[i].collision, BLUE);
     }
 }

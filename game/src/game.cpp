@@ -7,27 +7,21 @@ void Game::Over() {
     timeEnd = GetTime();
 }
 
-void Game::Load() {
+void Game::Start() {
     score = 0;
     lives = GAME_LIVES;
-    state = PLAYING;
+    state = PLAY;
     timeStart = GetTime();
-
-    // stage.Load();
-    // fruits.Load();
-    // basket.Load();
 }
 
 void Game::Update() {
     stage.Update();
 
-    if(state == END) {
-        if(IsKeyPressed(KEY_R)){
-            Load();
-        }
+    if((state == END && IsKeyPressed(KEY_R)) || state == START) {
+        Start();
     }
     
-    if(state == PLAYING) {
+    if(state == PLAY) {
         basket.Update();
 
         tuple<int, int> result = fruits.Update(basket);
@@ -49,13 +43,8 @@ void Game::Render() {
         display.Ending(lives, score, timeEnd, timeStart);
     }
 
-    if(state == PLAYING) {
+    if(state == PLAY) {
         display.Playing(lives, score);
     }
 }
 
-// void Game::Unload() {
-//     fruits.Unload();
-//     // basket.Unload();
-//     stage.Unload();
-// }

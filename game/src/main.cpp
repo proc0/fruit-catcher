@@ -6,8 +6,11 @@ int main() {
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_GAME_TITLE);
   SetTargetFPS(60);
   
-  Game Game;
-  Game.Load();
+  Fruits _fruits;
+  Basket _basket;
+  Display _display;
+  Stage _stage;
+  Game Game(_fruits, _basket, _display, _stage);
 
   while (!WindowShouldClose()) {
     Game.Update();

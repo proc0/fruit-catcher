@@ -7,32 +7,34 @@
 #include "stage.hpp"
 
 typedef enum State {
-    PLAYING,
+    START,
+    PLAY,
+    OVER,
     END
 } State;
 
 class Game {
-    int score;
-    int lives;
-    float timeStart;
-    float timeEnd;
+    Fruits &fruits;
+    Basket &basket;
+    Display &display;
+    Stage &stage;
     State state;
-    Fruits fruits;
-    Basket basket;
-    Display display;
-    Stage stage;
+    float timeEnd;
+    float timeStart;
+    int lives;
+    int score;
 
     public:
-        Game() :
-        fruits(),
-        basket(),
-        display(),
-        stage()
-        {}
-        ~Game()
-        {};
-        
-        void Load(void);
+        Game(Fruits &_fruits, Basket &_basket, Display &_display, Stage &_stage) :
+        fruits(_fruits),
+        basket(_basket),
+        display(_display),
+        stage(_stage) 
+        { 
+            state = START; 
+        }
+
+        void Start(void);
         void Update(void);
         void Render(void);
         void Over(void);

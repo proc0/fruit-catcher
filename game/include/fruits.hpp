@@ -24,9 +24,9 @@ class Fruits {
     public:
         Fruits(void);
         ~Fruits(void);
-        void Remove(Fruit*);
-        void Add(Fruit*, Vector2, int);
+        void Remove(Fruit&);
+        void Add(Fruit&, Vector2, int);
         void Spawn(void);
-        tuple<int, int> Update(Basket &);
+        tuple<int, int> Update(Basket&);
         void Render(void);
 };
