@@ -14,10 +14,10 @@ typedef enum State {
 } State;
 
 class Game {
-    Fruits &fruits;
-    Pot &pot;
-    Display &display;
-    Stage &stage;
+    Fruits fruits;
+    Pot pot;
+    Display display;
+    Stage stage;
     State state;
     float timeEnd;
     float timeStart;
@@ -25,11 +25,7 @@ class Game {
     int score;
 
     public:
-        Game(Fruits &_fruits, Pot &_pot, Display &_display, Stage &_stage) :
-        fruits(_fruits),
-        pot(_pot),
-        display(_display),
-        stage(_stage) 
+        Game()
         { 
             state = START; 
         }
