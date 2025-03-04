@@ -1,13 +1,12 @@
 #include "lib.h"
 
 class Stage {
-    Texture2D backgroundAnimated;
-    Image backgroundImage;
-    int frameTracker;
-    static const int frameDelay = 8;
-    unsigned int frameOffset;
-    int frameCurrent;
-    int frameCounter;
+    Texture2D cloudsBackground;
+    Texture2D cloudsForeground;
+    Texture2D mountains;
+    Texture2D sun;
+    Rectangle cloudsBackgroundRect;
+    Rectangle cloudsForegroundRect;
 
     public:
         Stage(void);
