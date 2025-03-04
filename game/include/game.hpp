@@ -2,7 +2,7 @@
 
 #include "lib.h"
 #include "fruits.hpp"
-#include "basket.hpp"
+#include "pot.hpp"
 #include "display.hpp"
 #include "stage.hpp"
 
@@ -15,7 +15,7 @@ typedef enum State {
 
 class Game {
     Fruits &fruits;
-    Basket &basket;
+    Pot &pot;
     Display &display;
     Stage &stage;
     State state;
@@ -25,9 +25,9 @@ class Game {
     int score;
 
     public:
-        Game(Fruits &_fruits, Basket &_basket, Display &_display, Stage &_stage) :
+        Game(Fruits &_fruits, Pot &_pot, Display &_display, Stage &_stage) :
         fruits(_fruits),
-        basket(_basket),
+        pot(_pot),
         display(_display),
         stage(_stage) 
         { 

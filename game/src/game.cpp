@@ -22,9 +22,9 @@ void Game::Update() {
     }
     
     if(state == PLAY) {
-        basket.Update();
+        pot.Update();
 
-        tuple<int, int> result = fruits.Update(basket);
+        tuple<int, int> result = fruits.Update(pot);
         lives += get<0>(result);
         score += get<1>(result);
 
@@ -36,7 +36,7 @@ void Game::Update() {
 
 void Game::Render() {
     stage.Render();
-    basket.Render();
+    pot.Render();
     fruits.Render();
 
     if(state == END) {

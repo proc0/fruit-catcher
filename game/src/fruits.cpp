@@ -32,7 +32,7 @@ void Fruits::Add(Fruit &fruit, Vector2 position, int speed) {
     fruit.active = true;
     fruit.position = position;
     fruit.speed = speed;
-    
+
     float xPos = GetRandomValue(0, FRUIT_ATLAS_TYPES-1) * FRUIT_ATLAS_WIDTH;
     float yPos = GetRandomValue(0, FRUIT_ATLAS_TYPES-1) * FRUIT_ATLAS_HEIGHT;
     fruit.atlasXPos = xPos;
@@ -59,7 +59,7 @@ void Fruits::Spawn(void) {
     Add(fruits[availableIndex], { float(posX), -FRUIT_ATLAS_HEIGHT}, speed);
 }
 
-tuple<int, int> Fruits::Update(Basket &basket) {
+tuple<int, int> Fruits::Update(Pot &pot) {
     int lives = 0;
     int score = 0;
 
@@ -80,12 +80,12 @@ tuple<int, int> Fruits::Update(Basket &basket) {
             continue;
        }
 
-       Rectangle basketColl = basket.GetCollision();
-       if(CheckCollisionRecs(fruits[i].collision, basketColl)) {
-            tuple<int, int> basketDimensions = basket.GetDimensions();
-            int basketWidth = get<0>(basketDimensions);
-            Rectangle collRect = GetCollisionRec(fruits[i].collision, basketColl);
-            if(collRect.width > basketWidth/4 && collRect.height < 20){
+       tuple<int, int> potDimensions = pot.GetDimensions();
+       int potWidth = get<0>(potDimensions);
+       Rectangle potCollision = pot.GetCollision();
+       if(CheckCollisionRecs(fruits[i].collision, potCollision)) {
+            Rectangle collision = GetCollisionRec(fruits[i].collision, potCollision);
+            if(collision.width > potWidth/4 && collision.height < 20){
                 score++;
                 Remove(fruits[i]);
                 continue;

@@ -7,10 +7,10 @@ int main() {
   SetTargetFPS(60);
   
   Fruits _fruits;
-  Basket _basket;
+  Pot _pot;
   Display _display;
   Stage _stage;
-  Game Game(_fruits, _basket, _display, _stage);
+  Game Game(_fruits, _pot, _display, _stage);
 
   while (!WindowShouldClose()) {
     Game.Update();

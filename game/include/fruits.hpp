@@ -3,7 +3,7 @@
 #include <tuple>
 
 #include "lib.h"
-#include "basket.hpp"
+#include "pot.hpp"
 
 using namespace std;
 
@@ -27,6 +27,6 @@ class Fruits {
         void Remove(Fruit&);
         void Add(Fruit&, Vector2, int);
         void Spawn(void);
-        tuple<int, int> Update(Basket&);
+        tuple<int, int> Update(Pot&);
         void Render(void);
 };

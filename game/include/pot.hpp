@@ -6,14 +6,14 @@
 
 using namespace std;
 
-class Basket {
-    Texture2D atlasBasket;
+class Pot {
+    Texture2D atlasPot;
     Rectangle collision;
     float x;
     
     public:
-        Basket();
-        ~Basket();
+        Pot();
+        ~Pot();
         Vector2 GetPosition(void);
         Rectangle GetCollision(void);
         tuple<int, int> GetDimensions(void);
