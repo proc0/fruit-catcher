@@ -28,11 +28,18 @@ void Fruits::Remove(Fruit &fruit) {
     fruit.active = false;
 }
 
-void Fruits::Add(Fruit &fruit, Vector2 position, int speed) {
+void Fruits::Add(Fruit &fruit, Vector2 position, Vector2 velocity) {
     fruit.active = true;
     fruit.position = position;
-    fruit.speed = speed;
+    fruit.velocity = velocity;
 
+    float forceX = GetRandomValue(0, 1000);
+    if(position.x > SCREEN_WIDTH/2) {
+        forceX = GetRandomValue(-1000, 0);
+    }
+    float forceY = 982.0f;
+    fruit.force = { forceX, forceY };
+    
     float xPos = GetRandomValue(0, FRUIT_ATLAS_TYPES-1) * FRUIT_ATLAS_WIDTH;
     float yPos = GetRandomValue(0, FRUIT_ATLAS_TYPES-1) * FRUIT_ATLAS_HEIGHT;
     fruit.atlasXPos = xPos;
@@ -53,10 +60,11 @@ void Fruits::Spawn(void) {
         return;
     }
     
-    int speed = GetRandomValue(FRUIT_FALL_SPEED_MIN, FRUIT_FALL_SPEED_MAX);
+    int velY = GetRandomValue(FRUIT_FALL_SPEED_MIN, FRUIT_FALL_SPEED_MAX);
+    int velX = GetRandomValue(0, 75);
     int posX = GetRandomValue(FRUIT_ATLAS_WIDTH/2, SCREEN_WIDTH - (FRUIT_ATLAS_WIDTH/2));
     
-    Add(fruits[availableIndex], { float(posX), -FRUIT_ATLAS_HEIGHT}, speed);
+    Add(fruits[availableIndex], { float(posX), -FRUIT_ATLAS_HEIGHT }, { float(velX), float(velY) });
 }
 
 tuple<int, int> Fruits::Update(Pot &pot) {
@@ -92,9 +100,16 @@ tuple<int, int> Fruits::Update(Pot &pot) {
             }
         }
 
-       float fruitY = fruits[i].speed * GetFrameTime();
-       fruits[i].position.y += fruitY;
-       fruits[i].collision.y += fruitY;
+        float accY = fruits[i].force.y / 1.0f;
+        float accX = fruits[i].force.x / fruits[i].velocity.x;
+        fruits[i].velocity.y += accY * GetFrameTime();
+        fruits[i].velocity.x += accX * GetFrameTime();
+        float deltaPosY = fruits[i].velocity.y * GetFrameTime();
+        float deltaPosX = fruits[i].velocity.x * GetFrameTime();
+        fruits[i].position.y += deltaPosY;
+        fruits[i].collision.y += deltaPosY;
+        fruits[i].position.x += deltaPosX;
+        fruits[i].collision.x += deltaPosX;
     }
 
     return make_tuple(lives, score);
