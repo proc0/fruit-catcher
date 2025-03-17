@@ -10,8 +10,9 @@ using namespace std;
 typedef struct Fruit {
     Rectangle collision;
     Vector2 position;
+    Vector2 lastPos;
+    Vector2 acceleration;
     Vector2 velocity;
-    Vector2 force;
     float atlasXPos;
     float atlasYPos;
     bool active;
@@ -26,8 +27,9 @@ class Fruits {
         Fruits(void);
         ~Fruits(void);
         void Remove(Fruit&);
-        void Add(Fruit&, Vector2, Vector2);
+        void Add(Fruit&);
         void Spawn(void);
+        void UpdateMovement(Fruit&);
         tuple<int, int> Update(Pot&);
         void Render(void);
 };

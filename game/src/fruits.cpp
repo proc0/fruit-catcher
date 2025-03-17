@@ -28,23 +28,27 @@ void Fruits::Remove(Fruit &fruit) {
     fruit.active = false;
 }
 
-void Fruits::Add(Fruit &fruit, Vector2 position, Vector2 velocity) {
+void Fruits::Add(Fruit &fruit) {
     fruit.active = true;
-    fruit.position = position;
-    fruit.velocity = velocity;
+        
+    fruit.atlasXPos = GetRandomValue(0, FRUIT_ATLAS_TYPES-1) * FRUIT_ATLAS_WIDTH;
+    fruit.atlasYPos = GetRandomValue(0, FRUIT_ATLAS_TYPES-1) * FRUIT_ATLAS_HEIGHT;
 
-    float forceX = GetRandomValue(0, 1000);
-    if(position.x > SCREEN_WIDTH/2) {
-        forceX = GetRandomValue(-1000, 0);
+    int posX = GetRandomValue(FRUIT_ATLAS_WIDTH, SCREEN_WIDTH - FRUIT_ATLAS_WIDTH);
+    fruit.position = fruit.lastPos = { float(posX), -FRUIT_ATLAS_HEIGHT };
+
+    fruit.collision = { fruit.position.x, fruit.position.y, FRUIT_ATLAS_WIDTH/2, FRUIT_ATLAS_HEIGHT/2 };
+
+    fruit.acceleration = { 0.0f, 0.0f };
+
+    // int velY = GetRandomValue(FRUIT_FALL_SPEED_MIN, FRUIT_FALL_SPEED_MAX);
+    // int velX = GetRandomValue(0, 75);
+
+    float velX = GetRandomValue(0, 500);
+    if(fruit.position.x > SCREEN_WIDTH/2) {
+        velX = GetRandomValue(-500, 0);
     }
-    float forceY = 982.0f;
-    fruit.force = { forceX, forceY };
-    
-    float xPos = GetRandomValue(0, FRUIT_ATLAS_TYPES-1) * FRUIT_ATLAS_WIDTH;
-    float yPos = GetRandomValue(0, FRUIT_ATLAS_TYPES-1) * FRUIT_ATLAS_HEIGHT;
-    fruit.atlasXPos = xPos;
-    fruit.atlasYPos = yPos;
-    fruit.collision = { position.x, position.y, FRUIT_ATLAS_WIDTH/2, FRUIT_ATLAS_HEIGHT/2 };
+    fruit.velocity = { velX, 0.0f };
 }
 
 void Fruits::Spawn(void) {
@@ -60,11 +64,24 @@ void Fruits::Spawn(void) {
         return;
     }
     
-    int velY = GetRandomValue(FRUIT_FALL_SPEED_MIN, FRUIT_FALL_SPEED_MAX);
-    int velX = GetRandomValue(0, 75);
-    int posX = GetRandomValue(FRUIT_ATLAS_WIDTH/2, SCREEN_WIDTH - (FRUIT_ATLAS_WIDTH/2));
-    
-    Add(fruits[availableIndex], { float(posX), -FRUIT_ATLAS_HEIGHT }, { float(velX), float(velY) });
+    Add(fruits[availableIndex]);
+}
+
+void Fruits::UpdateMovement(Fruit &fruit) {
+    float deltaTime = GetFrameTime();
+    float deltaHalf = deltaTime * 0.5f;
+    float deltaSquare = deltaTime * deltaHalf;
+    // calculate next position using Velocity Verlet integration
+    fruit.position = fruit.position + fruit.velocity * deltaTime + fruit.acceleration * deltaSquare;
+    // copy to collision position
+    fruit.collision.x = fruit.position.x;
+    fruit.collision.y = fruit.position.y;
+    // calculate new velocity by applying forces
+    Vector2 force = { -2.0f, 982.0f }; // NOTE: can have multiple forces later
+    fruit.velocity = fruit.velocity + (fruit.acceleration + force) * deltaHalf;
+    // set last acceleration and last position
+    fruit.acceleration = force;
+    fruit.lastPos = fruit.position;
 }
 
 tuple<int, int> Fruits::Update(Pot &pot) {
@@ -78,20 +95,20 @@ tuple<int, int> Fruits::Update(Pot &pot) {
     }
 
     for(int i=0; i<GAME_FRUITS_MAX; i++){
-       if(!fruits[i].active){
+        if(!fruits[i].active){
             continue;
-       }
-        
-       if(fruits[i].position.y > SCREEN_HEIGHT) {
+        }
+            
+        if(fruits[i].position.y > SCREEN_HEIGHT) {
             lives--;
             Remove(fruits[i]);
             continue;
-       }
+        }
 
-       tuple<int, int> potDimensions = pot.GetDimensions();
-       int potWidth = get<0>(potDimensions);
-       Rectangle potCollision = pot.GetCollision();
-       if(CheckCollisionRecs(fruits[i].collision, potCollision)) {
+        tuple<int, int> potDimensions = pot.GetDimensions();
+        int potWidth = get<0>(potDimensions);
+        Rectangle potCollision = pot.GetCollision();
+        if(CheckCollisionRecs(fruits[i].collision, potCollision)) {
             Rectangle collision = GetCollisionRec(fruits[i].collision, potCollision);
             if(collision.width > potWidth/4 && collision.height < 20){
                 score++;
@@ -100,16 +117,7 @@ tuple<int, int> Fruits::Update(Pot &pot) {
             }
         }
 
-        float accY = fruits[i].force.y / 1.0f;
-        float accX = fruits[i].force.x / fruits[i].velocity.x;
-        fruits[i].velocity.y += accY * GetFrameTime();
-        fruits[i].velocity.x += accX * GetFrameTime();
-        float deltaPosY = fruits[i].velocity.y * GetFrameTime();
-        float deltaPosX = fruits[i].velocity.x * GetFrameTime();
-        fruits[i].position.y += deltaPosY;
-        fruits[i].collision.y += deltaPosY;
-        fruits[i].position.x += deltaPosX;
-        fruits[i].collision.x += deltaPosX;
+        UpdateMovement(fruits[i]);
     }
 
     return make_tuple(lives, score);
