@@ -19,14 +19,14 @@ Stage::~Stage() {
 }
 
 void Stage::Update() {
-    cloudsBackgroundRect.x += 0.005;
+    cloudsBackgroundRect.x += 0.05f;
     if(cloudsBackgroundRect.x > SCREEN_WIDTH){
-        cloudsBackgroundRect.x = 0;
+        cloudsBackgroundRect.x = 0.0f;
     }
 
-    cloudsForegroundRect.x += 0.01;
+    cloudsForegroundRect.x += 0.1f;
     if(cloudsForegroundRect.x > SCREEN_WIDTH){
-        cloudsForegroundRect.x = 0;
+        cloudsForegroundRect.x = 0.0f;
     }
 }
 

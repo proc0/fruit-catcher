@@ -2,25 +2,53 @@
 
 using namespace std;
 
-void Game::Over() {
+void Game::End() {
     state = END;
+}
+
+void Game::Over() {
+    state = OVER;
     timeEnd = GetTime();
 }
 
-void Game::Start() {
+void Game::Play() {
     score = 0;
     lives = GAME_LIVES;
     state = PLAY;
     timeStart = GetTime();
 }
 
-void Game::Update() {
-    stage.Update();
+void Game::Start() {
+    state = START;
+}
 
-    if((state == END && IsKeyPressed(KEY_R)) || state == START) {
-        Start();
+void Game::Update() {
+    if(state != END){
+        stage.Update();
+        mousePosition = GetMousePosition();
     }
     
+    if(state == NONE) {
+        Start();
+    }
+
+    if(state == OVER) {
+        if(IsKeyPressed(KEY_R)){
+            Play();
+        }
+    }
+
+    if(state == START){
+        display.UpdateStartMenu(mousePosition);
+        if(display.startButtonState == display.ButtonState::CLICKED){
+            Play();
+        }
+
+        if(display.quitButtonState == display.ButtonState::CLICKED){
+            End();
+        }
+    }
+
     if(state == PLAY) {
         pot.Update();
 
@@ -35,16 +63,22 @@ void Game::Update() {
 }
 
 void Game::Render() {
-    stage.Render();
-    pot.Render();
-    fruits.Render();
+    if(state != END){
+        stage.Render();
+    }
 
-    if(state == END) {
-        display.Ending(lives, score, timeEnd, timeStart);
+    if(state == START) {
+        display.DisplayStartMenu();
+    }
+
+    if(state == OVER) {
+        display.DisplayGameOver(lives, score, timeEnd, timeStart);
     }
 
     if(state == PLAY) {
-        display.Playing(lives, score);
+        pot.Render();
+        fruits.Render();
+        display.DisplayHUD(lives, score);
     }
 }
 
