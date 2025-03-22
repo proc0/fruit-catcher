@@ -47,9 +47,9 @@ void Game::Update() {
     }
 
     if(state == PLAY) {
-        pot.Update();
+        bucket.Update();
 
-        tuple<int, int> result = fruits.Update(pot);
+        tuple<int, int> result = fruits.Update(bucket);
         lives += get<0>(result);
         score += get<1>(result);
 
@@ -73,7 +73,7 @@ void Game::Render() {
     }
 
     if(state == PLAY) {
-        pot.Render();
+        bucket.Render();
         fruits.Render();
         display.DisplayHUD(lives, score);
     }

@@ -84,7 +84,7 @@ void Fruits::UpdateMovement(Fruit &fruit) {
     fruit.lastPos = fruit.position;
 }
 
-tuple<int, int> Fruits::Update(Pot &pot) {
+tuple<int, int> Fruits::Update(Bucket &bucket) {
     int lives = 0;
     int score = 0;
 
@@ -105,12 +105,12 @@ tuple<int, int> Fruits::Update(Pot &pot) {
             continue;
         }
 
-        tuple<int, int> potDimensions = pot.GetDimensions();
-        int potWidth = get<0>(potDimensions);
-        Rectangle potCollision = pot.GetCollision();
-        if(CheckCollisionRecs(fruits[i].collision, potCollision)) {
-            Rectangle collision = GetCollisionRec(fruits[i].collision, potCollision);
-            if(collision.width > potWidth/4 && collision.height < 20){
+        tuple<int, int> bucketDimensions = bucket.GetDimensions();
+        int bucketWidth = get<0>(bucketDimensions);
+        Rectangle bucketCollision = bucket.GetCollision();
+        if(CheckCollisionRecs(fruits[i].collision, bucketCollision)) {
+            Rectangle collision = GetCollisionRec(fruits[i].collision, bucketCollision);
+            if(collision.width > bucketWidth/4 && collision.height < 20){
                 score++;
                 Remove(fruits[i]);
                 continue;

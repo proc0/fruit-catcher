@@ -4,19 +4,17 @@
 
 #include "lib.h"
 
-using namespace std;
-
-class Pot {
-    Texture2D atlasPot;
+class Bucket {
+    Texture2D atlasBucket;
     Rectangle collision;
     float x;
     
     public:
-        Pot();
-        ~Pot();
+        Bucket();
+        ~Bucket();
         Vector2 GetPosition();
         Rectangle GetCollision();
-        tuple<int, int> GetDimensions();
+        std::tuple<int, int> GetDimensions();
         void SetPosition();
         void Update();
         void Render();

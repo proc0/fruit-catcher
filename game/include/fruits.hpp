@@ -3,7 +3,7 @@
 #include <tuple>
 
 #include "lib.h"
-#include "pot.hpp"
+#include "bucket.hpp"
 
 using namespace std;
 
@@ -30,6 +30,6 @@ class Fruits {
         void Add(Fruit&);
         void Spawn();
         void UpdateMovement(Fruit&);
-        tuple<int, int> Update(Pot&);
+        tuple<int, int> Update(Bucket&);
         void Render();
 };

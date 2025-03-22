@@ -2,13 +2,13 @@
 
 #include "lib.h"
 #include "fruits.hpp"
-#include "pot.hpp"
+#include "bucket.hpp"
 #include "display.hpp"
 #include "stage.hpp"
 
 class Game {
     Fruits fruits;
-    Pot pot;
+    Bucket bucket;
     Display display;
     Stage stage;
     Vector2 mousePosition;
