@@ -6,30 +6,26 @@ void Game::End() {
     state = END;
 }
 
+bool Game::isRunning(){
+    return state != END;
+}
+
 void Game::Over() {
     state = OVER;
     timeEnd = GetTime();
 }
 
 void Game::Play() {
+    state = PLAY;
     score = 0;
     lives = GAME_LIVES;
-    state = PLAY;
     timeStart = GetTime();
-}
-
-void Game::Start() {
-    state = START;
 }
 
 void Game::Update() {
     if(state != END){
         stage.Update();
         mousePosition = GetMousePosition();
-    }
-    
-    if(state == NONE) {
-        Start();
     }
 
     if(state == OVER) {
@@ -40,11 +36,12 @@ void Game::Update() {
 
     if(state == START){
         display.UpdateStartMenu(mousePosition);
-        if(display.startButtonState == display.ButtonState::CLICKED){
+
+        if(display.isStartButtonClicked()){
             Play();
         }
 
-        if(display.quitButtonState == display.ButtonState::CLICKED){
+        if(display.isQuitButtonClicked()){
             End();
         }
     }

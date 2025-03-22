@@ -14,10 +14,10 @@ class Pot {
     public:
         Pot();
         ~Pot();
-        Vector2 GetPosition(void);
-        Rectangle GetCollision(void);
-        tuple<int, int> GetDimensions(void);
-        void SetPosition(void);
-        void Update(void);
-        void Render(void);
+        Vector2 GetPosition();
+        Rectangle GetCollision();
+        tuple<int, int> GetDimensions();
+        void SetPosition();
+        void Update();
+        void Render();
 };

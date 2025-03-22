@@ -31,6 +31,14 @@ Display::~Display(void) {
     UnloadTexture(textureStartMenu);
 }
 
+bool Display::isStartButtonClicked(void) {
+    return startButtonState == CLICKED;
+}
+
+bool Display::isQuitButtonClicked(void) {
+    return quitButtonState == CLICKED;
+}
+
 void Display::UpdateStartMenu(Vector2 mousePosition){
     if (CheckCollisionPointRec(mousePosition, startButtonCollision)) {
         startButtonState = HOVER;

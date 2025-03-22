@@ -24,12 +24,12 @@ class Fruits {
     Fruit fruits[GAME_FRUITS_MAX];
 
     public:
-        Fruits(void);
-        ~Fruits(void);
+        Fruits();
+        ~Fruits();
         void Remove(Fruit&);
         void Add(Fruit&);
-        void Spawn(void);
+        void Spawn();
         void UpdateMovement(Fruit&);
         tuple<int, int> Update(Pot&);
-        void Render(void);
+        void Render();
 };

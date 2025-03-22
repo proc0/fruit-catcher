@@ -1,4 +1,3 @@
-#include "arena.hpp"
 #include "game.hpp"
 
 int main() {
@@ -8,7 +7,7 @@ int main() {
  
   Game Game;
 
-  while (!WindowShouldClose() && Game.state != Game.State::END) {
+  while (!WindowShouldClose() && Game.isRunning()) {
     Game.Update();
     BeginDrawing();
     Game.Render();

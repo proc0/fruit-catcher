@@ -16,21 +16,21 @@ class Game {
     float timeStart;
     int lives;
     int score;
+    enum State {
+        START,
+        PLAY,
+        OVER,
+        END
+    };
+    State state = START;
 
     public:
         Game() = default;
-        void Start(void);
-        void Play(void);
-        void Update(void);
-        void Render(void);
-        void Over(void);
-        void End(void);
-        enum State {
-            NONE,
-            START,
-            PLAY,
-            OVER,
-            END
-        };
-        State state = NONE;
+        void Play();
+        void Update();
+        void Render();
+        void Over();
+        void End();
+        bool isRunning();
+
 };

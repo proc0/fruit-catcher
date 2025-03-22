@@ -9,8 +9,8 @@ class Stage {
     Rectangle cloudsForegroundRect;
 
     public:
-        Stage(void);
-        ~Stage(void);
-        void Update(void);
-        void Render(void);
+        Stage();
+        ~Stage();
+        void Update();
+        void Render();
 };
