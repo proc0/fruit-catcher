@@ -30,7 +30,7 @@ void Stage::Update() {
     }
 }
 
-void Stage::Render() {
+void Stage::Render() const {
     DrawRectangleGradientV(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Color {80, 123, 179, 255}, Color {213, 246, 255, 255});
     DrawTexture(sun, 600, 300, WHITE);
     DrawTextureRec(cloudsBackground, cloudsBackgroundRect, {0, 241}, { 255, 255, 255, 150 }); 

@@ -12,5 +12,5 @@ class Stage {
         Stage();
         ~Stage();
         void Update();
-        void Render();
+        void Render() const;
 };

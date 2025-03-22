@@ -26,11 +26,11 @@ class Game {
 
     public:
         Game() = default;
-        void Play();
+        const bool isRunning() const;
+        void Begin();
         void Update();
-        void Render();
+        void Render() const;
         void Over();
         void End();
-        bool isRunning();
 
 };

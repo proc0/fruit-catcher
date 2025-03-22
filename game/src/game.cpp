@@ -6,7 +6,7 @@ void Game::End() {
     state = END;
 }
 
-bool Game::isRunning(){
+const bool Game::isRunning() const {
     return state != END;
 }
 
@@ -15,7 +15,7 @@ void Game::Over() {
     timeEnd = GetTime();
 }
 
-void Game::Play() {
+void Game::Begin() {
     state = PLAY;
     score = 0;
     lives = GAME_LIVES;
@@ -30,7 +30,7 @@ void Game::Update() {
 
     if(state == OVER) {
         if(IsKeyPressed(KEY_R)){
-            Play();
+            Begin();
         }
     }
 
@@ -38,7 +38,7 @@ void Game::Update() {
         display.UpdateStartMenu(mousePosition);
 
         if(display.isStartButtonClicked()){
-            Play();
+            Begin();
         }
 
         if(display.isQuitButtonClicked()){
@@ -47,9 +47,9 @@ void Game::Update() {
     }
 
     if(state == PLAY) {
-        bucket.Update();
+        bucket.Update(mousePosition);
 
-        tuple<int, int> result = fruits.Update(bucket);
+        const tuple<int, int> result = fruits.Update(bucket);
         lives += get<0>(result);
         score += get<1>(result);
 
@@ -59,23 +59,23 @@ void Game::Update() {
     }
 }
 
-void Game::Render() {
+void Game::Render() const {
     if(state != END){
         stage.Render();
     }
 
     if(state == START) {
-        display.DisplayStartMenu();
+        display.RenderStartMenu();
     }
 
     if(state == OVER) {
-        display.DisplayGameOver(lives, score, timeEnd, timeStart);
+        display.RenderGameOver(lives, score, timeEnd, timeStart);
     }
 
     if(state == PLAY) {
         bucket.Render();
         fruits.Render();
-        display.DisplayHUD(lives, score);
+        display.Render(lives, score);
     }
 }
 

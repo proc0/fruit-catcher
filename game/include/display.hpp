@@ -17,10 +17,10 @@ class Display {
     public:
         Display();
         ~Display();
-        void DisplayGameOver(int, int, float, float);
-        void DisplayHUD(int, int);
+        const bool isStartButtonClicked() const;
+        const bool isQuitButtonClicked() const;
         void UpdateStartMenu(Vector2 mousePosition);
-        void DisplayStartMenu();
-        bool isStartButtonClicked();
-        bool isQuitButtonClicked();
+        void RenderStartMenu() const;
+        void Render(int lives, int score) const;
+        void RenderGameOver(int lives, int score, float timeEnd, float timeStart) const;
 };

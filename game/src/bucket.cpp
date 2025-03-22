@@ -1,52 +1,44 @@
 #include "bucket.hpp"
 
-#define POT_IMAGE_URI "resources/pot.png"
-#define POT_SOURCE_WIDTH 150
-#define POT_SOURCE_HEIGHT 150
-#define POT_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, POT_SOURCE_WIDTH, POT_SOURCE_HEIGHT}
+#define BUCKET_IMAGE_URI "resources/pot.png"
+#define BUCKET_SOURCE_WIDTH 150
+#define BUCKET_SOURCE_HEIGHT 150
+#define BUCKET_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, BUCKET_SOURCE_WIDTH, BUCKET_SOURCE_HEIGHT}
 
 using namespace std;
 
 Bucket::Bucket(){
-    atlasBucket = LoadTexture(POT_IMAGE_URI);
-    Vector2 collPos = GetPosition();
-    collision = { collPos.x, collPos.y, POT_SOURCE_WIDTH, POT_SOURCE_HEIGHT };
-    SetPosition();
+    texture = LoadTexture(BUCKET_IMAGE_URI);
+    Vector2 mousePosition = GetMousePosition();
+    collision = { mousePosition.x, SCREEN_HEIGHT - (BUCKET_SOURCE_HEIGHT * 1.25), BUCKET_SOURCE_WIDTH, BUCKET_SOURCE_HEIGHT };
 }
 
 Bucket::~Bucket() {
-    UnloadTexture(atlasBucket);
+    UnloadTexture(texture);
 }
 
-void Bucket::SetPosition(void) {
-    float xPos = GetMousePosition().x;
-    this->x = xPos;
-    collision.x = xPos - atlasBucket.width/2;
-    
-}
-
-Rectangle Bucket::GetCollision() {
+const Rectangle Bucket::GetCollision() const {
     return collision;
 }
 
-Vector2 Bucket::GetPosition(void) {
-    return { x - atlasBucket.width/2, SCREEN_HEIGHT - (POT_SOURCE_HEIGHT * 1.25) };
+const Vector2 Bucket::GetPosition(void) const {
+    return { collision.x, collision.y };
 }
 
-tuple<int, int> Bucket::GetDimensions(void) {
-    return make_tuple(atlasBucket.width, atlasBucket.height);
+// const tuple<int, int> Bucket::GetDimensions(void) const {
+//     return make_tuple(texture.width, texture.height);
+// }
+
+void Bucket::Update(Vector2 mousePosition) {
+    collision.x = mousePosition.x - texture.width/2;
 }
 
-void Bucket::Update(void) {
-    SetPosition();
-}
-
-void Bucket::Render(void) {
+void Bucket::Render(void) const {
     Vector2 position = GetPosition();
     
-    // position.x -= atlasBucket.width/2;
-    // position.y -= atlasBucket.height/2;
+    // position.x -= texture.width/2;
+    // position.y -= texture.height/2;
     
-    DrawTextureRec(atlasBucket, POT_SOURCE_RECTANGLE, position, WHITE);
+    DrawTextureRec(texture, BUCKET_SOURCE_RECTANGLE, position, WHITE);
     // DrawRectangleRec(collision, GREEN);
 }

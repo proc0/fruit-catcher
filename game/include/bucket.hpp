@@ -5,17 +5,15 @@
 #include "lib.h"
 
 class Bucket {
-    Texture2D atlasBucket;
+    Texture2D texture;
     Rectangle collision;
-    float x;
     
     public:
         Bucket();
         ~Bucket();
-        Vector2 GetPosition();
-        Rectangle GetCollision();
-        std::tuple<int, int> GetDimensions();
-        void SetPosition();
-        void Update();
-        void Render();
+        const Vector2 GetPosition() const;
+        const Rectangle GetCollision() const;
+        // const std::tuple<int, int> GetDimensions() const;
+        void Update(Vector2 mousePosition);
+        void Render() const;
 };

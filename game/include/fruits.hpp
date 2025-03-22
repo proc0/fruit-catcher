@@ -13,6 +13,7 @@ typedef struct Fruit {
     Vector2 lastPos;
     Vector2 acceleration;
     Vector2 velocity;
+    Vector2 force;
     float atlasXPos;
     float atlasYPos;
     bool active;
@@ -29,7 +30,7 @@ class Fruits {
         void Remove(Fruit&);
         void Add(Fruit&);
         void Spawn();
-        void UpdateMovement(Fruit&);
-        tuple<int, int> Update(Bucket&);
-        void Render();
+        void UpdateMovement(Fruit&, Rectangle collision);
+        const tuple<int, int> Update(Bucket&);
+        void Render() const;
 };

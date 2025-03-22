@@ -40,7 +40,7 @@ void Fruits::Add(Fruit &fruit) {
     fruit.collision = { fruit.position.x, fruit.position.y, FRUIT_ATLAS_WIDTH/2, FRUIT_ATLAS_HEIGHT/2 };
 
     fruit.acceleration = { 0.0f, 0.0f };
-
+    fruit.force = { -2.0f, 982.0f };
     // int velY = GetRandomValue(FRUIT_FALL_SPEED_MIN, FRUIT_FALL_SPEED_MAX);
     // int velX = GetRandomValue(0, 75);
 
@@ -67,7 +67,7 @@ void Fruits::Spawn(void) {
     Add(fruits[availableIndex]);
 }
 
-void Fruits::UpdateMovement(Fruit &fruit) {
+void Fruits::UpdateMovement(Fruit &fruit, Rectangle collision) {
     float deltaTime = GetFrameTime();
     float deltaHalf = deltaTime * 0.5f;
     float deltaSquare = deltaTime * deltaHalf;
@@ -77,14 +77,21 @@ void Fruits::UpdateMovement(Fruit &fruit) {
     fruit.collision.x = fruit.position.x;
     fruit.collision.y = fruit.position.y;
     // calculate new velocity by applying forces
-    Vector2 force = { -2.0f, 982.0f }; // NOTE: can have multiple forces later
-    fruit.velocity = fruit.velocity + (fruit.acceleration + force) * deltaHalf;
+    // Vector2 force = { -2.0f, 982.0f };
+    if(collision.x) {
+        fruit.force.x -= collision.width*15.0f;
+        fruit.force.y -= collision.height*20.0f;
+    } else {
+        fruit.force.x = 2.0f;
+        fruit.force.y = 982.0f;
+    }
+    fruit.velocity = fruit.velocity + (fruit.acceleration + fruit.force) * deltaHalf;
     // set last acceleration and last position
-    fruit.acceleration = force;
+    fruit.acceleration = fruit.force;
     fruit.lastPos = fruit.position;
 }
 
-tuple<int, int> Fruits::Update(Bucket &bucket) {
+const tuple<int, int> Fruits::Update(Bucket &bucket) {
     int lives = 0;
     int score = 0;
 
@@ -95,35 +102,42 @@ tuple<int, int> Fruits::Update(Bucket &bucket) {
     }
 
     for(int i=0; i<GAME_FRUITS_MAX; i++){
-        if(!fruits[i].active){
+        Fruit &fruit = fruits[i];
+
+        if(!fruit.active){
             continue;
         }
             
-        if(fruits[i].position.y > SCREEN_HEIGHT) {
+        if(fruit.position.y > SCREEN_HEIGHT) {
             lives--;
-            Remove(fruits[i]);
+            Remove(fruit);
             continue;
         }
 
-        tuple<int, int> bucketDimensions = bucket.GetDimensions();
-        int bucketWidth = get<0>(bucketDimensions);
-        Rectangle bucketCollision = bucket.GetCollision();
-        if(CheckCollisionRecs(fruits[i].collision, bucketCollision)) {
-            Rectangle collision = GetCollisionRec(fruits[i].collision, bucketCollision);
-            if(collision.width > bucketWidth/4 && collision.height < 20){
-                score++;
-                Remove(fruits[i]);
-                continue;
-            }
-        }
+        const Rectangle bucketCollision = bucket.GetCollision();
+        if(CheckCollisionRecs(fruit.collision, bucketCollision)) {
+            const Rectangle collision = GetCollisionRec(fruit.collision, bucketCollision);
+            // TODO: calculate if force is from left or right by comparing collision.x to bucketWidth or collision.width??
+            // then pass that into UpdateMovement, and make a struct with isColliding, bool fromLeft, and collision info
+            // tuple<int, int> bucketDimensions = bucket.GetDimensions();
+            // int bucketWidth = get<0>(bucketDimensions);
 
-        UpdateMovement(fruits[i]);
+            if(collision.width > bucketCollision.width/4 && collision.height < 20){
+                score++;
+                Remove(fruit);
+                continue;
+            } else {
+                UpdateMovement(fruit, collision);
+            }
+        } else {
+            UpdateMovement(fruit, {});
+        }
     }
 
     return make_tuple(lives, score);
 }
 
-void Fruits::Render(void) {
+void Fruits::Render(void) const {
     for(int i=0; i<GAME_FRUITS_MAX; i++){
         if(!fruits[i].active){
             continue;

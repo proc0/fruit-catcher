@@ -31,15 +31,15 @@ Display::~Display(void) {
     UnloadTexture(textureStartMenu);
 }
 
-bool Display::isStartButtonClicked(void) {
+const bool Display::isStartButtonClicked(void) const {
     return startButtonState == CLICKED;
 }
 
-bool Display::isQuitButtonClicked(void) {
+const bool Display::isQuitButtonClicked(void) const {
     return quitButtonState == CLICKED;
 }
 
-void Display::UpdateStartMenu(Vector2 mousePosition){
+void Display::UpdateStartMenu(Vector2 mousePosition) {
     if (CheckCollisionPointRec(mousePosition, startButtonCollision)) {
         startButtonState = HOVER;
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -65,7 +65,7 @@ void Display::UpdateStartMenu(Vector2 mousePosition){
     }
 }
 
-void Display::DisplayStartMenu(void) {
+void Display::RenderStartMenu(void) const {
     const int centerPanel = SCREEN_HALF_WIDTH - textureStartMenu.width/2;
     const int verticalAlignPanel = SCREEN_HEIGHT/2 - textureStartMenu.height/2;
     DrawTexture(textureStartMenu, centerPanel, verticalAlignPanel, WHITE);
@@ -83,7 +83,7 @@ void Display::DisplayStartMenu(void) {
     DrawText(textQuit, centerGameStart, verticalAlignGameQuit, TITLE_FONT_SIZE, BLACK);
 }
 
-void Display::DisplayGameOver(int lives, int score, float timeEnd, float timeStart) {
+void Display::RenderGameOver(int lives, int score, float timeEnd, float timeStart) const {
     DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Fade(WHITE, 0.8f));
 
     const char *scoreText = TextFormat(textScore, score);
@@ -105,7 +105,7 @@ void Display::DisplayGameOver(int lives, int score, float timeEnd, float timeSta
     DrawText(totalTime, SUBTITLE_FONT_SIZE, SCREEN_HEIGHT - 40, SUBTITLE_FONT_SIZE, DARKGRAY);
 }
 
-void Display::DisplayHUD(int lives, int score) {
+void Display::Render(int lives, int score) const {
     const char *scoreText = TextFormat(textScore, score);
     const char *livesText = TextFormat(textLives, lives);
     DrawText(scoreText, 10, 10, 32, BLACK);
