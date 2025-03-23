@@ -5,18 +5,17 @@
 #include "lib.h"
 #include "bucket.hpp"
 
-using namespace std;
-
 typedef struct Fruit {
     Rectangle collision;
+    Rectangle impactCollision;
     Vector2 position;
-    Vector2 lastPos;
-    Vector2 acceleration;
     Vector2 velocity;
     Vector2 force;
+    float mass;
     float atlasXPos;
     float atlasYPos;
     bool active;
+    bool collided;
 } Fruit;
 
 class Fruits {
@@ -30,7 +29,7 @@ class Fruits {
         void Remove(Fruit&);
         void Add(Fruit&);
         void Spawn();
-        void UpdateMovement(Fruit&, Rectangle collision);
-        const tuple<int, int> Update(Bucket&);
+        void UpdateMovement(Fruit&);
+        const std::tuple<int, int> Update(Bucket&);
         void Render() const;
 };
