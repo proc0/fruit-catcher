@@ -9,8 +9,6 @@
 #define FRUIT_ATLAS_RECT(xPos, yPos) CLITERAL(Rectangle){xPos, yPos, FRUIT_ATLAS_WIDTH, FRUIT_ATLAS_HEIGHT}
 
 #define FRUIT_TIME_INTERVAL 1.0f
-#define FRUIT_FALL_SPEED_MIN 150
-#define FRUIT_FALL_SPEED_MAX 250
 #define GRAVITY 982.0f
 
 using namespace std;
@@ -21,8 +19,6 @@ Fruits::Fruits() {
     for(int i=0; i < GAME_FRUITS_MAX; i++){
         Remove(fruits[i]);
     }
-    // ball = { 0.0f, 0.0f, 982.0f, 1.0f };
-    // ballRect = Rectangle({ 0, 0, 100, 100 });
 }
 
 Fruits::~Fruits() {
@@ -47,15 +43,12 @@ void Fruits::Add(Fruit &fruit) {
     fruit.mass = 1.0f;
     fruit.velocity = { 0.0f, 0.0f };
     fruit.collided = false;
-    fruit.impactCollision = {0};
-    // int velY = GetRandomValue(FRUIT_FALL_SPEED_MIN, FRUIT_FALL_SPEED_MAX);
-    // int velX = GetRandomValue(0, 75);
 
     float forceX = GetRandomValue(0, 500);
     if(fruit.position.x > SCREEN_WIDTH/2) {
         forceX = GetRandomValue(-500, 0);
     }
-    // fruit.velocity = { velX, 0.0f };
+
     fruit.force = { forceX, GRAVITY };
 
 }
@@ -79,10 +72,10 @@ void Fruits::Spawn(void) {
 
 void Fruits::UpdateMovement(Fruit &fruit) {
     
-    if(fruit.impactCollision.x > 0 && !fruit.collided) {
+    if(fruit.velocity.x > 0 && fruit.collided) {
         fruit.velocity.x = -fruit.velocity.x;
         fruit.velocity.y = -fruit.velocity.y;
-        fruit.collided = true;
+        fruit.collided = false;
     } 
 
     float deltaTime = GetFrameTime();
@@ -121,22 +114,21 @@ const tuple<int, int> Fruits::Update(Bucket &bucket) {
         }
             
         if(fruit.position.y > SCREEN_HEIGHT) {
-            // lives--;
+            lives--;
             Remove(fruit);
             continue;
         }
 
         const Rectangle bucketCollision = bucket.GetCollision();
         if(CheckCollisionCircleRec(fruit.collision, FRUIT_COLLISION_RADIUS, bucketCollision)) {
-            const Rectangle collision = GetCollisionRec({fruit.collision.x, fruit.collision.y, FRUIT_COLLISION_RADIUS, FRUIT_COLLISION_RADIUS}, bucketCollision);
 
-            if(collision.width > bucketCollision.width/4 && collision.height < 20){
+            if(fruit.collision.x - FRUIT_COLLISION_RADIUS + 10 > bucketCollision.x && fruit.collision.x + FRUIT_COLLISION_RADIUS - 10 < bucketCollision.x + bucketCollision.width){
                 score++;
                 Remove(fruit);
                 continue;
             }
 
-            fruit.impactCollision = collision;
+            fruit.collided = true;
         } 
         
         UpdateMovement(fruit);

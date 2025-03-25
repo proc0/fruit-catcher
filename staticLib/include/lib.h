@@ -12,7 +12,7 @@
 #define TEXT_SCORE "SCORE: %d"
 #define TEXT_LIVES "LIVES: %d"
 
-#define GAME_LIVES 3
+#define GAME_LIVES 10
 #define GAME_SCORE_UNIT 100
 #define GAME_FRUITS_MAX 8
 
