@@ -6,8 +6,8 @@
 #include "bucket.hpp"
 
 typedef struct Fruit {
-    Rectangle collision;
     Rectangle impactCollision;
+    Vector2 collision;
     Vector2 position;
     Vector2 velocity;
     Vector2 force;
