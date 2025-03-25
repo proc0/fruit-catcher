@@ -11,8 +11,6 @@
 #define FRUIT_TIME_INTERVAL 1.0f
 #define GRAVITY 982.0f
 
-using namespace std;
-
 Fruits::Fruits() {
     atlasFruit = LoadTexture(FRUIT_ATLAS_URI);
     timeNextFruit = FRUIT_TIME_INTERVAL;
@@ -50,7 +48,6 @@ void Fruits::Add(Fruit &fruit) {
     }
 
     fruit.force = { forceX, GRAVITY };
-
 }
 
 void Fruits::Spawn(void) {
@@ -96,7 +93,7 @@ void Fruits::UpdateMovement(Fruit &fruit) {
     }
 }
 
-const tuple<int, int> Fruits::Update(Bucket &bucket) {
+const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
     int lives = 0;
     int score = 0;
 
@@ -134,7 +131,7 @@ const tuple<int, int> Fruits::Update(Bucket &bucket) {
         UpdateMovement(fruit);
     }
 
-    return make_tuple(lives, score);
+    return std::make_tuple(lives, score);
 }
 
 void Fruits::Render(void) const {

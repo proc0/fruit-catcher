@@ -3,7 +3,7 @@
 #include "raylib.h"
 #include "raymath.h"
 
-#define TEXT_GAME_TITLE "Fruit Catcher"
+#define TEXT_GAME_TITLE "Fruit\nCatcher"
 #define TEXT_GAME_START "New Game"
 #define TEXT_GAME_QUIT "Quit"
 #define TEXT_GAME_OVER "Game Over"

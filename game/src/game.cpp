@@ -64,12 +64,12 @@ void Game::Render() const {
         stage.Render();
     }
 
-    if(state == START) {
-        display.RenderStartMenu();
-    }
-
     if(state == OVER) {
         display.RenderGameOver(lives, score, timeEnd, timeStart);
+    }
+
+    if(state == START) {
+        display.RenderStartMenu();
     }
 
     if(state == PLAY) {

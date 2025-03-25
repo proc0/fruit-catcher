@@ -11,7 +11,8 @@ const char *gameOver = TEXT_GAME_OVER;
 const char *restartMessage = TEXT_RESTART;
 const char *textTimePlayed = TEXT_TIME_PLAYED;
 
-static constexpr int TITLE_FONT_SIZE = 40;
+static constexpr int TITLE_FONT_SIZE = 58;
+static constexpr int TEXT_MENU_FONT_SIZE = 44;
 static constexpr int SUBTITLE_FONT_SIZE = 20;
 static constexpr int SCORE_FONT_SIZE = 32;
 static constexpr int SCREEN_HALF_WIDTH = SCREEN_WIDTH/2;
@@ -19,12 +20,12 @@ static constexpr int SCREEN_HALF_WIDTH = SCREEN_WIDTH/2;
 Display::Display(void) {
     textureStartMenu = LoadTexture(START_MENU_IMAGE);
 
-    const float centerGameStart = SCREEN_HALF_WIDTH - MeasureText(textStart, TITLE_FONT_SIZE)/2;
+    const float centerGameStart = SCREEN_HALF_WIDTH - MeasureText(textStart, TEXT_MENU_FONT_SIZE)/2;
     const float verticalAlignGameStart = SCREEN_HEIGHT/2 + 30;
-    startButtonCollision = { centerGameStart, verticalAlignGameStart, float(MeasureText(textStart, TITLE_FONT_SIZE)), TITLE_FONT_SIZE };
+    startButtonCollision = { centerGameStart, verticalAlignGameStart, float(MeasureText(textStart, TEXT_MENU_FONT_SIZE)), TEXT_MENU_FONT_SIZE };
 
     const int verticalAlignGameQuit = SCREEN_HEIGHT/2 + 80;
-    quitButtonCollision = { centerGameStart, verticalAlignGameQuit, float(MeasureText(textQuit, TITLE_FONT_SIZE)), TITLE_FONT_SIZE };
+    quitButtonCollision = { centerGameStart, verticalAlignGameQuit, float(MeasureText(textQuit, TEXT_MENU_FONT_SIZE)), TEXT_MENU_FONT_SIZE };
 }
 
 Display::~Display(void) {
@@ -71,16 +72,18 @@ void Display::RenderStartMenu(void) const {
     DrawTexture(textureStartMenu, centerPanel, verticalAlignPanel, WHITE);
 
     const int centerGameTitle = SCREEN_HALF_WIDTH - MeasureText(textGameTitle, TITLE_FONT_SIZE)/2;
-    const int verticalAlignGameTitle = SCREEN_HEIGHT/2 - 100;
+    const int verticalAlignGameTitle = SCREEN_HEIGHT/2 - 140;
     DrawText(textGameTitle, centerGameTitle, verticalAlignGameTitle, TITLE_FONT_SIZE, BLACK);
 
-    const int centerGameStart = SCREEN_HALF_WIDTH - MeasureText(textStart, TITLE_FONT_SIZE)/2;
+    const int centerGameStart = SCREEN_HALF_WIDTH - MeasureText(textStart, TEXT_MENU_FONT_SIZE)/2;
     const int verticalAlignGameStart = SCREEN_HEIGHT/2 + 30;
-    DrawText(textStart, centerGameStart, verticalAlignGameStart, TITLE_FONT_SIZE, BLACK);
+    const Color startColor = startButtonState == HOVER ? RED : BLACK;
+    DrawText(textStart, centerGameStart, verticalAlignGameStart, TEXT_MENU_FONT_SIZE, startColor);
     //DrawRectangleRec(startButtonCollision, RED);
 
     const int verticalAlignGameQuit = SCREEN_HEIGHT/2 + 80;
-    DrawText(textQuit, centerGameStart, verticalAlignGameQuit, TITLE_FONT_SIZE, BLACK);
+    const Color quitColor = quitButtonState == HOVER ? RED : BLACK;
+    DrawText(textQuit, centerGameStart, verticalAlignGameQuit, TEXT_MENU_FONT_SIZE, quitColor);
 }
 
 void Display::RenderGameOver(int lives, int score, float timeEnd, float timeStart) const {
