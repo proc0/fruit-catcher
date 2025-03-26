@@ -1,6 +1,7 @@
 #include "display.hpp"
 
 #define START_MENU_IMAGE "resources/start_menu_panel.png"
+#define HUD_PANEL "resources/hud_panel.png"
 
 const char *textGameTitle = TEXT_GAME_TITLE;
 const char *textStart = TEXT_GAME_START;
@@ -19,7 +20,8 @@ static constexpr int SCREEN_HALF_WIDTH = SCREEN_WIDTH/2;
 
 Display::Display(void) {
     textureStartMenu = LoadTexture(START_MENU_IMAGE);
-
+    hudPanel = LoadTexture(HUD_PANEL);
+    
     const float centerGameStart = SCREEN_HALF_WIDTH - MeasureText(textStart, TEXT_MENU_FONT_SIZE)/2;
     const float verticalAlignGameStart = SCREEN_HEIGHT/2 + 30;
     startButtonCollision = { centerGameStart, verticalAlignGameStart, float(MeasureText(textStart, TEXT_MENU_FONT_SIZE)), TEXT_MENU_FONT_SIZE };
@@ -30,6 +32,7 @@ Display::Display(void) {
 
 Display::~Display(void) {
     UnloadTexture(textureStartMenu);
+    UnloadTexture(hudPanel);
 }
 
 const bool Display::isStartButtonClicked(void) const {
@@ -109,8 +112,17 @@ void Display::RenderGameOver(int lives, int score, float timeEnd, float timeStar
 }
 
 void Display::Render(int lives, int score) const {
-    const char *scoreText = TextFormat(textScore, score);
-    const char *livesText = TextFormat(textLives, lives);
-    DrawText(scoreText, 10, 10, 32, BLACK);
-    DrawText(livesText, 10, 35, 24, DARKGRAY);
+    DrawTexture(hudPanel, 20, 20, WHITE);
+
+    // const char *scoreText = TextFormat(textScore);
+    // const char *livesText = TextFormat(textLives);
+    // const char *scoreNum = TextFormat(score);
+    // const char *livesNum = TextFormat(lives);
+    const char *scoreNum = TextFormat("%d", score);
+    const char *livesNum = TextFormat("%d", lives);
+    DrawText(livesNum, 32, 32, 72, BLACK);
+    DrawText(textLives, 28, 115, 18, BLACK);
+
+    DrawText(scoreNum, 100, 72, 42, BLACK);
+    DrawText(textScore, 100, 115, 18, BLACK);
 }

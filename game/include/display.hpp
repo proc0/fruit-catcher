@@ -4,6 +4,7 @@
 
 class Display {
     Texture2D textureStartMenu;
+    Texture2D hudPanel;
     Rectangle startButtonCollision;
     Rectangle quitButtonCollision;
     enum ButtonState {

@@ -9,8 +9,8 @@
 #define TEXT_GAME_OVER "Game Over"
 #define TEXT_RESTART "Press R to restart"
 #define TEXT_TIME_PLAYED "Time Played: %d minutes and %d seconds"
-#define TEXT_SCORE "SCORE: %d"
-#define TEXT_LIVES "LIVES: %d"
+#define TEXT_SCORE "SCORE"
+#define TEXT_LIVES "LIVES"
 
 #define GAME_LIVES 10
 #define GAME_SCORE_UNIT 100
