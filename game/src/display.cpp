@@ -2,8 +2,9 @@
 
 #define START_MENU_IMAGE "resources/start_menu_panel.png"
 #define HUD_PANEL "resources/hud_panel.png"
+#define FRUIT_ICON_URI "resources/fruit_icon.png"
 
-const char *textGameTitle = TEXT_GAME_TITLE;
+const char *textGameTitle = TEXT_START_MENU_TITLE;
 const char *textStart = TEXT_GAME_START;
 const char *textQuit = TEXT_GAME_QUIT;
 const char *textScore = TEXT_SCORE;
@@ -20,7 +21,7 @@ static constexpr int SCREEN_HALF_WIDTH = SCREEN_WIDTH/2;
 
 Display::Display(void) {
     textureStartMenu = LoadTexture(START_MENU_IMAGE);
-    hudPanel = LoadTexture(HUD_PANEL);
+    fruitIcon = LoadTexture(FRUIT_ICON_URI);
     
     const float centerGameStart = SCREEN_HALF_WIDTH - MeasureText(textStart, TEXT_MENU_FONT_SIZE)/2;
     const float verticalAlignGameStart = SCREEN_HEIGHT/2 + 30;
@@ -32,7 +33,7 @@ Display::Display(void) {
 
 Display::~Display(void) {
     UnloadTexture(textureStartMenu);
-    UnloadTexture(hudPanel);
+    UnloadTexture(fruitIcon);
 }
 
 const bool Display::isStartButtonClicked(void) const {
@@ -112,17 +113,12 @@ void Display::RenderGameOver(int lives, int score, float timeEnd, float timeStar
 }
 
 void Display::Render(int lives, int score) const {
-    DrawTexture(hudPanel, 20, 20, WHITE);
-
-    // const char *scoreText = TextFormat(textScore);
-    // const char *livesText = TextFormat(textLives);
-    // const char *scoreNum = TextFormat(score);
-    // const char *livesNum = TextFormat(lives);
-    const char *scoreNum = TextFormat("%d", score);
+    const char *scoreNum = TextFormat("%d", score * 50);
     const char *livesNum = TextFormat("%d", lives);
-    DrawText(livesNum, 32, 32, 72, BLACK);
-    DrawText(textLives, 28, 115, 18, BLACK);
+    DrawText(textLives, 28, 32, 18, WHITE);
+    DrawText(livesNum, 28, 55, 72, WHITE);
 
-    DrawText(scoreNum, 100, 72, 42, BLACK);
-    DrawText(textScore, 100, 115, 18, BLACK);
+    DrawTexture(fruitIcon, 100, 32, WHITE);
+    DrawText("x", 100, 85, 18, WHITE);
+    DrawText(scoreNum, 115, 75, 32, WHITE);
 }
