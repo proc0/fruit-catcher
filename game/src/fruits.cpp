@@ -13,13 +13,17 @@
 Fruits::Fruits() {
     atlasFruit = LoadTexture(FRUIT_ATLAS_URI);
     timeNextFruit = FRUIT_TIME_INTERVAL;
-    for(int i=0; i < GAME_FRUITS_MAX; i++){
-        Remove(fruits[i]);
-    }
+    Reset();
 }
 
 Fruits::~Fruits() {
     UnloadTexture(atlasFruit);
+}
+
+void Fruits::Reset(void){
+    for(int i=0; i < GAME_FRUITS_MAX; i++){
+        Remove(fruits[i]);
+    }
 }
 
 void Fruits::Remove(Fruit &fruit) {
@@ -74,6 +78,7 @@ void Fruits::UpdateMovement(Fruit &fruit) {
         fruit.velocity.x = -fruit.velocity.x;
         fruit.velocity.y = -fruit.velocity.y;
         fruit.collided = false;
+        fruit.debounce = true;
     } 
 
     float deltaTime = GetFrameTime();
@@ -90,13 +95,12 @@ void Fruits::UpdateMovement(Fruit &fruit) {
     fruit.velocity.x = fruit.velocity.x + accelerationX * deltaTime;
 
     if(fruit.velocity.y < 0) {
-        if(!fruit.debounce){
-            fruit.debounce = true;
-        }
         fruit.velocity.y += GRAVITY * deltaTime;
+    } else {
+        fruit.debounce = false;
     }
 
-    fruit.rotation += fruit.force.x * deltaTime;
+    fruit.rotation += accelerationX/2 * deltaTime;
 }
 
 const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
@@ -123,15 +127,14 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
         }
 
         const Rectangle bucketCollision = bucket.GetCollision();
-        fruit.debounce = fruit.debounce && GetFrameTime() == 0.0f ? false : fruit.debounce;
-        if(fruit.collision.y + FRUIT_COLLISION_RADIUS >= bucketCollision.y && CheckCollisionCircleRec(fruit.collision, FRUIT_COLLISION_RADIUS, bucketCollision)) {
+        if(!fruit.debounce && CheckCollisionCircleRec(fruit.collision, FRUIT_COLLISION_RADIUS, bucketCollision)) {
 
             if(fruit.collision.x - FRUIT_COLLISION_RADIUS > bucketCollision.x && fruit.collision.x + FRUIT_COLLISION_RADIUS < bucketCollision.x + bucketCollision.width){
                 score++;
                 Remove(fruit);
                 continue;
             }
-            
+
             fruit.collided = true;
         } 
         

@@ -29,6 +29,7 @@ class Fruits {
         ~Fruits();
         void Remove(Fruit&);
         void Add(Fruit&);
+        void Reset();
         void Spawn();
         void UpdateMovement(Fruit&);
         const std::tuple<int, int> Update(Bucket&);

@@ -30,6 +30,7 @@ void Game::Update() {
 
     if(state == OVER) {
         if(IsKeyPressed(KEY_R)){
+            fruits.Reset();
             Begin();
         }
     }
