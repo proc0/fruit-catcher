@@ -4,8 +4,7 @@
 #define FRUIT_ATLAS_WIDTH 150
 #define FRUIT_ATLAS_HEIGHT 150
 #define FRUIT_ATLAS_TYPES 4
-#define FRUIT_COLLISION_OFFSET 75
-#define FRUIT_COLLISION_RADIUS 50
+#define FRUIT_COLLISION_RADIUS 40
 #define FRUIT_ATLAS_RECT(xPos, yPos) CLITERAL(Rectangle){xPos, yPos, FRUIT_ATLAS_WIDTH, FRUIT_ATLAS_HEIGHT}
 
 #define FRUIT_TIME_INTERVAL 1.0f
@@ -36,11 +35,12 @@ void Fruits::Add(Fruit &fruit) {
     int posX = GetRandomValue(FRUIT_ATLAS_WIDTH, SCREEN_WIDTH - FRUIT_ATLAS_WIDTH);
     fruit.position = { float(posX), -FRUIT_ATLAS_HEIGHT };
 
-    fruit.collision = { fruit.position.x + FRUIT_COLLISION_OFFSET, fruit.position.y + FRUIT_COLLISION_OFFSET };
+    fruit.collision = { fruit.position.x + FRUIT_ATLAS_HEIGHT/2, fruit.position.y + FRUIT_ATLAS_HEIGHT/2 };
 
     fruit.mass = 1.0f;
     fruit.velocity = { 0.0f, 0.0f };
     fruit.collided = false;
+    fruit.debounce = false;
 
     float forceX = GetRandomValue(0, 500);
     if(fruit.position.x > SCREEN_WIDTH/2) {
@@ -69,7 +69,7 @@ void Fruits::Spawn(void) {
 
 void Fruits::UpdateMovement(Fruit &fruit) {
     
-    if(fruit.velocity.x > 0 && fruit.collided) {
+    if(fruit.collided && !fruit.debounce) {
         fruit.velocity.x = -fruit.velocity.x;
         fruit.velocity.y = -fruit.velocity.y;
         fruit.collided = false;
@@ -79,16 +79,19 @@ void Fruits::UpdateMovement(Fruit &fruit) {
 
     float accelerationX = fruit.force.x/fruit.mass;
     fruit.position.x = fruit.position.x + fruit.velocity.x * deltaTime + accelerationX * deltaTime * deltaTime * 0.5f;
-    fruit.collision.x = fruit.position.x + FRUIT_COLLISION_OFFSET;
+    fruit.collision.x = fruit.position.x + FRUIT_ATLAS_HEIGHT/2;
 
     float accelerationY = fruit.force.y/fruit.mass;
     fruit.position.y = fruit.position.y + fruit.velocity.y * deltaTime + accelerationY * deltaTime * deltaTime * 0.5f;
-    fruit.collision.y = fruit.position.y + FRUIT_COLLISION_OFFSET;
+    fruit.collision.y = fruit.position.y + FRUIT_ATLAS_HEIGHT/2;
 
     fruit.velocity.y = fruit.velocity.y + accelerationY * deltaTime;
     fruit.velocity.x = fruit.velocity.x + accelerationX * deltaTime;
 
     if(fruit.velocity.y < 0) {
+        if(!fruit.debounce){
+            fruit.debounce = true;
+        }
         fruit.velocity.y += GRAVITY * deltaTime;
     }
 }
@@ -117,14 +120,14 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
         }
 
         const Rectangle bucketCollision = bucket.GetCollision();
-        if(CheckCollisionCircleRec(fruit.collision, FRUIT_COLLISION_RADIUS, bucketCollision)) {
+        if(fruit.collision.y >= bucketCollision.y && CheckCollisionCircleRec(fruit.collision, FRUIT_COLLISION_RADIUS, bucketCollision)) {
 
-            if(fruit.collision.x - FRUIT_COLLISION_RADIUS + 10 > bucketCollision.x && fruit.collision.x + FRUIT_COLLISION_RADIUS - 10 < bucketCollision.x + bucketCollision.width){
+            if(fruit.collision.x - FRUIT_COLLISION_RADIUS > bucketCollision.x && fruit.collision.x + FRUIT_COLLISION_RADIUS < bucketCollision.x + bucketCollision.width){
                 score++;
                 Remove(fruit);
                 continue;
             }
-
+            fruit.debounce = GetFrameTime() == 0.0f ? false : fruit.debounce;
             fruit.collided = true;
         } 
         

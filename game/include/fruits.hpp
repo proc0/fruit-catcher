@@ -15,6 +15,7 @@ typedef struct Fruit {
     float atlasYPos;
     bool active;
     bool collided;
+    bool debounce;
 } Fruit;
 
 class Fruits {
