@@ -11,6 +11,7 @@ typedef struct Fruit {
     Vector2 velocity;
     Vector2 force;
     float mass;
+    float rotation;
     float atlasXPos;
     float atlasYPos;
     bool active;
