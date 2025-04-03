@@ -4,6 +4,7 @@
 
 class Display {
     Texture2D textureStartMenu;
+    Texture2D gameOverPanel;
     Texture2D fruitIcon;
     Rectangle startButtonCollision;
     Rectangle quitButtonCollision;

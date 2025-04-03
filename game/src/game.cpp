@@ -29,9 +29,15 @@ void Game::Update() {
     }
 
     if(state == OVER) {
-        if(IsKeyPressed(KEY_R)){
+        display.UpdateStartMenu(mousePosition);
+
+        if(display.isStartButtonClicked() || IsKeyPressed(KEY_R)){
             fruits.Reset();
             Begin();
+        }
+
+        if(display.isQuitButtonClicked()){
+            End();
         }
     }
 
