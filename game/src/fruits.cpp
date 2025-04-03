@@ -60,7 +60,7 @@ void Fruits::Add(Fruit &fruit) {
         radius: FRUIT_COLLISION_RADIUS * ratio 
     };
 
-    fruit.mass = 1.0f + ratio;
+    fruit.mass = ratio;
     fruit.velocity = { 0.0f, 0.0f };
     fruit.collided = false;
     fruit.debounce = false;
@@ -92,32 +92,38 @@ void Fruits::Spawn(void) {
 
 
 void Fruits::UpdateMovement(Fruit &fruit) {
-    
+    // Velocity Verlet Integration
+    // (i)   x(t+Δt) = x(t) + v(t)Δt + 1/2a(t)Δt^2
+    // (ii)  a(t+Δt) = f(x(t+Δt))
+    // (iii) v(t+Δt) = v(t) + 1/2(a(t)+a(t+Δt))Δt
+
+    // Δt and Δt * 1/2
+    const float deltaTime = GetFrameTime();
+    const float halfTime = deltaTime * 0.5f;
+    // [acceleration] with F=ma
+    const Vector2 acceleration = fruit.force/fruit.mass;
+    // [next position] expanding first equation to match order (i)
+    // x(t+Δt) = x(t) + v(t) * Δt + a(t) * Δt * (Δt * 1/2)
+    fruit.position = fruit.position + fruit.velocity * deltaTime + acceleration * deltaTime * halfTime;
+    // [next velocity] without force change (iii)
+    // v(t+Δt) = v(t) + a(t)Δt
+    fruit.velocity = fruit.velocity + acceleration * deltaTime;
+
+    // [rotation]
+    fruit.rotation += acceleration.x * halfTime;
+    // reverse direction to bounce
     if(fruit.collided && !fruit.debounce) {
-        fruit.velocity.x = -fruit.velocity.x;
-        fruit.velocity.y = -fruit.velocity.y;
+        fruit.velocity *= -1;
         fruit.collided = false;
         fruit.debounce = true;
-    } 
-
-    float deltaTime = GetFrameTime();
-
-    float accelerationX = fruit.force.x/fruit.mass;
-    fruit.position.x = fruit.position.x + fruit.velocity.x * deltaTime + accelerationX * deltaTime * deltaTime * 0.5f;
-
-    float accelerationY = fruit.force.y/fruit.mass;
-    fruit.position.y = fruit.position.y + fruit.velocity.y * deltaTime + accelerationY * deltaTime * deltaTime * 0.5f;
-
-    fruit.velocity.y = fruit.velocity.y + accelerationY * deltaTime;
-    fruit.velocity.x = fruit.velocity.x + accelerationX * deltaTime;
-
+    }
+    // add gravity to bounce
     if(fruit.velocity.y < 0) {
         fruit.velocity.y += GRAVITY * deltaTime;
     } else {
+        // reset debounce on fall
         fruit.debounce = false;
     }
-
-    fruit.rotation += accelerationX/2 * deltaTime;
 }
 
 const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
@@ -136,25 +142,24 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
         if(!fruit.active){
             continue;
         }
-            
+        // fruit hits bottom
         if(fruit.position.y > SCREEN_HEIGHT) {
             lives--;
             Remove(fruit);
             continue;
         }
-
+        // fruit hits bucket
         const Rectangle bucketCollision = bucket.GetCollision();
         const Vector2 fruitCenter = { fruit.position.x + fruit.collision.offset.x, fruit.position.y + fruit.collision.offset.y };
         if(!fruit.debounce && CheckCollisionCircleRec(fruitCenter, fruit.collision.radius, bucketCollision)) {
-
+            fruit.collided = true;
+            // when fruit is above bucket, and fruit is centered with bucket
             if(fruitCenter.y - fruit.collision.radius < bucketCollision.y && fruitCenter.x - fruit.collision.radius > bucketCollision.x && fruitCenter.x + fruit.collision.radius < bucketCollision.x + bucketCollision.width){
                 score++;
                 Remove(fruit);
                 continue;
             }
-
-            fruit.collided = true;
-        } 
+        }
         
         UpdateMovement(fruit);
     }
@@ -164,16 +169,18 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
 
 void Fruits::Render(void) const {
     for(int i=0; i<GAME_FRUITS_MAX; i++){
-        if(!fruits[i].active){
+        const Fruit &fruit = fruits[i];
+
+        if(!fruit.active){
             continue;
         }
 
-        Texture2D fruitSprite = sprites[fruits[i].type];
+        Texture2D fruitSprite = sprites[fruit.type];
         const float fruitWidth = (float)fruitSprite.width;
         const float fruitHeight = (float)fruitSprite.height;
-        DrawTexturePro(fruitSprite, {0, 0, fruitWidth, fruitHeight}, {fruits[i].position.x, fruits[i].position.y, fruitWidth, fruitHeight}, fruits[i].origin, fruits[i].rotation, WHITE);
+        DrawTexturePro(fruitSprite, {0, 0, fruitWidth, fruitHeight}, {fruit.position.x, fruit.position.y, fruitWidth, fruitHeight}, fruit.origin, fruit.rotation, WHITE);
         
-        // const Vector2 fruitCenter = { fruits[i].position.x + fruits[i].collision.offset.x, fruits[i].position.y + fruits[i].collision.offset.y };
-        // DrawCircleV(fruitCenter, fruits[i].collision.radius, BLUE);
+        // const Vector2 fruitCenter = { fruit.position.x + fruit.collision.offset.x, fruit.position.y + fruit.collision.offset.y };
+        // DrawCircleV(fruitCenter, fruit.collision.radius, BLUE);
     }
 }
