@@ -44,7 +44,6 @@ typedef struct Fruit {
     bool debounce;
 } Fruit;
 
-
 static const std::unordered_map<FruitType, std::string> fruit_sprite_uris = {
     {FruitType::APPLE, "resources/fruits/red-apple.png"},
     {FruitType::BANANA, "resources/fruits/banana.png"},

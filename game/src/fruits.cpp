@@ -90,7 +90,6 @@ void Fruits::Spawn(void) {
     Add(fruits[availableIndex]);
 }
 
-
 void Fruits::UpdateMovement(Fruit &fruit) {
     // Velocity Verlet Integration
     // (i)   x(t+Δt) = x(t) + v(t)Δt + 1/2a(t)Δt^2
@@ -100,25 +99,28 @@ void Fruits::UpdateMovement(Fruit &fruit) {
     // Δt and Δt * 1/2
     const float deltaTime = GetFrameTime();
     const float halfTime = deltaTime * 0.5f;
-    // [acceleration] with F=ma
+    // [acceleration] using F=ma
     const Vector2 acceleration = fruit.force/fruit.mass;
-    // [next position] expanding first equation to match order (i)
+    // (i) [next position] expanding first equation to match order
     // x(t+Δt) = x(t) + v(t) * Δt + a(t) * Δt * (Δt * 1/2)
     fruit.position = fruit.position + fruit.velocity * deltaTime + acceleration * deltaTime * halfTime;
-    // [next velocity] without force change (iii)
+    // (iii) [next velocity] without force change (skips (ii))
     // v(t+Δt) = v(t) + a(t)Δt
     fruit.velocity = fruit.velocity + acceleration * deltaTime;
 
-    // [rotation]
+    // [rotation] basic simple rotation effect
     fruit.rotation += acceleration.x * halfTime;
-    // reverse direction to bounce
+    
+    // on collision
     if(fruit.collided && !fruit.debounce) {
+        // reverse direction
         fruit.velocity *= -1;
         fruit.collided = false;
         fruit.debounce = true;
     }
-    // add gravity to bounce
+
     if(fruit.velocity.y < 0) {
+        // add gravity on bounce
         fruit.velocity.y += GRAVITY * deltaTime;
     } else {
         // reset debounce on fall
