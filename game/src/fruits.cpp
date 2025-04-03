@@ -1,23 +1,33 @@
+#include <iostream>
+
 #include "fruits.hpp"
 
-#define FRUIT_ATLAS_URI "resources/atlas_fruits.png"
-#define FRUIT_ATLAS_WIDTH 150
-#define FRUIT_ATLAS_HEIGHT 150
-#define FRUIT_ATLAS_TYPES 4
-#define FRUIT_COLLISION_RADIUS 40
-#define FRUIT_ATLAS_RECT(xPos, yPos) CLITERAL(Rectangle){xPos, yPos, FRUIT_ATLAS_WIDTH, FRUIT_ATLAS_HEIGHT}
-
+#define FRUIT_MAX_SIZE 150.0f
+#define FRUIT_COLLISION_RADIUS 45.0f
 #define FRUIT_TIME_INTERVAL 1.0f
 #define GRAVITY 982.0f
 
 Fruits::Fruits() {
-    atlasFruit = LoadTexture(FRUIT_ATLAS_URI);
+    for (const auto& pair : fruit_sprite_uris) {
+        try {
+            sprites[pair.first] = LoadTexture(pair.second.c_str());
+        } catch (const std::exception& e) {
+            std::cerr << e.what() << '\n';
+            CloseWindow();
+        }
+    }
     timeNextFruit = FRUIT_TIME_INTERVAL;
     Reset();
 }
 
 Fruits::~Fruits() {
-    UnloadTexture(atlasFruit);
+    for (const auto& pair : fruit_sprite_uris) {
+        try {
+            UnloadTexture(sprites[pair.first]);
+        } catch (const std::exception& e) {
+            std::cerr << e.what() << '\n';
+        }
+    }
 }
 
 void Fruits::Reset(void){
@@ -32,16 +42,25 @@ void Fruits::Remove(Fruit &fruit) {
 
 void Fruits::Add(Fruit &fruit) {
     fruit.active = true;
-        
-    fruit.atlasXPos = GetRandomValue(0, FRUIT_ATLAS_TYPES-1) * FRUIT_ATLAS_WIDTH;
-    fruit.atlasYPos = GetRandomValue(0, FRUIT_ATLAS_TYPES-1) * FRUIT_ATLAS_HEIGHT;
+    fruit.type = (FruitType)GetRandomValue(0, GAME_FRUIT_TYPES-1);
 
-    int posX = GetRandomValue(FRUIT_ATLAS_WIDTH, SCREEN_WIDTH - FRUIT_ATLAS_WIDTH);
-    fruit.position = { float(posX), -FRUIT_ATLAS_HEIGHT };
+    Texture2D fruitSprite = sprites[fruit.type];
+    const float fruitWidth = (float)fruitSprite.width;
+    const float fruitHeight = (float)fruitSprite.height;
 
-    fruit.collision = { fruit.position.x + FRUIT_ATLAS_HEIGHT/2, fruit.position.y + FRUIT_ATLAS_HEIGHT/2 };
+    const int posX = GetRandomValue(fruitWidth, SCREEN_WIDTH - fruitHeight);
+    fruit.position = { float(posX), -fruitHeight };
+    fruit.origin = { fruitWidth/2, fruitHeight/2 };
 
-    fruit.mass = 1.0f;
+    const int longSide = fruitWidth > fruitHeight ? fruitWidth : fruitHeight;
+    const float ratio = longSide / FRUIT_MAX_SIZE;
+    
+    fruit.collision = { 
+        offset: { 0, 0 },
+        radius: FRUIT_COLLISION_RADIUS * ratio 
+    };
+
+    fruit.mass = 1.0f + ratio;
     fruit.velocity = { 0.0f, 0.0f };
     fruit.collided = false;
     fruit.debounce = false;
@@ -85,11 +104,9 @@ void Fruits::UpdateMovement(Fruit &fruit) {
 
     float accelerationX = fruit.force.x/fruit.mass;
     fruit.position.x = fruit.position.x + fruit.velocity.x * deltaTime + accelerationX * deltaTime * deltaTime * 0.5f;
-    fruit.collision.x = fruit.position.x;
 
     float accelerationY = fruit.force.y/fruit.mass;
     fruit.position.y = fruit.position.y + fruit.velocity.y * deltaTime + accelerationY * deltaTime * deltaTime * 0.5f;
-    fruit.collision.y = fruit.position.y;
 
     fruit.velocity.y = fruit.velocity.y + accelerationY * deltaTime;
     fruit.velocity.x = fruit.velocity.x + accelerationX * deltaTime;
@@ -127,9 +144,10 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
         }
 
         const Rectangle bucketCollision = bucket.GetCollision();
-        if(!fruit.debounce && CheckCollisionCircleRec(fruit.collision, FRUIT_COLLISION_RADIUS, bucketCollision)) {
+        const Vector2 fruitCenter = { fruit.position.x + fruit.collision.offset.x, fruit.position.y + fruit.collision.offset.y };
+        if(!fruit.debounce && CheckCollisionCircleRec(fruitCenter, fruit.collision.radius, bucketCollision)) {
 
-            if(fruit.collision.x - FRUIT_COLLISION_RADIUS > bucketCollision.x && fruit.collision.x + FRUIT_COLLISION_RADIUS < bucketCollision.x + bucketCollision.width){
+            if(fruitCenter.y - fruit.collision.radius < bucketCollision.y && fruitCenter.x - fruit.collision.radius > bucketCollision.x && fruitCenter.x + fruit.collision.radius < bucketCollision.x + bucketCollision.width){
                 score++;
                 Remove(fruit);
                 continue;
@@ -150,8 +168,12 @@ void Fruits::Render(void) const {
             continue;
         }
 
-        // DrawTextureRec(atlasFruit, FRUIT_ATLAS_RECT(fruits[i].atlasXPos, fruits[i].atlasYPos), fruits[i].position, WHITE);
-        DrawTexturePro(atlasFruit, FRUIT_ATLAS_RECT(fruits[i].atlasXPos, fruits[i].atlasYPos), FRUIT_ATLAS_RECT(fruits[i].position.x, fruits[i].position.y), {75, 75}, fruits[i].rotation, WHITE);
-        // DrawCircleV(fruits[i].collision, FRUIT_COLLISION_RADIUS, BLUE);
+        Texture2D fruitSprite = sprites[fruits[i].type];
+        const float fruitWidth = (float)fruitSprite.width;
+        const float fruitHeight = (float)fruitSprite.height;
+        DrawTexturePro(fruitSprite, {0, 0, fruitWidth, fruitHeight}, {fruits[i].position.x, fruits[i].position.y, fruitWidth, fruitHeight}, fruits[i].origin, fruits[i].rotation, WHITE);
+        
+        // const Vector2 fruitCenter = { fruits[i].position.x + fruits[i].collision.offset.x, fruits[i].position.y + fruits[i].collision.offset.y };
+        // DrawCircleV(fruitCenter, fruits[i].collision.radius, BLUE);
     }
 }

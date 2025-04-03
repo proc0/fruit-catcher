@@ -17,7 +17,7 @@
 #define GAME_LIVES 10
 #define GAME_SCORE_UNIT 100
 #define GAME_FRUITS_MAX 8
-
+#define GAME_FRUIT_TYPES 15
 static constexpr int SCREEN_WIDTH = 1280;
 static constexpr int SCREEN_HEIGHT = 720;
 
