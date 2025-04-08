@@ -5,7 +5,7 @@ int main() {
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_GAME_TITLE);
   SetTargetFPS(60);
  
-  Game Game;
+  Game Game("game/FruitCatcher.ini");
 
   while (!WindowShouldClose() && Game.isRunning()) {
     Game.Update();

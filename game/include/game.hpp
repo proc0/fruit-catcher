@@ -1,12 +1,14 @@
 #pragma once
 
 #include "lib.h"
+#include "config.hpp"
 #include "fruits.hpp"
 #include "bucket.hpp"
 #include "display.hpp"
 #include "stage.hpp"
 
 class Game {
+    Config config;
     Fruits fruits;
     Bucket bucket;
     Display display;
@@ -25,7 +27,9 @@ class Game {
     State state = START;
 
     public:
-        Game() = default;
+        Game(const std::string& configFile): 
+            config(configFile),
+            fruits(config.GetData()) {};
         const bool isRunning() const;
         void Begin();
         void Update();

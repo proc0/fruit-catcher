@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 
 #include "fruits.hpp"
 
@@ -7,10 +8,15 @@
 #define FRUIT_TIME_INTERVAL 1.0f
 #define GRAVITY 982.0f
 
-Fruits::Fruits() {
-    for (const auto& pair : fruit_sprite_uris) {
+
+Fruits::Fruits(const ConfigData& configData) {
+    std::cout << "Loading Fruits ..." << std::endl;
+    std::cout << "showCollisions: " << configData.debug.showCollision << std::endl;
+    std::cout << "showFPS: " << configData.debug.showFPS << std::endl;
+    for (const auto& pair : fruitSpriteDetails) {
         try {
-            sprites[pair.first] = LoadTexture(pair.second.c_str());
+            int spriteKey = static_cast<int>(pair.first);
+            sprites[spriteKey] = LoadTexture(pair.second.uri.c_str());
         } catch (const std::exception& e) {
             std::cerr << e.what() << '\n';
             CloseWindow();
@@ -21,9 +27,10 @@ Fruits::Fruits() {
 }
 
 Fruits::~Fruits() {
-    for (const auto& pair : fruit_sprite_uris) {
+    for (const auto& pair : fruitSpriteDetails) {
         try {
-            UnloadTexture(sprites[pair.first]);
+            int spriteKey = static_cast<int>(pair.first);
+            UnloadTexture(sprites[spriteKey]);
         } catch (const std::exception& e) {
             std::cerr << e.what() << '\n';
         }
@@ -42,9 +49,11 @@ void Fruits::Remove(Fruit &fruit) {
 
 void Fruits::Add(Fruit &fruit) {
     fruit.active = true;
-    fruit.type = (FruitType)GetRandomValue(0, GAME_FRUIT_TYPES-1);
+    fruit.type = (FruitType)GetRandomValue(0, fruitSpriteDetails.size()-1);
 
-    Texture2D fruitSprite = sprites[fruit.type];
+    int spriteKey = static_cast<int>(fruit.type);
+    Texture2D fruitSprite = sprites[spriteKey];
+    FruitSprite fruitDetails = fruitSpriteDetails.at(fruit.type);
     const float fruitWidth = (float)fruitSprite.width;
     const float fruitHeight = (float)fruitSprite.height;
 
@@ -56,7 +65,7 @@ void Fruits::Add(Fruit &fruit) {
     const float ratio = longSide / FRUIT_MAX_SIZE;
     
     fruit.collision = { 
-        offset: { 0, 0 },
+        offset: fruitDetails.offset,
         radius: FRUIT_COLLISION_RADIUS * ratio 
     };
 
@@ -177,7 +186,8 @@ void Fruits::Render(void) const {
             continue;
         }
 
-        Texture2D fruitSprite = sprites[fruit.type];
+        int spriteKey = static_cast<int>(fruit.type);
+        Texture2D fruitSprite = sprites[spriteKey];
         const float fruitWidth = (float)fruitSprite.width;
         const float fruitHeight = (float)fruitSprite.height;
         DrawTexturePro(fruitSprite, {0, 0, fruitWidth, fruitHeight}, {fruit.position.x, fruit.position.y, fruitWidth, fruitHeight}, fruit.origin, fruit.rotation, WHITE);
