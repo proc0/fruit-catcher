@@ -6,6 +6,10 @@ void Game::End() {
     state = END;
 }
 
+const bool Game::isDebug() const {
+    return debug;
+}
+
 const bool Game::isRunning() const {
     return state != END;
 }
@@ -86,3 +90,18 @@ void Game::Render() const {
     }
 }
 
+void Game::UpdateDebug() {
+    if(state != END){
+        stage.Update();
+        mousePosition = GetMousePosition();
+
+        fruits.UpdateDebug();
+    }
+}
+
+void Game::RenderDebug() const {
+    if(state != END){
+        stage.Render();
+        fruits.RenderDebug();
+    }
+}

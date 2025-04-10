@@ -15,10 +15,10 @@ const char *gameOver = TEXT_GAME_OVER;
 const char *restartMessage = TEXT_PRESS_R;
 const char *textTimePlayed = TEXT_TIME_PLAYED;
 
-static constexpr int TITLE_FONT_SIZE = 58;
-static constexpr int TEXT_MENU_FONT_SIZE = 44;
-static constexpr int SUBTITLE_FONT_SIZE = 20;
-static constexpr int SCORE_FONT_SIZE = 52;
+static const int TITLE_FONT_SIZE = 58;
+static const int TEXT_MENU_FONT_SIZE = 44;
+static const int SUBTITLE_FONT_SIZE = 20;
+static const int SCORE_FONT_SIZE = 52;
 static constexpr int SCREEN_HALF_WIDTH = SCREEN_WIDTH/2;
 
 Display::Display(void) {

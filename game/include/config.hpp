@@ -4,7 +4,8 @@
 #include <map>
 
 typedef struct ConfigDebug {
-    bool showCollision;
+    bool displayDebug;
+    bool showCollisions;
     bool showFPS;
 } ConfigDebug;
 
@@ -16,6 +17,6 @@ class Config {
     ConfigData data;
 
     public:
-    Config(const std::string& filename);
-    const ConfigData& GetData() const;
+        Config(const std::string& filename);
+        const ConfigData& GetData() const;
 };

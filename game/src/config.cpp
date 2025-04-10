@@ -39,10 +39,15 @@ Config::Config(const std::string& filename) {
 
         if (std::getline(iss, key, '=') && std::getline(iss, value)) {
             if (currentSection == "Debug") {
-                if (key == "showCollision") {
-                    data.debug.showCollision = value == "true" ? true : false;
+                if (key == "showCollisions") {
+                    data.debug.showCollisions = value == "true" ? true : false;
                 } else if (key == "showFPS") {
                     data.debug.showFPS = value == "true" ? true : false;
+                } else if (key == "displayDebug") {
+                    data.debug.displayDebug = value == "true" ? true : false;
+                } else {
+                    std::cerr << "Unknown key in debug section: " << key << std::endl;
+                    continue;
                 }
             }
         }

@@ -4,15 +4,21 @@
 #include "fruits.hpp"
 
 #define FRUIT_MAX_SIZE 150.0f
-#define FRUIT_COLLISION_RADIUS 45.0f
+#define FRUIT_COLLISION_RADIUS 42.0f
 #define FRUIT_TIME_INTERVAL 1.0f
 #define GRAVITY 982.0f
 
 
 Fruits::Fruits(const ConfigData& configData) {
     std::cout << "Loading Fruits ..." << std::endl;
-    std::cout << "showCollisions: " << configData.debug.showCollision << std::endl;
-    std::cout << "showFPS: " << configData.debug.showFPS << std::endl;
+    std::cout << "showCollisions: " << configData.debug.showCollisions << std::endl;
+    std::cout << "showFPS: " << configData.debug.displayDebug << std::endl;
+    if(configData.debug.displayDebug){
+        debug = true;
+    }
+    if (configData.debug.showCollisions) {
+        showCollisions = true;
+    }
     for (const auto& pair : fruitSpriteDetails) {
         try {
             int spriteKey = static_cast<int>(pair.first);
@@ -137,6 +143,7 @@ void Fruits::UpdateMovement(Fruit &fruit) {
     }
 }
 
+
 const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
     int lives = 0;
     int score = 0;
@@ -192,7 +199,57 @@ void Fruits::Render(void) const {
         const float fruitHeight = (float)fruitSprite.height;
         DrawTexturePro(fruitSprite, {0, 0, fruitWidth, fruitHeight}, {fruit.position.x, fruit.position.y, fruitWidth, fruitHeight}, fruit.origin, fruit.rotation, WHITE);
         
-        // const Vector2 fruitCenter = { fruit.position.x + fruit.collision.offset.x, fruit.position.y + fruit.collision.offset.y };
-        // DrawCircleV(fruitCenter, fruit.collision.radius, BLUE);
+        if(showCollisions){
+            const Vector2 fruitCenter = { fruit.position.x + fruit.collision.offset.x, fruit.position.y + fruit.collision.offset.y };
+            DrawCircleV(fruitCenter, fruit.collision.radius, BLUE);
+        }
+    }
+}
+
+void Fruits::UpdateDebug(void){
+    int colNum = 0;
+    int rowNum = 0;
+    for(int i=0; i<GAME_FRUIT_TYPES; i++){
+        Fruit& fruit = fruitsDebug[i];
+
+        fruit.active = true;
+        fruit.type = (FruitType)i;
+        Texture2D fruitSprite = sprites[i];
+        FruitSprite fruitDetails = fruitSpriteDetails.at(fruit.type);
+        const float fruitWidth = (float)fruitSprite.width;
+        const float fruitHeight = (float)fruitSprite.height;
+        fruit.origin = { fruitWidth/2, fruitHeight/2 };
+
+        const int longSide = fruitWidth > fruitHeight ? fruitWidth : fruitHeight;
+        const float ratio = longSide / FRUIT_MAX_SIZE;
+        fruit.collision = { 
+            offset: fruitDetails.offset,
+            radius: FRUIT_COLLISION_RADIUS * ratio 
+        };
+    
+        fruit.position.x = 150*colNum + 100;
+        fruit.position.y = 150*rowNum + 100;
+        if(colNum == 4){
+            colNum = 0;
+            rowNum++;
+        } else {
+            colNum++; 
+        }
+    }
+}
+
+void Fruits::RenderDebug(void) const {
+    for (const Fruit& fruit : fruitsDebug) {
+        int spriteKey = static_cast<int>(fruit.type);
+        Texture2D fruitSprite = sprites[spriteKey];
+        const float fruitWidth = (float)fruitSprite.width;
+        const float fruitHeight = (float)fruitSprite.height;
+        DrawTexturePro(fruitSprite, {0, 0, fruitWidth, fruitHeight}, {fruit.position.x, fruit.position.y, fruitWidth, fruitHeight}, fruit.origin, fruit.rotation, WHITE);
+        DrawRectangleLines(fruit.position.x - fruit.origin.x, fruit.position.y - fruit.origin.y, fruitWidth, fruitHeight, RED);
+
+        if(showCollisions){
+            const Vector2 fruitCenter = { fruit.position.x + fruit.collision.offset.x, fruit.position.y + fruit.collision.offset.y };
+            DrawCircleV(fruitCenter, fruit.collision.radius, BLUE);
+        }
     }
 }
