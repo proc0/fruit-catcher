@@ -46,31 +46,6 @@ static const std::map<FruitType, FruitSprite> fruitSpriteDetails = {
 #undef X
 };
 
-// static const FruitType stringToFruit(const std::string& fruitString) {
-//     static const std::map<std::string, FruitType> fruitMap = {
-// #define X(STRING, ENUM, URI, OFFSETX, OFFSETY) { STRING, FruitType::ENUM },
-//     FRUITS
-// #undef X
-//     };
-
-//     try {
-//         return fruitMap.at(fruitString);
-//     } catch (const std::exception& e) {
-//         std::cerr << "ERROR at stringToFruit: " << e.what() << '\n';
-//         return FruitType::APPLE;
-//     }
-// }
-
-// static const char* fruitToString(const FruitType fruitType) {
-//     static const char* fruitString[] = {
-// #define X(STRING, ENUM, URI, OFFSETX, OFFSETY) STRING,
-//     FRUITS
-// #undef X
-//     };
-
-//     return fruitString[static_cast<int>(fruitType)];
-// }
-
 #undef FRUITS
 
 typedef struct FruitCollision {
@@ -86,6 +61,8 @@ typedef struct Fruit {
     Vector2 force;
     float mass;
     float rotation;
+    float width;
+    float height;
     FruitType type;
     bool active;
     bool collided;
@@ -96,21 +73,22 @@ class Fruits {
     Texture2D sprites[GAME_FRUIT_TYPES];
     Fruit fruits[GAME_FRUITS_MAX];
     Fruit fruitsDebug[GAME_FRUIT_TYPES];
-    float timeNextFruit;
-    int maxFruitTypes = 0;
-    bool debug = false;
+    float fruitTimeInterval;
+    bool displayDebug = false;
     bool showCollisions = false;
     
     public:
         Fruits(const ConfigData&);
         ~Fruits();
-        void Remove(Fruit&);
-        void Add(Fruit&);
-        void Reset();
+        void RemoveFruit(Fruit&);
+        void SpawnFruit(Fruit&);
         void Spawn();
+        void MakeFruit(Fruit&, int index);
+        void Reset();
         void UpdateDebug();
-        void UpdateMovement(Fruit&);
+        void UpdateMovementFruit(Fruit&);
         const std::tuple<int, int> Update(Bucket&);
         void RenderDebug() const;
+        void RenderFruit(const Fruit&) const;
         void Render() const;
 };
