@@ -33,13 +33,13 @@ typedef enum class FruitType {
 #undef X
 } FruitType;
 
-typedef struct FruitSprite {
+typedef struct FruitData {
     FruitType type;
     std::string uri;
     Vector2 offset;
-} FruitSprite;
+} FruitData;
 
-static const std::map<FruitType, FruitSprite> fruitSpriteDetails = {
+static const std::map<FruitType, FruitData> static_FruitDataMap = {
 #define X(STRING, ENUM, URI, OFFSETX, OFFSETY) { FruitType::ENUM, \
     { type: FruitType::ENUM, uri: URI, offset: { OFFSETX, OFFSETY } }},
     FRUITS
@@ -73,22 +73,24 @@ class Fruits {
     Texture2D sprites[GAME_FRUIT_TYPES];
     Fruit fruits[GAME_FRUITS_MAX];
     Fruit fruitsDebug[GAME_FRUIT_TYPES];
-    float fruitTimeInterval;
+    float fruitTimeInterval = 0.0f;
     bool displayDebug = false;
     bool showCollisions = false;
+
+    void SetConfig(const ConfigData&);
+    void ResetFruit(Fruit&);
+    void MakeFruit(Fruit&, int index);
+    void SpawnFruit(Fruit&);
+    void UpdateMovementFruit(Fruit&);
+    void RenderFruit(const Fruit&) const;
     
     public:
-        Fruits(const ConfigData&);
-        ~Fruits();
-        void RemoveFruit(Fruit&);
-        void SpawnFruit(Fruit&);
-        void Spawn();
-        void MakeFruit(Fruit&, int index);
-        void Reset();
-        void UpdateDebug();
-        void UpdateMovementFruit(Fruit&);
-        const std::tuple<int, int> Update(Bucket&);
-        void RenderDebug() const;
-        void RenderFruit(const Fruit&) const;
-        void Render() const;
+    Fruits(const ConfigData&);
+    ~Fruits();
+    void Reset();
+    void Spawn();
+    const std::tuple<int, int> Update(Bucket&);
+    void Render() const;
+    void UpdateDebug();
+    void RenderDebug() const;
 };

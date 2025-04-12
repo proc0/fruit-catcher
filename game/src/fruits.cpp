@@ -9,47 +9,39 @@
 #define GRAVITY 982.0f
 
 Fruits::Fruits(const ConfigData& configData) {
-    std::cout << "Loading Fruits ..." << std::endl;
-    std::cout << "showCollisions: " << configData.debug.showCollisions << std::endl;
-    std::cout << "showFPS: " << configData.debug.displayDebug << std::endl;
-    if(configData.debug.displayDebug){
-        displayDebug = true;
-    }
-    if (configData.debug.showCollisions) {
-        showCollisions = true;
-    }
-    for (const auto& pair : fruitSpriteDetails) {
+    SetConfig(configData);
+    for (const auto& fruitData : static_FruitDataMap) {
         try {
-            int spriteKey = static_cast<int>(pair.first);
-            sprites[spriteKey] = LoadTexture(pair.second.uri.c_str());
-        } catch (const std::exception& e) {
-            std::cerr << e.what() << '\n';
+            const int spriteKey = static_cast<int>(fruitData.first);
+            const char* spriteUri = fruitData.second.uri.c_str();
+            sprites[spriteKey] = LoadTexture(spriteUri);
+        } catch (const std::exception& error) {
+            std::cerr << error.what() << '\n';
             CloseWindow();
         }
     }
-    fruitTimeInterval = FRUIT_TIME_INTERVAL;
     Reset();
 }
 
 Fruits::~Fruits() {
-    for (const auto& pair : fruitSpriteDetails) {
-        try {
-            int spriteKey = static_cast<int>(pair.first);
-            UnloadTexture(sprites[spriteKey]);
-        } catch (const std::exception& e) {
-            std::cerr << e.what() << '\n';
-        }
+    for (const auto& sprite : sprites) {
+        UnloadTexture(sprite);
     }
+}
+
+void Fruits::SetConfig(const ConfigData& configData) {
+    displayDebug = configData.debug.displayDebug;
+    showCollisions = configData.debug.showCollisions;
+}
+
+void Fruits::ResetFruit(Fruit &fruit) {
+    fruit.active = false;
 }
 
 void Fruits::Reset(void){
-    for(int i=0; i < GAME_FRUITS_MAX; i++){
-        RemoveFruit(fruits[i]);
+    for(auto& fruit : fruits){
+        ResetFruit(fruit);
     }
-}
-
-void Fruits::RemoveFruit(Fruit &fruit) {
-    fruit.active = false;
 }
 
 void Fruits::MakeFruit(Fruit &fruit, int index) {
@@ -63,36 +55,37 @@ void Fruits::MakeFruit(Fruit &fruit, int index) {
     fruit.width = fruitWidth;
     fruit.height = fruitHeight;
     
-    FruitSprite fruitDetails = fruitSpriteDetails.at(fruit.type);
+    FruitData fruitData = static_FruitDataMap.at(fruit.type);
     const int longSide = fruitWidth > fruitHeight ? fruitWidth : fruitHeight;
     const float ratio = longSide / FRUIT_MAX_SIZE;
     
     fruit.collision = { 
-        offset: fruitDetails.offset,
+        offset: fruitData.offset,
         radius: FRUIT_COLLISION_RADIUS * ratio 
     };
 
     fruit.mass = ratio;
+    fruit.collided = false;
+    fruit.debounce = false;
 }
 
 void Fruits::SpawnFruit(Fruit &fruit) {
-    const int typeIndex = GetRandomValue(0, fruitSpriteDetails.size()-1);
-    MakeFruit(fruit, typeIndex);
+    const int index = GetRandomValue(0, static_FruitDataMap.size()-1);
+    MakeFruit(fruit, index);
+    
+    const float posX = GetRandomValue(fruit.width, SCREEN_WIDTH - fruit.height);
+    fruit.position = { posX, -fruit.height };
+    
+    float forceX = 0.0f;
+    if(fruit.position.x > SCREEN_WIDTH/2) {
+        forceX = GetRandomValue(-500, 0);
+    } else {
+        forceX = GetRandomValue(0, 500);
+    }
+    fruit.force = { forceX, GRAVITY };
 
     fruit.velocity = { 0.0f, 0.0f };
     fruit.rotation = 0.0f;
-    fruit.collided = false;
-    fruit.debounce = false;
-
-    const float posX = GetRandomValue(fruit.width, SCREEN_WIDTH - fruit.height);
-    fruit.position = { posX, -fruit.height };
-
-    float forceX = GetRandomValue(0, 500);
-    if(fruit.position.x > SCREEN_WIDTH/2) {
-        forceX = GetRandomValue(-500, 0);
-    }
-
-    fruit.force = { forceX, GRAVITY };
 }
 
 void Fruits::Spawn(void) {
@@ -153,10 +146,11 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
     int lives = 0;
     int score = 0;
 
-    fruitTimeInterval -= GetFrameTime();
     if(fruitTimeInterval <= 0) {
         fruitTimeInterval = FRUIT_TIME_INTERVAL;
         Spawn();
+    } else {
+        fruitTimeInterval -= GetFrameTime();
     }
 
     for(int i=0; i<GAME_FRUITS_MAX; i++){
@@ -168,7 +162,7 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
         // fruit hits bottom
         if(fruit.position.y > SCREEN_HEIGHT) {
             lives--;
-            RemoveFruit(fruit);
+            ResetFruit(fruit);
             continue;
         }
         // fruit hits bucket
@@ -179,7 +173,7 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
             // when fruit is above bucket, and fruit is centered with bucket
             if(fruitCenter.y - fruit.collision.radius < bucketCollision.y && fruitCenter.x - fruit.collision.radius > bucketCollision.x && fruitCenter.x + fruit.collision.radius < bucketCollision.x + bucketCollision.width){
                 score++;
-                RemoveFruit(fruit);
+                ResetFruit(fruit);
                 continue;
             }
         }
@@ -188,20 +182,6 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
     }
 
     return std::make_tuple(lives, score);
-}
-
-void Fruits::RenderFruit(const Fruit& fruit) const {
-    int spriteKey = static_cast<int>(fruit.type);
-    Texture2D fruitSprite = sprites[spriteKey];
-    DrawTexturePro(fruitSprite, {0, 0, fruit.width, fruit.height}, {fruit.position.x, fruit.position.y, fruit.width, fruit.height}, fruit.origin, fruit.rotation, WHITE);
-}
-
-void Fruits::Render(void) const {
-    for (const Fruit& fruit : fruits) {
-        if(!fruit.active) continue;
-
-        RenderFruit(fruit);
-    }
 }
 
 void Fruits::UpdateDebug(void){
@@ -223,6 +203,12 @@ void Fruits::UpdateDebug(void){
     }
 }
 
+void Fruits::RenderFruit(const Fruit& fruit) const {
+    int spriteKey = static_cast<int>(fruit.type);
+    Texture2D fruitSprite = sprites[spriteKey];
+    DrawTexturePro(fruitSprite, {0, 0, fruit.width, fruit.height}, {fruit.position.x, fruit.position.y, fruit.width, fruit.height}, fruit.origin, fruit.rotation, WHITE);
+}
+
 void Fruits::RenderDebug(void) const {
     for (const Fruit& fruit : fruitsDebug) {
         RenderFruit(fruit);
@@ -233,5 +219,13 @@ void Fruits::RenderDebug(void) const {
         }
 
         DrawRectangleLines(fruit.position.x - fruit.origin.x, fruit.position.y - fruit.origin.y, fruit.width, fruit.height, RED);
+    }
+}
+
+void Fruits::Render(void) const {
+    for (const Fruit& fruit : fruits) {
+        if(!fruit.active) continue;
+
+        RenderFruit(fruit);
     }
 }
