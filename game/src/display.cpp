@@ -21,6 +21,7 @@ static const int SUBTITLE_FONT_SIZE = 20;
 static const int SCORE_FONT_SIZE = 52;
 static constexpr int SCREEN_HALF_WIDTH = SCREEN_WIDTH/2;
 
+//TODO: refactor and optimize the layout variables. Needs to be initialized and stored in some structure.
 Display::Display(void) {
     textureStartMenu = LoadTexture(START_MENU_IMAGE);
     fruitIcon = LoadTexture(FRUIT_ICON_URI);

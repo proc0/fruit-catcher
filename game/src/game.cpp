@@ -1,7 +1,5 @@
 #include "game.hpp"
 
-using namespace std;
-
 const bool Game::isDebug() const {
     return debug;
 }
@@ -35,9 +33,9 @@ void Game::Update() {
     if(state == PLAY) {
         bucket.Update(mousePosition);
 
-        const tuple<int, int> result = fruits.Update(bucket);
-        lives += get<0>(result);
-        score += get<1>(result);
+        const std::tuple<int, int> result = fruits.Update(bucket);
+        lives += std::get<0>(result);
+        score += std::get<1>(result);
 
         if(lives <= 0) {
             state = OVER;
