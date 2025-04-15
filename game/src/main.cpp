@@ -6,7 +6,8 @@ int main() {
 
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_GAME_TITLE);
   SetTargetFPS(60);
- 
+  SetExitKey(KEY_NULL);
+  
   Game Game(GAME_CONFIG_URI);
 
   if(Game.isDebug()){

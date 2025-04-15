@@ -17,6 +17,7 @@ class Game {
     enum State {
         START,
         PLAY,
+        PAUSE,
         OVER,
         END
     };
@@ -34,12 +35,8 @@ class Game {
             fruits(config.GetData()) {};
         const bool isRunning() const;
         const bool isDebug() const;
-        void Begin();
         void Update();
         void UpdateDebug();
         void Render() const;
         void RenderDebug() const;
-        void Over();
-        void End();
-
 };

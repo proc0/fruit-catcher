@@ -85,12 +85,12 @@ class Fruits {
     void RenderFruit(const Fruit&) const;
     
     public:
-    Fruits(const ConfigData&);
-    ~Fruits();
-    void Reset();
-    void Spawn();
-    const std::tuple<int, int> Update(Bucket&);
-    void Render() const;
-    void UpdateDebug();
-    void RenderDebug() const;
+        Fruits(const ConfigData&);
+        ~Fruits();
+        void Reset();
+        void Spawn();
+        const std::tuple<int, int> Update(Bucket&);
+        void Render() const;
+        void UpdateDebug();
+        void RenderDebug() const;
 };
