@@ -14,7 +14,7 @@
 #define TEXT_SCORE "SCORE %d"
 #define TEXT_LIVES "LIVES"
 
-#define GAME_LIVES 10
+#define GAME_LIVES 3
 #define GAME_SCORE_UNIT 100
 
 static constexpr int SCREEN_WIDTH = 1280;

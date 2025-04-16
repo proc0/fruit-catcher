@@ -22,10 +22,12 @@ class Game {
         END
     };
     State state = START;
+    State lastState = END;
     float timeEnd;
     float timeStart;
     int lives;
     int score;
+    int displayScore;
     bool debug = false;
 
     public:

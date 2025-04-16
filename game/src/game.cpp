@@ -9,11 +9,19 @@ const bool Game::isRunning() const {
 }
 
 void Game::Update() {
+    // always 
     if(state != END){
         stage.Update();
         mousePosition = GetMousePosition();
     }
-
+    // only on state change
+    if(lastState != state){
+        if(state == OVER){
+            displayScore = score * GAME_SCORE_UNIT;
+            display.UpdateGameOver(displayScore, timeEnd, timeStart);
+        }
+    }
+    // UI update
     if(state == OVER || state == PAUSE || state == START) {
         display.UpdateStartMenu(mousePosition);
 
@@ -23,13 +31,15 @@ void Game::Update() {
             score = 0;
             lives = GAME_LIVES;
             timeStart = GetTime();
+            return;
         }
 
         if(display.isQuitButtonClicked()){
             state = END;
+            return;
         }
     }
-
+    // Game update
     if(state == PLAY) {
         bucket.Update(mousePosition);
 
@@ -40,16 +50,21 @@ void Game::Update() {
         if(lives <= 0) {
             state = OVER;
             timeEnd = GetTime();
+            return;
         }
 
         if(IsKeyPressed(KEY_ESCAPE)){
             state = PAUSE;
+            return;
         }
     } else if(state == PAUSE) {
         if(IsKeyPressed(KEY_ESCAPE)){
             state = PLAY;
+            return;
         }
     }
+    
+    lastState = state;
 }
 
 void Game::Render() const {
@@ -64,7 +79,7 @@ void Game::Render() const {
     }
 
     if(state == OVER) {
-        display.RenderGameOver(lives, score, timeEnd, timeStart);
+        display.RenderGameOver();
     }
 
     if(state == START || state == PAUSE) {
