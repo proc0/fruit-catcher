@@ -196,10 +196,10 @@ void Display::RenderStartMenu(void) const {
 }
 
 void Display::UpdateGameOver(int score, float timeEnd, float timeStart) {
-    // Using sprintf because this function is being called once only (in game update)
+    // Using snprintf because this function is being called once only (in game update)
     // If function is called multiple times in update, change to using Raylib TextFormat
     // const char *textScore = TextFormat(textTotalScore, score);
-    sprintf(textScore, textTotalScore, score);
+    snprintf(textScore, sizeof(textScore), textTotalScore, score);
     const int scoreTextX = SCREEN_HALFWIDTH - MeasureText(textScore, FONTSIZE_SCORETEXT)/2;
     const int scoreTextY = SCREEN_HEIGHT*0.22f;
     gameOverTextParams["gameOverScore"] = {
@@ -212,7 +212,7 @@ void Display::UpdateGameOver(int score, float timeEnd, float timeStart) {
 
     const int totalMinutes = (int)(timeEnd - timeStart)/60;
     const int totalSeconds = (int)(timeEnd - timeStart)%60;
-    sprintf(textTime, textTimePlayed, totalMinutes, totalSeconds);
+    snprintf(textTime, sizeof(textTime), textTimePlayed, totalMinutes, totalSeconds);
     // const char *textTime = TextFormat(textTimePlayed, totalMinutes, totalSeconds);
     const int timeTextX = SCREEN_HALFWIDTH - MeasureText(textTime, FONTSIZE_SUBTITLE)/2;
     gameOverTextParams["gameOverTime"] = {
