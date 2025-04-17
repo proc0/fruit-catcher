@@ -1,3 +1,4 @@
+#include <iterator>
 #include "display.hpp"
 
 #define START_MENU_IMAGE "resources/start_menu_panel.png"
@@ -22,7 +23,6 @@ static const int FONTSIZE_SCORETEXT = 52;
 static constexpr int SCREEN_HALFWIDTH = SCREEN_WIDTH*0.5f;
 static constexpr int SCREEN_HALFHEIGHT = SCREEN_HEIGHT*0.5f;
 
-//TODO: fix game over screen bug (in updategameover, it is not being called?)
 Display::Display(void) {
     panelStartMenu = LoadTexture(START_MENU_IMAGE);
     panelGameOver = LoadTexture(PANEL_GAME_OVER);
@@ -219,6 +219,11 @@ void Display::UpdateGameOver(int score, float timeEnd, float timeStart) {
         fontSize: FONTSIZE_SUBTITLE,
         color: DARKGRAY,
     };
+    // reset HUD
+    livesChanged = false;
+    scoreChanged = false;
+    hudLivesFrameIdx = 0;
+    hudScoreFrameIdx = 0;
 }
 
 void Display::RenderGameOver() const {
@@ -231,13 +236,42 @@ void Display::RenderGameOver() const {
     }
 }
 
-void Display::Render(int lives, int score) const {
-    const char *scoreNum = TextFormat("%d", score);
-    const char *livesNum = TextFormat("%d", lives);
-    DrawText(textLives, 28, 32, 18, WHITE);
-    DrawText(livesNum, 28, 55, 72, WHITE);
+void Display::Update(int _lives, int _score) {
+    livesChanged = _lives != lives;
+    scoreChanged = _score != score;
 
+    if(livesChanged || scoreChanged){
+        score = _score;
+        lives = _lives;
+    }
+
+    const int hudAnimationSize = std::size(hudAnimation) - 1;
+    if(hudLivesFrameIdx < hudAnimationSize && (livesChanged || hudLivesFrameIdx != 0)) {
+        hudLivesFrameIdx++;
+    } else {
+        hudLivesFrameIdx = 0;
+    }
+
+    if(hudScoreFrameIdx < hudAnimationSize && (scoreChanged || hudScoreFrameIdx != 0)) {
+        hudScoreFrameIdx++;
+    } else {
+        hudScoreFrameIdx = 0;
+    }
+}
+
+void Display::Render() const {
+    // Lives
+    DrawText(textLives, 28, 32, 18, WHITE);
+    const char *livesNum = TextFormat("%d", lives);
+    const int livesFontsize = 72 + hudAnimation[hudLivesFrameIdx];
+    const Color livesColor = hudLivesFrameIdx != 0 ? RED : WHITE;
+    DrawText(livesNum, 28, 55, livesFontsize, livesColor);
+    
+    // Score
     DrawTexture(fruitIcon, 100, 32, WHITE);
     DrawText("x", 100, 85, 18, WHITE);
-    DrawText(scoreNum, 115, 75, 32, WHITE);
+    const char *scoreNum = TextFormat("%d", score);
+    const int scoreFontsize = 32 + hudAnimation[hudScoreFrameIdx];
+    const Color scoreColor = hudScoreFrameIdx != 0 ? GOLD : WHITE;
+    DrawText(scoreNum, 115, 75, scoreFontsize, scoreColor);
 }

@@ -42,6 +42,8 @@ void Game::Update() {
         score += std::get<1>(result);
         displayScore = score * GAME_SCORE_UNIT;
 
+        display.Update(lives, displayScore);
+
         if(lives <= 0) {
             timeEnd = GetTime();
             // fires once to update score and time - for now
@@ -70,7 +72,7 @@ void Game::Render() const {
     if(state == PLAY || state == PAUSE || state == OVER) {
         bucket.Render();
         fruits.Render();
-        display.Render(lives, displayScore);
+        display.Render();
     }
 
     if(state == OVER) {
