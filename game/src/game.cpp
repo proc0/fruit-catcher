@@ -14,23 +14,17 @@ void Game::Update() {
         stage.Update();
         mousePosition = GetMousePosition();
     }
-    // only on state change
-    if(lastState != state){
-        if(state == OVER){
-            displayScore = score * GAME_SCORE_UNIT;
-            display.UpdateGameOver(displayScore, timeEnd, timeStart);
-        }
-    }
+
     // UI update
     if(state == OVER || state == PAUSE || state == START) {
         display.UpdateStartMenu(mousePosition);
 
         if(display.isStartButtonClicked() || IsKeyPressed(KEY_R)){
             fruits.Reset();
-            state = PLAY;
+            timeStart = GetTime();
             score = 0;
             lives = GAME_LIVES;
-            timeStart = GetTime();
+            state = PLAY;
             return;
         }
 
@@ -46,10 +40,13 @@ void Game::Update() {
         const std::tuple<int, int> result = fruits.Update(bucket);
         lives += std::get<0>(result);
         score += std::get<1>(result);
+        displayScore = score * GAME_SCORE_UNIT;
 
         if(lives <= 0) {
-            state = OVER;
             timeEnd = GetTime();
+            // fires once to update score and time - for now
+            display.UpdateGameOver(displayScore, timeEnd, timeStart);
+            state = OVER;
             return;
         }
 
@@ -63,8 +60,6 @@ void Game::Update() {
             return;
         }
     }
-    
-    lastState = state;
 }
 
 void Game::Render() const {
@@ -75,7 +70,7 @@ void Game::Render() const {
     if(state == PLAY || state == PAUSE || state == OVER) {
         bucket.Render();
         fruits.Render();
-        display.Render(lives, score);
+        display.Render(lives, displayScore);
     }
 
     if(state == OVER) {

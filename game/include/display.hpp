@@ -7,7 +7,7 @@
 #define STARTMENU_OPTIONS_LENGTH 3
 
 typedef struct TextParams {
-    const char* text;
+    const char *text;
     int x;
     int y;
     int fontSize;
@@ -22,6 +22,8 @@ typedef struct TextureParams {
 } TextureParams;
 
 class Display {
+    char textTime[80];
+    char textScore[20];
     Texture2D panelStartMenu;
     Texture2D panelGameOver;
     Texture2D fruitIcon;

@@ -1,3 +1,6 @@
+#include <iostream>
+#include <cstdio>
+
 #include "display.hpp"
 
 #define START_MENU_IMAGE "resources/start_menu_panel.png"
@@ -5,15 +8,15 @@
 #define HUD_PANEL "resources/hud_panel.png"
 #define FRUIT_ICON_URI "resources/fruit_icon.png"
 
-static const char *textStartMenuTitle = TEXT_START_MENU_TITLE;
-static const char *textStart = TEXT_GAME_START;
-static const char *textQuit = TEXT_GAME_QUIT;
-static const char *textScore = TEXT_SCORE;
-static const char *textLives = TEXT_LIVES;
-static const char *textRestart = TEXT_RESTART;
 static const char *textGameOver = TEXT_GAME_OVER;
+static const char *textLives = TEXT_LIVES;
+static const char *textQuit = TEXT_GAME_QUIT;
+static const char *textRestart = TEXT_RESTART;
 static const char *textRestartMessage = TEXT_PRESS_R;
+static const char *textStart = TEXT_GAME_START;
+static const char *textStartMenuTitle = TEXT_START_MENU_TITLE;
 static const char *textTimePlayed = TEXT_TIME_PLAYED;
+static const char *textTotalScore = TEXT_SCORE;
 
 static const int FONTSIZE_TITLE = 58;
 static const int FONTSIZE_SUBTITLE = 20;
@@ -22,7 +25,7 @@ static const int FONTSIZE_SCORETEXT = 52;
 static constexpr int SCREEN_HALFWIDTH = SCREEN_WIDTH*0.5f;
 static constexpr int SCREEN_HALFHEIGHT = SCREEN_HEIGHT*0.5f;
 
-//TODO: refactor and optimize the layout variables. Needs to be initialized and stored in some structure.
+//TODO: fix game over screen bug (in updategameover, it is not being called?)
 Display::Display(void) {
     panelStartMenu = LoadTexture(START_MENU_IMAGE);
     panelGameOver = LoadTexture(PANEL_GAME_OVER);
@@ -193,12 +196,14 @@ void Display::RenderStartMenu(void) const {
 }
 
 void Display::UpdateGameOver(int score, float timeEnd, float timeStart) {
-
-    const char *scoreText = TextFormat(textScore, score);
-    const int scoreTextX = SCREEN_HALFWIDTH - MeasureText(scoreText, FONTSIZE_SCORETEXT)/2;
+    // Using sprintf because this function is being called once only (in game update)
+    // If function is called multiple times in update, change to using Raylib TextFormat
+    // const char *textScore = TextFormat(textTotalScore, score);
+    sprintf(textScore, textTotalScore, score);
+    const int scoreTextX = SCREEN_HALFWIDTH - MeasureText(textScore, FONTSIZE_SCORETEXT)/2;
     const int scoreTextY = SCREEN_HEIGHT*0.22f;
     gameOverTextParams["gameOverScore"] = {
-        text: scoreText,
+        text: textScore,
         x: scoreTextX,
         y: scoreTextY,
         fontSize: FONTSIZE_SCORETEXT,
@@ -207,10 +212,11 @@ void Display::UpdateGameOver(int score, float timeEnd, float timeStart) {
 
     const int totalMinutes = (int)(timeEnd - timeStart)/60;
     const int totalSeconds = (int)(timeEnd - timeStart)%60;
-    const char *timeText = TextFormat(textTimePlayed, totalMinutes, totalSeconds);
-    const int timeTextX = SCREEN_HALFWIDTH - MeasureText(timeText, FONTSIZE_SUBTITLE)/2;
+    sprintf(textTime, textTimePlayed, totalMinutes, totalSeconds);
+    // const char *textTime = TextFormat(textTimePlayed, totalMinutes, totalSeconds);
+    const int timeTextX = SCREEN_HALFWIDTH - MeasureText(textTime, FONTSIZE_SUBTITLE)/2;
     gameOverTextParams["gameOverTime"] = {
-        text: timeText,
+        text: textTime,
         x: timeTextX,
         y: scoreTextY + 60,
         fontSize: FONTSIZE_SUBTITLE,

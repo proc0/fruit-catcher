@@ -22,7 +22,6 @@ class Game {
         END
     };
     State state = START;
-    State lastState = END;
     float timeEnd;
     float timeStart;
     int lives;
