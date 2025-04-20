@@ -1,8 +1,8 @@
 #include "bucket.hpp"
 
-#define BUCKET_IMAGE_URI "resources/pot.png"
-#define BUCKET_SOURCE_WIDTH 150
-#define BUCKET_SOURCE_HEIGHT 150
+#define BUCKET_IMAGE_URI "resources/bucket.png"
+#define BUCKET_SOURCE_WIDTH 131
+#define BUCKET_SOURCE_HEIGHT 160
 #define BUCKET_COLLISION_SIZE 110
 #define BUCKET_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, BUCKET_SOURCE_WIDTH, BUCKET_SOURCE_HEIGHT}
 
