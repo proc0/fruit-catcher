@@ -8,7 +8,7 @@
 #define FRUIT_TIME_INTERVAL 1.0f
 #define GRAVITY 982.0f
 
-Fruits::Fruits(const ConfigData& configData) {
+Fruits::Fruits(const ConfigData& configData, const FruitLevelData& levelData) {
     SetConfig(configData);
     for (const auto& fruitData : static_FruitDataMap) {
         try {
@@ -20,6 +20,7 @@ Fruits::Fruits(const ConfigData& configData) {
             CloseWindow();
         }
     }
+    SetFruitLevelData(levelData);
     Reset();
 }
 
@@ -32,6 +33,10 @@ Fruits::~Fruits() {
 void Fruits::SetConfig(const ConfigData& configData) {
     displayDebug = configData.debug.displayDebug;
     showCollisions = configData.debug.showCollisions;
+}
+
+void Fruits::SetFruitLevelData(const FruitLevelData& levelData) {
+    currentLevelData = levelData;
 }
 
 void Fruits::ResetFruit(Fruit &fruit) {

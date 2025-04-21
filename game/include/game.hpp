@@ -5,10 +5,12 @@
 #include "fruits.hpp"
 #include "bucket.hpp"
 #include "display.hpp"
+#include "level.hpp"
 #include "stage.hpp"
 
 class Game {
     Config config;
+    Level level;
     Fruits fruits;
     Bucket bucket;
     Display display;
@@ -33,7 +35,8 @@ class Game {
         Game(const std::string& configFile): 
             config(configFile),
             debug(config.GetData().debug.displayDebug),
-            fruits(config.GetData()) {};
+            level(config.GetData()),
+            fruits(config.GetData(), level.GetCurrentLevel().fruitLevelData) {};
         const bool isRunning() const;
         const bool isDebug() const;
         void Update();
