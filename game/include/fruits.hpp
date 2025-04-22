@@ -89,6 +89,8 @@ typedef struct FruitLevelData {
     int dropFrequencyMax;
 } FruitLevelData;
 
+typedef std::array<FruitLevelData, GAME_LEVELS_NUMBER> FruitLevels;
+
 typedef struct FruitCollision {
     Vector2 offset;
     float radius;
@@ -96,42 +98,40 @@ typedef struct FruitCollision {
 
 typedef struct Fruit {
     FruitCollision collision;
-    Vector2 position;
+    Vector2 position = { 0.0f, 0.0f };
     Vector2 origin;
     Vector2 velocity;
     Vector2 force;
-    float mass;
-    float rotation;
-    float width;
-    float height;
-    FruitType type;
-    bool active;
-    bool collided;
-    bool debounce;
+    float mass = 0.0f;
+    float rotation = 0.0f;
+    float width = 0.0f;
+    float height = 0.0f;
+    FruitType type = FruitType::APPLE;
+    bool active = false;
+    bool created = false;
+    bool collided = false;
+    bool debounce = false;
 } Fruit;
 
 class Fruits {
     Texture2D sprites[GAME_FRUIT_TYPES];
     Fruit fruits[GAME_FRUITS_MAX];
     Fruit fruitsDebug[GAME_FRUIT_TYPES];
-    std::array<FruitLevelData, GAME_LEVELS_NUMBER> fruitLevelData;
+    FruitLevels fruitLevels;
     float fruitTimeInterval = 0.0f;
     int currentLevel = 0;
     bool displayDebug = false;
     bool showCollisions = false;
 
-    void SetConfig(const ConfigData&);
-    void ResetFruit(Fruit&);
-    void MakeFruit(Fruit&, int index);
+    void CreateFruit(Fruit&, int index);
     void SpawnFruit(Fruit&);
     void UpdateMovementFruit(Fruit&);
     void RenderFruit(const Fruit&) const;
     
     public:
-        Fruits(const ConfigData&, const std::array<FruitLevelData, GAME_LEVELS_NUMBER>);
+        Fruits(const ConfigData&, const FruitLevels&);
         ~Fruits();
         void Reset();
-        void SetFruitLevelData(const std::array<FruitLevelData, GAME_LEVELS_NUMBER>);
         void Spawn();
         const std::tuple<int, int> Update(Bucket&);
         void Render() const;

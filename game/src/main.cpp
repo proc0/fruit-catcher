@@ -15,7 +15,7 @@
 int main() {
 
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_GAME_TITLE);
-  SetTargetFPS(60);
+  SetTargetFPS(120);
   SetExitKey(KEY_NULL);
   
   Game FruitJam(GAME_CONFIG_URI);

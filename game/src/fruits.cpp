@@ -8,8 +8,10 @@
 #define FRUIT_TIME_INTERVAL 1.0f
 #define GRAVITY 982.0f
 
-Fruits::Fruits(const ConfigData& configData, const std::array<FruitLevelData, GAME_LEVELS_NUMBER> levelData) {
-    SetConfig(configData);
+Fruits::Fruits(const ConfigData& configData, const FruitLevels& levelData): 
+fruitLevels(levelData),
+displayDebug(configData.debug.displayDebug),
+showCollisions(configData.debug.showCollisions) {
     for (const auto& fruitData : static_FruitDataMap) {
         try {
             const int spriteKey = static_cast<int>(fruitData.first);
@@ -20,8 +22,6 @@ Fruits::Fruits(const ConfigData& configData, const std::array<FruitLevelData, GA
             CloseWindow();
         }
     }
-    SetFruitLevelData(levelData);
-    Reset();
 }
 
 Fruits::~Fruits() {
@@ -30,27 +30,13 @@ Fruits::~Fruits() {
     }
 }
 
-void Fruits::SetConfig(const ConfigData& configData) {
-    displayDebug = configData.debug.displayDebug;
-    showCollisions = configData.debug.showCollisions;
-}
-
-void Fruits::SetFruitLevelData(const std::array<FruitLevelData, GAME_LEVELS_NUMBER> levelData) {
-    fruitLevelData = levelData;
-}
-
-void Fruits::ResetFruit(Fruit &fruit) {
-    fruit.active = false;
-}
-
 void Fruits::Reset(void){
     for(auto& fruit : fruits){
-        ResetFruit(fruit);
+        fruit.active = false;
     }
 }
 
-void Fruits::MakeFruit(Fruit &fruit, int index) {
-    fruit.active = true;
+void Fruits::CreateFruit(Fruit &fruit, int index) {
     fruit.type = (FruitType)index;
 
     Texture2D fruitSprite = sprites[index];
@@ -70,16 +56,12 @@ void Fruits::MakeFruit(Fruit &fruit, int index) {
     };
 
     fruit.mass = ratio;
-    fruit.collided = false;
-    fruit.debounce = false;
+    fruit.created = true;
 }
 
 void Fruits::SpawnFruit(Fruit &fruit) {
-    const std::array<FruitType, 10> fruitRatio = fruitLevelData[currentLevel].fruitRatio;
-    const int index = GetRandomValue(0, fruitRatio.size()-1);
-    const int fruitIndex = static_cast<int>(fruitRatio[index]);
-    MakeFruit(fruit, fruitIndex);
-    
+    fruit.active = true;
+
     const float posX = GetRandomValue(fruit.width, SCREEN_WIDTH - fruit.height);
     fruit.position = { posX, -fruit.height };
     
@@ -93,22 +75,39 @@ void Fruits::SpawnFruit(Fruit &fruit) {
 
     fruit.velocity = { 0.0f, 0.0f };
     fruit.rotation = 0.0f;
+    fruit.collided = false;
+    fruit.debounce = false;
 }
 
 void Fruits::Spawn(void) {
+    const std::array<FruitType, 10> fruitRatio = fruitLevels[currentLevel].fruitRatio;
+    const int index = GetRandomValue(0, fruitRatio.size()-1);
+    const int fruitIndex = static_cast<int>(fruitRatio[index]);
+
     int availableIndex = -1;
     for(int i=0; i<GAME_FRUITS_MAX; i++){
-        if(!fruits[i].active){
+        if(fruits[i].active) {
+            continue;
+        }
+        
+        if(fruits[i].type == fruitRatio[index]){
+            availableIndex = i;
+            break;
+        } else if(availableIndex == -1){
            availableIndex = i;
-           break;
         }
     }
     
     if(availableIndex == -1) {
         return;
     }
-    
-    SpawnFruit(fruits[availableIndex]);
+
+    Fruit &fruit = fruits[availableIndex];
+    if(!fruit.created) {
+        CreateFruit(fruit, fruitIndex);
+    }
+
+    SpawnFruit(fruit);
 }
 
 void Fruits::UpdateMovementFruit(Fruit &fruit) {
@@ -169,7 +168,7 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
         // fruit hits bottom
         if(fruit.position.y > SCREEN_HEIGHT) {
             lives--;
-            ResetFruit(fruit);
+            fruit.active = false;
             continue;
         }
         // fruit hits bucket
@@ -180,7 +179,7 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
             // when fruit is above bucket, and fruit is centered with bucket
             if(fruitCenter.y - fruit.collision.radius < bucketCollision.y && fruitCenter.x - fruit.collision.radius > bucketCollision.x && fruitCenter.x + fruit.collision.radius < bucketCollision.x + bucketCollision.width){
                 score++;
-                ResetFruit(fruit);
+                fruit.active = false;
                 continue;
             }
         }
@@ -197,7 +196,7 @@ void Fruits::UpdateDebug(void){
     for(int i=0; i<GAME_FRUIT_TYPES; i++){
         Fruit& fruit = fruitsDebug[i];
 
-        MakeFruit(fruit, i);
+        CreateFruit(fruit, i);
     
         fruit.position.x = 150*colNum + 100;
         fruit.position.y = 150*rowNum + 100;

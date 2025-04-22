@@ -60,8 +60,8 @@ const LevelData Level::GetCurrentLevel() const {
     return levels[currentLevel];
 }
 
-const std::array<FruitLevelData, GAME_LEVELS_NUMBER> Level::GetFruitLevelData() const {
-    std::array<FruitLevelData, GAME_LEVELS_NUMBER> levelData;
+const FruitLevels Level::GetFruitLevelData() const {
+    FruitLevels levelData;
     for(int i=0; i<GAME_LEVELS_NUMBER; i++){
         levelData[i] = levels[i].fruitLevelData;
     }

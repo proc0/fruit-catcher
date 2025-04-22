@@ -19,6 +19,6 @@ class Level {
         Level(const ConfigData&);
         ~Level() = default;
         const LevelData GetCurrentLevel() const;
-        const std::array<FruitLevelData, GAME_LEVELS_NUMBER> GetFruitLevelData() const;
+        const FruitLevels GetFruitLevelData() const;
         // void UpdateLevel(int currentLevel);
 };
