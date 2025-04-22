@@ -36,7 +36,7 @@ class Game {
             config(configFile),
             debug(config.GetData().debug.displayDebug),
             level(config.GetData()),
-            fruits(config.GetData(), level.GetCurrentLevel().fruitLevelData) {};
+            fruits(config.GetData(), level.GetFruitLevelData()) {};
         const bool isRunning() const;
         const bool isDebug() const;
         void Update();

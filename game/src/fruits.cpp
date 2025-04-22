@@ -8,7 +8,7 @@
 #define FRUIT_TIME_INTERVAL 1.0f
 #define GRAVITY 982.0f
 
-Fruits::Fruits(const ConfigData& configData, const FruitLevelData& levelData) {
+Fruits::Fruits(const ConfigData& configData, const std::array<FruitLevelData, GAME_LEVELS_NUMBER> levelData) {
     SetConfig(configData);
     for (const auto& fruitData : static_FruitDataMap) {
         try {
@@ -35,8 +35,8 @@ void Fruits::SetConfig(const ConfigData& configData) {
     showCollisions = configData.debug.showCollisions;
 }
 
-void Fruits::SetFruitLevelData(const FruitLevelData& levelData) {
-    currentLevelData = levelData;
+void Fruits::SetFruitLevelData(const std::array<FruitLevelData, GAME_LEVELS_NUMBER> levelData) {
+    fruitLevelData = levelData;
 }
 
 void Fruits::ResetFruit(Fruit &fruit) {
@@ -75,8 +75,10 @@ void Fruits::MakeFruit(Fruit &fruit, int index) {
 }
 
 void Fruits::SpawnFruit(Fruit &fruit) {
-    const int index = GetRandomValue(0, static_FruitDataMap.size()-1);
-    MakeFruit(fruit, index);
+    const std::array<FruitType, 10> fruitRatio = fruitLevelData[currentLevel].fruitRatio;
+    const int index = GetRandomValue(0, fruitRatio.size()-1);
+    const int fruitIndex = static_cast<int>(fruitRatio[index]);
+    MakeFruit(fruit, fruitIndex);
     
     const float posX = GetRandomValue(fruit.width, SCREEN_WIDTH - fruit.height);
     fruit.position = { posX, -fruit.height };

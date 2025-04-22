@@ -1,7 +1,5 @@
 #pragma once
 
-#include <map>
-
 #include "lib.h"
 #include "fruits.hpp"
 #include "config.hpp"
@@ -21,5 +19,6 @@ class Level {
         Level(const ConfigData&);
         ~Level() = default;
         const LevelData GetCurrentLevel() const;
+        const std::array<FruitLevelData, GAME_LEVELS_NUMBER> GetFruitLevelData() const;
         // void UpdateLevel(int currentLevel);
 };

@@ -8,6 +8,8 @@ Level::Level(const ConfigData &configData){
             break;
         }
 
+        std::array<FruitType, 10> fruitRatio; // TODO: centralize this num
+        int currentFruitRatioIndex = 0;
         std::map<FruitType, float> _frequencies;
         for(const auto &pair : levelConfig.fruitFrequencies){
             const std::string fruitString = pair.first;
@@ -16,6 +18,14 @@ Level::Level(const ConfigData &configData){
             try {
                 const FruitType fruitType = static_StringToFruit(fruitString);
                 _frequencies[fruitType] = frequency;
+
+                if(currentFruitRatioIndex < 10){  // TODO: centralize this num
+                    int multiplyFruitNum = frequency * 10.0f;
+                    for(int i=0; i<multiplyFruitNum; i++){
+                        fruitRatio[currentFruitRatioIndex] = fruitType;
+                        currentFruitRatioIndex++;
+                    }
+                }
             } catch(const std::exception &e){
                 std::cerr << "Could not convert string to fruit type, from config file." << e.what() << std::endl;
                 break;
@@ -27,6 +37,7 @@ Level::Level(const ConfigData &configData){
             fruitLevelData: {
                 levelId: levelConfig.id,
                 fruitFrequencies: _frequencies,
+                fruitRatio: fruitRatio,
                 dropFrequencyMin: levelConfig.dropFrequencyMin,
                 dropFrequencyMax: levelConfig.dropFrequencyMax,
             },
@@ -46,11 +57,13 @@ Level::Level(const ConfigData &configData){
 }
 
 const LevelData Level::GetCurrentLevel() const {
-    try {
+    return levels[currentLevel];
+}
 
-        return levels[0];
-    } catch (const std::exception &e) { 
-        std::cout << "blah blah" << '\n';
-        return levels[0];
+const std::array<FruitLevelData, GAME_LEVELS_NUMBER> Level::GetFruitLevelData() const {
+    std::array<FruitLevelData, GAME_LEVELS_NUMBER> levelData;
+    for(int i=0; i<GAME_LEVELS_NUMBER; i++){
+        levelData[i] = levels[i].fruitLevelData;
     }
+    return levelData;
 }

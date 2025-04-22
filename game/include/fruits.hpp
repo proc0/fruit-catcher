@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <array>
 #include <string>
 #include <tuple>
 #include <iostream>
@@ -83,6 +84,7 @@ static const char* static_FruitToString(const FruitType fruitType) {
 typedef struct FruitLevelData {
     int levelId;
     std::map<FruitType, float> fruitFrequencies;
+    std::array<FruitType, 10> fruitRatio;
     int dropFrequencyMin;
     int dropFrequencyMax;
 } FruitLevelData;
@@ -112,8 +114,9 @@ class Fruits {
     Texture2D sprites[GAME_FRUIT_TYPES];
     Fruit fruits[GAME_FRUITS_MAX];
     Fruit fruitsDebug[GAME_FRUIT_TYPES];
-    FruitLevelData currentLevelData;
+    std::array<FruitLevelData, GAME_LEVELS_NUMBER> fruitLevelData;
     float fruitTimeInterval = 0.0f;
+    int currentLevel = 0;
     bool displayDebug = false;
     bool showCollisions = false;
 
@@ -125,10 +128,10 @@ class Fruits {
     void RenderFruit(const Fruit&) const;
     
     public:
-        Fruits(const ConfigData&, const FruitLevelData&);
+        Fruits(const ConfigData&, const std::array<FruitLevelData, GAME_LEVELS_NUMBER>);
         ~Fruits();
         void Reset();
-        void SetFruitLevelData(const FruitLevelData&);
+        void SetFruitLevelData(const std::array<FruitLevelData, GAME_LEVELS_NUMBER>);
         void Spawn();
         const std::tuple<int, int> Update(Bucket&);
         void Render() const;
