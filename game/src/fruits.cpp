@@ -153,7 +153,8 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
     int score = 0;
 
     if(fruitTimeInterval <= 0) {
-        fruitTimeInterval = FRUIT_TIME_INTERVAL;
+        const FruitLevelData level = fruitLevels[currentLevel];
+        fruitTimeInterval = GetRandomValue(level.dropFrequencyMin, level.dropFrequencyMax)/1000.0f;
         Spawn();
     } else {
         fruitTimeInterval -= GetFrameTime();

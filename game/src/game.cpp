@@ -18,21 +18,24 @@ void Game::Update() {
     // UI update
     if(state == OVER || state == PAUSE || state == START) {
         display.UpdateStartMenu(mousePosition);
-
+        // Start or Restart action
         if(display.isStartButtonClicked() || IsKeyPressed(KEY_R)){
             fruits.Reset();
+            bucket.Update(mousePosition);
+            HideCursor();
             timeStart = GetTime();
             score = 0;
             lives = GAME_LIVES;
             state = PLAY;
             return;
         }
-
+        // Quit action
         if(display.isQuitButtonClicked()){
             state = END;
             return;
         }
     }
+    
     // Game update
     if(state == PLAY) {
         bucket.Update(mousePosition);
@@ -48,16 +51,19 @@ void Game::Update() {
             timeEnd = GetTime();
             // fires once to update score and time - for now
             display.UpdateGameOver(displayScore, timeEnd, timeStart);
+            ShowCursor();
             state = OVER;
             return;
         }
 
         if(IsKeyPressed(KEY_ESCAPE)){
+            ShowCursor();
             state = PAUSE;
             return;
         }
     } else if(state == PAUSE) {
         if(IsKeyPressed(KEY_ESCAPE)){
+            HideCursor();
             state = PLAY;
             return;
         }
