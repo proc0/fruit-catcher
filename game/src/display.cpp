@@ -23,11 +23,15 @@ static const int FONTSIZE_SCORETEXT = 52;
 static constexpr int SCREEN_HALFWIDTH = SCREEN_WIDTH*0.5f;
 static constexpr int SCREEN_HALFHEIGHT = SCREEN_HEIGHT*0.5f;
 
-Display::Display(void) {
+Display::Display(const ConfigData& configData) {
     panelStartMenu = LoadTexture(START_MENU_IMAGE);
     panelGameOver = LoadTexture(PANEL_GAME_OVER);
     fruitIcon = LoadTexture(FRUIT_ICON_URI);
 
+    // config
+    displayFPS = configData.debug.showFPS;
+
+    // panel params
     const int startMenuPanelX = SCREEN_HALFWIDTH - panelStartMenu.width/2;
     const int startMenuPanelY = SCREEN_HALFHEIGHT - panelStartMenu.height/2;
     panelTextureParams["startMenuPanel"] = {
@@ -274,4 +278,10 @@ void Display::Render() const {
     const int scoreFontsize = 32 + hudAnimation[hudScoreFrameIdx];
     const Color scoreColor = hudScoreFrameIdx != 0 ? GOLD : WHITE;
     DrawText(scoreNum, 115, 75, scoreFontsize, scoreColor);
+
+    if(displayFPS){
+        const int fps = GetFPS();
+        const char *fpsNum = TextFormat("%d", fps);
+        DrawText(fpsNum, 10, 10, 20, BLACK);
+    }
 }

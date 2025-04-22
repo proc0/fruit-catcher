@@ -35,6 +35,7 @@ class Game {
         Game(const std::string& configFile): 
             config(configFile),
             debug(config.GetData().debug.displayDebug),
+            display(config.GetData()),
             level(config.GetData()),
             fruits(config.GetData(), level.GetFruitLevelData()) {};
         const bool isRunning() const;

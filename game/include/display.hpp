@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <string>
+#include "config.hpp"
 #include "lib.h"
 
 #define STARTMENU_OPTIONS_LENGTH 3
@@ -48,9 +49,10 @@ class Display {
     int hudLivesFrameIdx = 0;
     bool scoreChanged = false;
     bool livesChanged = false;
+    bool displayFPS = false;
 
     public:
-        Display();
+        Display(const ConfigData& configData);
         ~Display();
         const bool isStartButtonClicked() const;
         const bool isQuitButtonClicked() const;
