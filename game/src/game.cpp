@@ -77,7 +77,7 @@ void Game::Update() {
 
         if(lives <= 0) {
             timeEnd = GetTime();
-            // fires once to update score and time - for now
+            // fires once to update score and time
             display.UpdateGameOver(displayScore, timeEnd, timeStart);
             ShowCursor();
             state = OVER;
@@ -88,10 +88,23 @@ void Game::Update() {
         if(levelTimeStart >= level.GetCurrentLevel().duration){
             levelTimeEnd = GetTime();
             levelTimeStart = 0.0f;
-
-            // TODO: check if last level
-            state = READY;
-            return;
+            if(level.GetCurrentLevel().id == GAME_LEVELS_NUMBER - 1){
+                //TODO: add a game ending screen
+                timeEnd = GetTime();
+                level.Reset();
+                fruits.SetLevel(0);
+                // fires once to update score and time
+                display.UpdateGameOver(displayScore, timeEnd, timeStart);
+                ShowCursor();
+                state = OVER;
+                return;                
+            } else {
+                level.NextLevel();
+                fruits.Reset();
+                fruits.SetLevel(level.GetCurrentLevel().id);
+                state = READY;
+                return;
+            }
         }
     }
 }

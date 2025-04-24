@@ -133,6 +133,7 @@ class Fruits {
         ~Fruits();
         void Reset();
         void Spawn();
+        void SetLevel(int);
         const std::tuple<int, int> Update(Bucket&);
         void Render() const;
         void UpdateDebug();

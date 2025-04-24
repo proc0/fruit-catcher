@@ -67,3 +67,14 @@ const FruitLevels Level::GetFruitLevelData() const {
     }
     return levelData;
 }
+
+void Level::NextLevel(){
+    if(currentLevel >= GAME_LEVELS_NUMBER){
+        return;
+    }
+    currentLevel++;
+}
+
+void Level::Reset(){
+    currentLevel = 0;
+}

@@ -18,7 +18,8 @@ class Level {
     public:
         Level(const ConfigData&);
         ~Level() = default;
+        void NextLevel();
+        void Reset();
         const LevelData GetCurrentLevel() const;
         const FruitLevels GetFruitLevelData() const;
-        // void UpdateLevel(int currentLevel);
 };

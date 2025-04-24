@@ -36,6 +36,14 @@ void Fruits::Reset(void){
     }
 }
 
+void Fruits::SetLevel(int level){
+    if(level > fruitLevels.size()) {
+        std::cout << "Fruit.SetLevel Index Error" << std::endl;
+        return;
+    }
+    currentLevel = level;
+}
+
 void Fruits::CreateFruit(Fruit &fruit, int index) {
     fruit.type = (FruitType)index;
 
@@ -80,11 +88,12 @@ void Fruits::SpawnFruit(Fruit &fruit) {
 }
 
 void Fruits::Spawn(void) {
-    const std::array<FruitType, 10> fruitRatio = fruitLevels[currentLevel].fruitRatio;
+    const std::array<FruitType, 10> &fruitRatio = fruitLevels[currentLevel].fruitRatio;
     const int index = GetRandomValue(0, fruitRatio.size()-1);
     const int fruitIndex = static_cast<int>(fruitRatio[index]);
 
     int availableIndex = -1;
+    bool forceCreate = false;
     for(int i=0; i<GAME_FRUITS_MAX; i++){
         if(fruits[i].active) {
             continue;
@@ -94,6 +103,7 @@ void Fruits::Spawn(void) {
             availableIndex = i;
             break;
         } else if(availableIndex == -1){
+            forceCreate = true;
            availableIndex = i;
         }
     }
@@ -103,7 +113,7 @@ void Fruits::Spawn(void) {
     }
 
     Fruit &fruit = fruits[availableIndex];
-    if(!fruit.created) {
+    if(!fruit.created || forceCreate) {
         CreateFruit(fruit, fruitIndex);
     }
 
