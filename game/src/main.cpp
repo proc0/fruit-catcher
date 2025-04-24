@@ -5,7 +5,9 @@
 
 //TODO: make bucket into a transparent jar, every fruit turns into jam at the bottom, layers build up and clear when it gets to the top.
 //TODO: spice up the game over screen
-//TODO: add eggs that add one life point
+//TODO: add ending screen
+//TODO: add eggs that add one life point, and spikes that take away a life point
+//TODO: make fruits missed add to timer, and increase chance of spawning a spike
 //TODO: add progressive difficulty, starting with small fruit and more fruits are added faster -- LEVELS
 //TODO: add satisfying sound when fruit is caught, add some other secondary effects (cartoon lines)
 //TODO: update game name
