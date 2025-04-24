@@ -19,16 +19,19 @@ class Game {
     enum State {
         START,
         PLAY,
+        READY,
         PAUSE,
         OVER,
         END
     };
     State state = START;
-    float timeEnd;
-    float timeStart;
-    int lives;
-    int score;
-    int displayScore;
+    float timeEnd = 0.0f;
+    float timeStart = 0.0f;
+    float levelTimeStart = 0.0f;
+    float levelTimeEnd = 0.0f;
+    int lives = GAME_LIVES;
+    int score = 0;
+    int displayScore = 0;
     bool debug = false;
 
     public:

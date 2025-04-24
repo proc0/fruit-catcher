@@ -9,6 +9,7 @@
 static const char *textGameOver = TEXT_GAME_OVER;
 static const char *textLives = TEXT_LIVES;
 static const char *textQuit = TEXT_GAME_QUIT;
+static const char *textReady = TEXT_READY;
 static const char *textRestart = TEXT_RESTART;
 static const char *textRestartMessage = TEXT_PRESS_R;
 static const char *textStart = TEXT_GAME_START;
@@ -84,6 +85,17 @@ Display::Display(const ConfigData& configData) {
         x: int(startButtonX),
         y: int(quitButtonY),
         fontSize: FONTSIZE_MENUTEXT,
+        color: BLACK,
+    };
+
+    // Start level
+    const int textReadyX = SCREEN_HALFWIDTH - MeasureText(textReady, FONTSIZE_TITLE)/2;
+    const int textReadyY = SCREEN_HALFHEIGHT - 100;
+    gamePlayTextParams["startLevelReady"] = {
+        text: textReady,
+        x: textReadyX,
+        y: textReadyY,
+        fontSize: FONTSIZE_TITLE,
         color: BLACK,
     };
 
@@ -284,4 +296,9 @@ void Display::Render() const {
         const char *fpsNum = TextFormat("%d", fps);
         DrawText(fpsNum, 10, 10, 20, BLACK);
     }
+}
+
+void Display::RenderReady() const {
+    const TextParams labelReady = gamePlayTextParams.at("startLevelReady");
+    DrawText(labelReady.text, labelReady.x, labelReady.y, labelReady.fontSize, BLACK);
 }

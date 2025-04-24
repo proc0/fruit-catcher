@@ -1,5 +1,7 @@
 #include "game.hpp"
 
+#define GAME_LEVEL_READY_TIME 2.0f
+
 const bool Game::isDebug() const {
     return debug;
 }
@@ -15,6 +17,19 @@ void Game::Update() {
         mousePosition = GetMousePosition();
     }
 
+    if(state == PAUSE) {
+        if(IsKeyPressed(KEY_ESCAPE)){
+            HideCursor();
+            state = PLAY;
+            return;
+        }
+    }
+    
+    if(IsKeyPressed(KEY_ESCAPE)){
+        ShowCursor();
+        state = PAUSE;
+    }
+
     // UI update
     if(state == OVER || state == PAUSE || state == START) {
         display.UpdateStartMenu(mousePosition);
@@ -24,9 +39,11 @@ void Game::Update() {
             bucket.Update(mousePosition);
             HideCursor();
             timeStart = GetTime();
+            levelTimeEnd = 0.0f;
+            levelTimeStart = 0.0f;
             score = 0;
             lives = GAME_LIVES;
-            state = PLAY;
+            state = READY;
             return;
         }
         // Quit action
@@ -37,6 +54,18 @@ void Game::Update() {
     }
     
     // Game update
+    if(state == READY){
+        bucket.Update(mousePosition);
+        display.Update(lives, displayScore);
+
+        levelTimeStart += GetFrameTime();
+        if(levelTimeStart >= GAME_LEVEL_READY_TIME){
+            state = PLAY;
+            return;
+        }
+
+    }
+
     if(state == PLAY) {
         bucket.Update(mousePosition);
 
@@ -44,7 +73,6 @@ void Game::Update() {
         lives += std::get<0>(result);
         score += std::get<1>(result);
         displayScore = score * GAME_SCORE_UNIT;
-
         display.Update(lives, displayScore);
 
         if(lives <= 0) {
@@ -56,15 +84,13 @@ void Game::Update() {
             return;
         }
 
-        if(IsKeyPressed(KEY_ESCAPE)){
-            ShowCursor();
-            state = PAUSE;
-            return;
-        }
-    } else if(state == PAUSE) {
-        if(IsKeyPressed(KEY_ESCAPE)){
-            HideCursor();
-            state = PLAY;
+        levelTimeStart += GetFrameTime();
+        if(levelTimeStart >= level.GetCurrentLevel().duration){
+            levelTimeEnd = GetTime();
+            levelTimeStart = 0.0f;
+
+            // TODO: check if last level
+            state = READY;
             return;
         }
     }
@@ -73,6 +99,12 @@ void Game::Update() {
 void Game::Render() const {
     if(state != END){
         stage.Render();
+    }
+
+    if(state == READY){
+        bucket.Render();
+        display.Render();
+        display.RenderReady();
     }
 
     if(state == PLAY || state == PAUSE || state == OVER) {
