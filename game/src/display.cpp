@@ -252,9 +252,10 @@ void Display::RenderGameOver() const {
     }
 }
 
-void Display::Update(int _lives, int _score) {
+void Display::Update(int _lives, int _score, int _time) {
     livesChanged = _lives != lives;
     scoreChanged = _score != score;
+    time = _time;
 
     if(livesChanged || scoreChanged){
         score = _score;
@@ -291,6 +292,9 @@ void Display::Render() const {
     const Color scoreColor = hudScoreFrameIdx != 0 ? GOLD : WHITE;
     DrawText(scoreNum, 115, 75, scoreFontsize, scoreColor);
 
+    const char *levelTime = TextFormat("%d", time);
+    DrawText(levelTime, SCREEN_HALFWIDTH-20, 20, 52, WHITE);
+
     if(displayFPS){
         const int fps = GetFPS();
         const char *fpsNum = TextFormat("%d", fps);
@@ -300,5 +304,5 @@ void Display::Render() const {
 
 void Display::RenderReady() const {
     const TextParams labelReady = gamePlayTextParams.at("startLevelReady");
-    DrawText(labelReady.text, labelReady.x, labelReady.y, labelReady.fontSize, BLACK);
+    DrawText(labelReady.text, labelReady.x, labelReady.y, labelReady.fontSize, WHITE);
 }

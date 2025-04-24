@@ -5,8 +5,6 @@
 #include "config.hpp"
 #include "lib.h"
 
-#define STARTMENU_OPTIONS_LENGTH 3
-
 typedef struct TextParams {
     const char *text;
     int x;
@@ -46,6 +44,7 @@ class Display {
     std::unordered_map<std::string, TextureParams> panelTextureParams;
     int score;
     int lives;
+    int time;
     int hudScoreFrameIdx = 0;
     int hudLivesFrameIdx = 0;
     bool scoreChanged = false;
@@ -59,7 +58,7 @@ class Display {
         const bool isQuitButtonClicked() const;
         void UpdateStartMenu(Vector2 mousePosition);
         void RenderStartMenu() const;
-        void Update(int lives, int score);
+        void Update(int lives, int score, int time);
         void Render() const;
         void RenderReady() const;
         void UpdateGameOver(int score, float timeEnd, float timeStart);

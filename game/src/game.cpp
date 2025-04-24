@@ -39,9 +39,10 @@ void Game::Update() {
             bucket.Update(mousePosition);
             HideCursor();
             timeStart = GetTime();
-            levelTimeEnd = 0.0f;
-            levelTimeStart = 0.0f;
+            timeReady = 0.0f;
+            timeLevel = 0.0f;
             score = 0;
+            displayScore = 0;
             lives = GAME_LIVES;
             state = READY;
             return;
@@ -56,10 +57,12 @@ void Game::Update() {
     // Game update
     if(state == READY){
         bucket.Update(mousePosition);
-        display.Update(lives, displayScore);
+        displayTime = level.GetCurrentLevel().duration;
+        display.Update(lives, displayScore, displayTime);
 
-        levelTimeStart += GetFrameTime();
-        if(levelTimeStart >= GAME_LEVEL_READY_TIME){
+        timeReady += GetFrameTime();
+        if(timeReady >= GAME_LEVEL_READY_TIME){
+            timeReady = 0.0f;
             state = PLAY;
             return;
         }
@@ -73,10 +76,17 @@ void Game::Update() {
         lives += std::get<0>(result);
         score += std::get<1>(result);
         displayScore = score * GAME_SCORE_UNIT;
-        display.Update(lives, displayScore);
 
+        timeLevel += GetFrameTime();
+        const int duration = level.GetCurrentLevel().duration;
+        displayTime = duration - timeLevel;
+        display.Update(lives, displayScore, displayTime);
+    
         if(lives <= 0) {
+            //TODO: add a game ending screen
             timeEnd = GetTime();
+            level.Reset();
+            fruits.SetLevel(0);
             // fires once to update score and time
             display.UpdateGameOver(displayScore, timeEnd, timeStart);
             ShowCursor();
@@ -84,10 +94,8 @@ void Game::Update() {
             return;
         }
 
-        levelTimeStart += GetFrameTime();
-        if(levelTimeStart >= level.GetCurrentLevel().duration){
-            levelTimeEnd = GetTime();
-            levelTimeStart = 0.0f;
+        if(timeLevel >= duration){
+            timeLevel = 0.0f;
             if(level.GetCurrentLevel().id == GAME_LEVELS_NUMBER - 1){
                 //TODO: add a game ending screen
                 timeEnd = GetTime();

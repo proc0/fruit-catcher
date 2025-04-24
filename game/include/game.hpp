@@ -26,12 +26,13 @@ class Game {
     };
     State state = START;
     float timeEnd = 0.0f;
+    float timeLevel = 0.0f;
     float timeStart = 0.0f;
-    float levelTimeStart = 0.0f;
-    float levelTimeEnd = 0.0f;
+    float timeReady = 0.0f;
+    int displayScore = 0;
+    int displayTime = 0;
     int lives = GAME_LIVES;
     int score = 0;
-    int displayScore = 0;
     bool debug = false;
 
     public:
