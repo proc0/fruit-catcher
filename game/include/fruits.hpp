@@ -11,24 +11,24 @@
 #include "bucket.hpp"
 
 #define FRUITS \
-    X("APPLE", APPLE, "resources/fruits/red-apple.png", 0.0f, 15.0f, 0.8f) \
-    X("BANANA", BANANA, "resources/fruits/banana.png", 23.0f, 28.0f, 0.9f) \
-    X("BLACKBERRY", BLACKBERRY, "resources/fruits/black-berry-light.png", 0.0f, 9.0f, 0.3f) \
-    X("CHERRY", CHERRY, "resources/fruits/red-cherry.png", -4.0f, 9.0f, 0.3f) \
-    X("COCONUT", COCONUT, "resources/fruits/coconut.png", -20.0f, 10.0f, 1.0f) \
-    X("GRAPE", GRAPE, "resources/fruits/red-grape.png", 3.0f, -8.0f, 0.8f) \
-    X("LEMON", LEMON, "resources/fruits/lemon.png", 0.0f, 0.0f, 0.5f) \
-    X("LIMA", LIMA, "resources/fruits/lime.png", 0.0f, 0.0f, 0.5f) \
-    X("NARANJA", NARANJA, "resources/fruits/orange.png", 0.0f, 5.0f, 0.8f) \
-    X("PEACH", PEACH, "resources/fruits/peach.png", 0.0f, 0.0f, 0.8f) \
-    X("PEAR", PEAR, "resources/fruits/pear.png", 0.0f, 25.0f, 0.65f) \
-    X("PLUM", PLUM, "resources/fruits/plum.png", 4.0f, 10.0f, 0.8f) \
-    X("RASPBERRY", RASPBERRY, "resources/fruits/raspberry.png", 0.0f, 9.0f, 0.3f) \
-    X("STRAWBERRY", STRAWBERRY, "resources/fruits/strawberry.png", -8.0f, 12.0f, 0.4f) \
-    X("WATERMELON", WATERMELON, "resources/fruits/watermelon.png", 0.0f, 0.0f, 1.0f)
+    X("APPLE", APPLE, "resources/fruits/red-apple.png", 0.0f, 15.0f, RED, 0.8f) \
+    X("BANANA", BANANA, "resources/fruits/banana.png", 23.0f, 28.0f, YELLOW, 0.9f) \
+    X("BLACKBERRY", BLACKBERRY, "resources/fruits/black-berry-light.png", 0.0f, 9.0f, PURPLE, 0.3f) \
+    X("CHERRY", CHERRY, "resources/fruits/red-cherry.png", -4.0f, 9.0f, RED, 0.3f) \
+    X("COCONUT", COCONUT, "resources/fruits/coconut.png", -20.0f, 10.0f, WHITE, 1.0f) \
+    X("GRAPE", GRAPE, "resources/fruits/red-grape.png", 3.0f, -8.0f, GREEN, 0.8f) \
+    X("LEMON", LEMON, "resources/fruits/lemon.png", 0.0f, 0.0f, YELLOW, 0.5f) \
+    X("LIMA", LIMA, "resources/fruits/lime.png", 0.0f, 0.0f, LIME, 0.5f) \
+    X("NARANJA", NARANJA, "resources/fruits/orange.png", 0.0f, 5.0f, ORANGE, 0.8f) \
+    X("PEACH", PEACH, "resources/fruits/peach.png", 0.0f, 0.0f, BEIGE, 0.8f) \
+    X("PEAR", PEAR, "resources/fruits/pear.png", 0.0f, 25.0f, GREEN, 0.65f) \
+    X("PLUM", PLUM, "resources/fruits/plum.png", 4.0f, 10.0f, PURPLE, 0.8f) \
+    X("RASPBERRY", RASPBERRY, "resources/fruits/raspberry.png", 0.0f, 9.0f, RED, 0.3f) \
+    X("STRAWBERRY", STRAWBERRY, "resources/fruits/strawberry.png", -8.0f, 12.0f, RED, 0.4f) \
+    X("WATERMELON", WATERMELON, "resources/fruits/watermelon.png", 0.0f, 0.0f, RED, 1.0f)
 
 typedef enum class FruitType {
-#define X(STRING, ENUM, URI, OFFSETX, OFFSETY, RATING) ENUM,
+#define X(STRING, ENUM, URI, OFFSETX, OFFSETY, COLOR, RATING) ENUM,
     FRUITS
 #undef X
 } FruitType;
@@ -37,19 +37,20 @@ typedef struct FruitData {
     const FruitType type;
     const std::string uri;
     const Vector2 offset;
+    const Color color;
     const float rating;
 } FruitData;
 
 static const std::map<FruitType, FruitData> static_FruitDataMap = {
-#define X(STRING, ENUM, URI, OFFSETX, OFFSETY, RATING) { FruitType::ENUM, \
-    { type: FruitType::ENUM, uri: URI, offset: { OFFSETX, OFFSETY }, rating: RATING }},
+#define X(STRING, ENUM, URI, OFFSETX, OFFSETY, COLOR, RATING) { FruitType::ENUM, \
+    { type: FruitType::ENUM, uri: URI, offset: { OFFSETX, OFFSETY }, color: COLOR, rating: RATING }},
     FRUITS
 #undef X
 };
 
 static const FruitType static_StringToFruit(const std::string& fruitString) {
     static const std::map<std::string, FruitType> fruitMap = {
-#define X(STRING, ENUM, URI, OFFSETX, OFFSETY, RATING) { STRING, FruitType::ENUM },
+#define X(STRING, ENUM, URI, OFFSETX, OFFSETY, COLOR, RATING) { STRING, FruitType::ENUM },
     FRUITS
 #undef X
     };
@@ -65,7 +66,7 @@ static const FruitType static_StringToFruit(const std::string& fruitString) {
 
 static const char* static_FruitToString(const FruitType fruitType) {
     static const char* fruitArray[] = {
-#define X(STRING, ENUM, URI, OFFSETX, OFFSETY, RATING) STRING,
+#define X(STRING, ENUM, URI, OFFSETX, OFFSETY, COLOR, RATING) STRING,
     FRUITS
 #undef X
     };

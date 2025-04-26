@@ -93,18 +93,18 @@ void Fruits::Spawn(void) {
     const int fruitIndex = static_cast<int>(fruitRatio[index]);
 
     int availableIndex = -1;
-    bool forceCreate = false;
+    bool skipCreate = false;
     for(int i=0; i<GAME_FRUITS_MAX; i++){
         if(fruits[i].active) {
             continue;
         }
         
         if(fruits[i].type == fruitRatio[index]){
+            skipCreate = true;
             availableIndex = i;
             break;
         } else if(availableIndex == -1){
-            forceCreate = true;
-           availableIndex = i;
+            availableIndex = i;
         }
     }
     
@@ -113,7 +113,7 @@ void Fruits::Spawn(void) {
     }
 
     Fruit &fruit = fruits[availableIndex];
-    if(!fruit.created || forceCreate) {
+    if(!fruit.created || !skipCreate) {
         CreateFruit(fruit, fruitIndex);
     }
 
@@ -190,6 +190,7 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
             // when fruit is above bucket, and fruit is centered with bucket
             if(fruitCenter.y - fruit.collision.radius < bucketCollision.y && fruitCenter.x - fruit.collision.radius > bucketCollision.x && fruitCenter.x + fruit.collision.radius < bucketCollision.x + bucketCollision.width){
                 score++;
+                bucket.UpdateColor(static_FruitDataMap.at(fruit.type).color);
                 fruit.active = false;
                 continue;
             }

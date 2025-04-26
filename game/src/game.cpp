@@ -146,9 +146,9 @@ void Game::Render() const {
 void Game::UpdateDebug() {
     if(state != END){
         stage.Update();
-        mousePosition = GetMousePosition();
 
         fruits.UpdateDebug();
+        bucket.UpdateDebug();
     }
 }
 
@@ -156,5 +156,6 @@ void Game::RenderDebug() const {
     if(state != END){
         stage.Render();
         fruits.RenderDebug();
+        bucket.RenderDebug();
     }
 }
