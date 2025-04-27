@@ -5,8 +5,8 @@
 
 //DONE: make bucket into a transparent jar, every fruit turns into jam at the bottom, layers build up and clear when it gets to the top.
 //DONE: add progressive difficulty, starting with small fruit and more fruits are added faster -- LEVELS
+//DONE: Fix background scroll depending on FPS
 
-//TODO: Fix background scroll depending on FPS
 //TODO: add WIN screen (based on game over screen)
 //TODO: add LOSE screen (based on game over screen)
 //TODO: add eggs that add one life point
