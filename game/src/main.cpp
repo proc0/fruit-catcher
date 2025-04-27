@@ -15,6 +15,8 @@
 //TODO: Add score number popup when fruit is caught
 //TODO: add satisfying sound when fruit is caught
 //TODO: add comic style impact lines when fruit is caught
+//TODO: add more levels, and test for balance
+//TODO: iterate until it's fun
 //TODO: update game name
 //TODO: Look into packaging for different platforms
 //TODO: Look into adding this to itch.io
