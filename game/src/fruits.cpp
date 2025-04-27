@@ -190,7 +190,7 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
             // when fruit is above bucket, and fruit is centered with bucket
             if(fruitCenter.y - fruit.collision.radius < bucketCollision.y && fruitCenter.x - fruit.collision.radius > bucketCollision.x && fruitCenter.x + fruit.collision.radius < bucketCollision.x + bucketCollision.width){
                 score++;
-                bucket.UpdateColor(static_FruitDataMap.at(fruit.type).color);
+                bucket.UpdateJam(static_FruitDataMap.at(fruit.type).color);
                 fruit.active = false;
                 continue;
             }

@@ -1,6 +1,6 @@
 #include "game.hpp"
 
-#define GAME_LEVEL_READY_TIME 2.0f
+#define GAME_LEVEL_READY_TIME 1.25f
 
 const bool Game::isDebug() const {
     return debug;
@@ -35,7 +35,9 @@ void Game::Update() {
         display.UpdateStartMenu(mousePosition);
         // Start or Restart action
         if(display.isStartButtonClicked() || IsKeyPressed(KEY_R)){
+            //TODO: move this to a reset?
             fruits.Reset();
+            bucket.Reset();
             bucket.Update(mousePosition);
             HideCursor();
             timeStart = GetTime();
@@ -70,18 +72,19 @@ void Game::Update() {
     }
 
     if(state == PLAY) {
+        // player input
         bucket.Update(mousePosition);
-
+        // resources
         const std::tuple<int, int> result = fruits.Update(bucket);
         lives += std::get<0>(result);
         score += std::get<1>(result);
         displayScore = score * GAME_SCORE_UNIT;
-
+        // level and HUD
         timeLevel += GetFrameTime();
         const int duration = level.GetCurrentLevel().duration;
         displayTime = duration - timeLevel;
         display.Update(lives, displayScore, displayTime);
-    
+        // Lose
         if(lives <= 0) {
             //TODO: add a game ending screen
             timeEnd = GetTime();
@@ -93,10 +96,13 @@ void Game::Update() {
             state = OVER;
             return;
         }
-
+        // Progress
         if(timeLevel >= duration){
             timeLevel = 0.0f;
+            // Win
             if(level.GetCurrentLevel().id == GAME_LEVELS_NUMBER - 1){
+                //WIN
+                //TODO: make distinction between WIN and LOSE branches
                 //TODO: add a game ending screen
                 timeEnd = GetTime();
                 level.Reset();
@@ -107,6 +113,7 @@ void Game::Update() {
                 state = OVER;
                 return;                
             } else {
+                // Next level
                 level.NextLevel();
                 fruits.Reset();
                 fruits.SetLevel(level.GetCurrentLevel().id);
