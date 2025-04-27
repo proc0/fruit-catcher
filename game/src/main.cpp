@@ -3,14 +3,23 @@
 #define GAME_CONFIG_URI "game/FruitCatcher.ini"
 
 
-//TODO: make bucket into a transparent jar, every fruit turns into jam at the bottom, layers build up and clear when it gets to the top.
-//TODO: spice up the game over screen
-//TODO: add ending screen
-//TODO: add eggs that add one life point, and spikes that take away a life point
-//TODO: make fruits missed add to timer, and increase chance of spawning a spike
-//TODO: add progressive difficulty, starting with small fruit and more fruits are added faster -- LEVELS
-//TODO: add satisfying sound when fruit is caught, add some other secondary effects (cartoon lines)
+//DONE: make bucket into a transparent jar, every fruit turns into jam at the bottom, layers build up and clear when it gets to the top.
+//DONE: add progressive difficulty, starting with small fruit and more fruits are added faster -- LEVELS
+
+//TODO: Fix background scroll depending on FPS
+//TODO: add WIN screen (based on game over screen)
+//TODO: add LOSE screen (based on game over screen)
+//TODO: add eggs that add one life point
+//TODO: add spikes that stun for 1 second
+//TODO: add bucket effects when hit by spike
+//TODO: Add score number popup when fruit is caught
+//TODO: add satisfying sound when fruit is caught
+//TODO: add comic style impact lines when fruit is caught
 //TODO: update game name
+//TODO: Look into packaging for different platforms
+//TODO: Look into adding this to itch.io
+//TODO: Do Emscriptem build
+//TODO: Look into creating a debug build instead of including debug functions always, use define macros to read compiler variables
 
 int main() {
 
