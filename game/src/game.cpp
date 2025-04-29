@@ -11,11 +11,9 @@ const bool Game::isRunning() const {
 }
 
 void Game::Update() {
-    // always 
-    if(state != END){
-        stage.Update();
-        mousePosition = GetMousePosition();
-    }
+    if(state == END) return;
+
+    stage.Update();
 
     if(state == PAUSE) {
         if(IsKeyPressed(KEY_ESCAPE)){
@@ -25,51 +23,12 @@ void Game::Update() {
         }
     }
     
-    if(IsKeyPressed(KEY_ESCAPE)){
+    if(IsKeyPressed(KEY_ESCAPE)) {
         ShowCursor();
         state = PAUSE;
     }
 
-    // UI update
-    if(state == OVER || state == PAUSE || state == START) {
-        display.UpdateStartMenu(mousePosition);
-        // Start or Restart action
-        if(display.isStartButtonClicked() || IsKeyPressed(KEY_R)){
-            //TODO: move this to a reset?
-            fruits.Reset();
-            bucket.Reset();
-            bucket.Update(mousePosition);
-            HideCursor();
-            timeStart = GetTime();
-            timeReady = 0.0f;
-            timeLevel = 0.0f;
-            score = 0;
-            displayScore = 0;
-            lives = GAME_LIVES;
-            state = READY;
-            return;
-        }
-        // Quit action
-        if(display.isQuitButtonClicked()){
-            state = END;
-            return;
-        }
-    }
-    
-    // Game update
-    if(state == READY){
-        bucket.Update(mousePosition);
-        displayTime = level.GetCurrentLevel().duration;
-        display.Update(lives, displayScore, displayTime);
-
-        timeReady += GetFrameTime();
-        if(timeReady >= GAME_LEVEL_READY_TIME){
-            timeReady = 0.0f;
-            state = PLAY;
-            return;
-        }
-
-    }
+    mousePosition = GetMousePosition();
 
     if(state == PLAY) {
         // player input
@@ -100,7 +59,7 @@ void Game::Update() {
         if(timeLevel >= duration){
             timeLevel = 0.0f;
             // Win
-            if(level.GetCurrentLevel().id == GAME_LEVELS_NUMBER - 1){
+            if(level.GetCurrentLevel().id == LEVEL_COUNT - 1){
                 //WIN
                 //TODO: make distinction between WIN and LOSE branches
                 //TODO: add a game ending screen
@@ -122,18 +81,54 @@ void Game::Update() {
             }
         }
     }
+
+    if(state == READY){
+        // player input
+        bucket.Update(mousePosition);
+        // show HUD
+        displayTime = level.GetCurrentLevel().duration;
+        display.Update(lives, displayScore, displayTime);
+        // countdown
+        timeReady += GetFrameTime();
+        if(timeReady >= GAME_LEVEL_READY_TIME){
+            timeReady = 0.0f;
+            state = PLAY;
+            return;
+        }
+
+    }
+
+    // UI
+    if(state == OVER || state == PAUSE || state == START) {
+        display.UpdateStartMenu(mousePosition);
+        // Start or Restart action
+        if(display.isStartButtonClicked() || IsKeyPressed(KEY_R)){
+            //TODO: move this to a reset?
+            fruits.Reset();
+            bucket.Reset();
+            bucket.Update(mousePosition);
+            HideCursor();
+            timeStart = GetTime();
+            timeReady = 0.0f;
+            timeLevel = 0.0f;
+            score = 0;
+            displayScore = 0;
+            lives = GAME_LIVES;
+            state = READY;
+            return;
+        }
+        // Quit action
+        if(display.isQuitButtonClicked()){
+            state = END;
+            return;
+        }
+    }
 }
 
 void Game::Render() const {
-    if(state != END){
-        stage.Render();
-    }
-
-    if(state == READY){
-        bucket.Render();
-        display.Render();
-        display.RenderReady();
-    }
+    if(state == END) return;
+    
+    stage.Render();
 
     if(state == PLAY || state == PAUSE || state == OVER) {
         bucket.Render();
@@ -147,6 +142,12 @@ void Game::Render() const {
 
     if(state == START || state == PAUSE) {
         display.RenderStartMenu();
+    }
+
+    if(state == READY) {
+        bucket.Render();
+        display.Render();
+        display.RenderReady();
     }
 }
 

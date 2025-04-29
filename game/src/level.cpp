@@ -3,12 +3,12 @@
 Level::Level(const ConfigData &configData){
     for(const ConfigLevel &levelConfig : configData.levelConfigs){
         //TODO: look into making this an assert
-        if(levelConfig.id >= GAME_LEVELS_NUMBER || levelConfig.id < 0){
+        if(levelConfig.id >= LEVEL_COUNT || levelConfig.id < 0){
             std::cerr << "Too many levels defined in config file, or wrong level indices." << std::endl;
             break;
         }
 
-        std::array<FruitType, 10> fruitRatio; // TODO: centralize this num
+        FruitSample fruitSample;
         int currentFruitRatioIndex = 0;
         std::map<FruitType, float> _frequencies;
         for(const auto &pair : levelConfig.fruitFrequencies){
@@ -19,11 +19,14 @@ Level::Level(const ConfigData &configData){
                 const FruitType fruitType = static_StringToFruit(fruitString);
                 _frequencies[fruitType] = frequency;
 
-                if(currentFruitRatioIndex < 10){  // TODO: centralize this num
+                if(currentFruitRatioIndex < FRUIT_TYPE_COUNT){
                     int multiplyFruitNum = frequency * 10.0f;
-                    for(int i=0; i<multiplyFruitNum; i++){
-                        fruitRatio[currentFruitRatioIndex] = fruitType;
+                    for(int i=0; i<=multiplyFruitNum; i++) {
+                        fruitSample[currentFruitRatioIndex] = fruitType;
                         currentFruitRatioIndex++;
+                        if(currentFruitRatioIndex >= FRUIT_TYPE_COUNT){
+                            break;
+                        }
                     }
                 }
             } catch(const std::exception &e){
@@ -32,12 +35,12 @@ Level::Level(const ConfigData &configData){
             }
         }
 
-        levels[levelConfig.id] = {
+        levels[levelConfig.id] = (LevelData){
             id: levelConfig.id,
             fruitLevelData: {
                 levelId: levelConfig.id,
                 fruitFrequencies: _frequencies,
-                fruitRatio: fruitRatio,
+                fruitSample: fruitSample,
                 dropFrequencyMin: levelConfig.dropFrequencyMin,
                 dropFrequencyMax: levelConfig.dropFrequencyMax,
             },
@@ -62,14 +65,14 @@ const LevelData Level::GetCurrentLevel() const {
 
 const FruitLevels Level::GetFruitLevelData() const {
     FruitLevels levelData;
-    for(int i=0; i<GAME_LEVELS_NUMBER; i++){
+    for(int i=0; i<LEVEL_COUNT; i++){
         levelData[i] = levels[i].fruitLevelData;
     }
     return levelData;
 }
 
 void Level::NextLevel(){
-    if(currentLevel >= GAME_LEVELS_NUMBER){
+    if(currentLevel >= LEVEL_COUNT){
         return;
     }
     currentLevel++;

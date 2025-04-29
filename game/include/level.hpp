@@ -12,7 +12,7 @@ typedef struct LevelData {
 } LevelData;
 
 class Level {
-    LevelData levels[GAME_LEVELS_NUMBER];
+    LevelData levels[LEVEL_COUNT];
     int currentLevel = 0;
 
     public:

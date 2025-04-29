@@ -10,6 +10,7 @@
 #include "config.hpp"
 #include "bucket.hpp"
 
+#define FRUIT_TYPE_COUNT 15
 #define FRUITS \
     X("APPLE", APPLE, "resources/fruits/red-apple.png", 0.0f, 15.0f, RED, 0.8f) \
     X("BANANA", BANANA, "resources/fruits/banana.png", 23.0f, 28.0f, YELLOW, 0.9f) \
@@ -82,15 +83,17 @@ static const char* static_FruitToString(const FruitType fruitType) {
 
 #undef FRUITS
 
+typedef std::array<FruitType, FRUIT_TYPE_COUNT> FruitSample;
+
 typedef struct FruitLevelData {
     int levelId;
     std::map<FruitType, float> fruitFrequencies;
-    std::array<FruitType, 10> fruitRatio;
+    FruitSample fruitSample;
     int dropFrequencyMin;
     int dropFrequencyMax;
 } FruitLevelData;
 
-typedef std::array<FruitLevelData, GAME_LEVELS_NUMBER> FruitLevels;
+typedef std::array<FruitLevelData, LEVEL_COUNT> FruitLevels;
 
 typedef struct FruitCollision {
     Vector2 offset;
@@ -115,9 +118,9 @@ typedef struct Fruit {
 } Fruit;
 
 class Fruits {
-    Texture2D sprites[GAME_FRUIT_TYPES];
-    Fruit fruits[GAME_FRUITS_MAX];
-    Fruit fruitsDebug[GAME_FRUIT_TYPES];
+    Texture2D sprites[FRUIT_TYPE_COUNT];
+    Fruit fruits[FRUIT_TYPE_COUNT];
+    Fruit fruitsDebug[FRUIT_TYPE_COUNT];
     FruitLevels fruitLevels;
     float fruitTimeInterval = 0.0f;
     int currentLevel = 0;

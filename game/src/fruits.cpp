@@ -88,18 +88,18 @@ void Fruits::SpawnFruit(Fruit &fruit) {
 }
 
 void Fruits::Spawn(void) {
-    const std::array<FruitType, 10> &fruitRatio = fruitLevels[currentLevel].fruitRatio;
-    const int index = GetRandomValue(0, fruitRatio.size()-1);
-    const int fruitIndex = static_cast<int>(fruitRatio[index]);
+    const FruitSample &fruitSample = fruitLevels[currentLevel].fruitSample;
+    const int index = GetRandomValue(0, fruitSample.size()-1);
+    const int fruitIndex = static_cast<int>(fruitSample[index]);
 
     int availableIndex = -1;
     bool skipCreate = false;
-    for(int i=0; i<GAME_FRUITS_MAX; i++){
+    for(int i=0; i<FRUIT_TYPE_COUNT; i++){
         if(fruits[i].active) {
             continue;
         }
         
-        if(fruits[i].type == fruitRatio[index]){
+        if(fruits[i].type == fruitSample[index]){
             skipCreate = true;
             availableIndex = i;
             break;
@@ -170,7 +170,7 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
         fruitTimeInterval -= GetFrameTime();
     }
 
-    for(int i=0; i<GAME_FRUITS_MAX; i++){
+    for(int i=0; i<FRUIT_TYPE_COUNT; i++){
         Fruit &fruit = fruits[i];
 
         if(!fruit.active){
@@ -205,7 +205,7 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
 void Fruits::UpdateDebug(void){
     int colNum = 0;
     int rowNum = 0;
-    for(int i=0; i<GAME_FRUIT_TYPES; i++){
+    for(int i=0; i<FRUIT_TYPE_COUNT; i++){
         Fruit& fruit = fruitsDebug[i];
 
         CreateFruit(fruit, i);

@@ -5,6 +5,8 @@
 
 #include "lib.h"
 
+#define LEVEL_COUNT 3
+
 typedef struct ConfigLevel {
     int id;
     std::map<std::string, float> fruitFrequencies;
@@ -22,7 +24,7 @@ typedef struct ConfigDebug {
 
 typedef struct ConfigData {
     ConfigDebug debug;
-    ConfigLevel levelConfigs[GAME_LEVELS_NUMBER];
+    ConfigLevel levelConfigs[LEVEL_COUNT];
 } ConfigData;
 
 class Config {
