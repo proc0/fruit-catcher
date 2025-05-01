@@ -29,10 +29,11 @@ Display::Display(const ConfigData& configData) {
     panelStartMenu = LoadTexture(START_MENU_IMAGE);
     panelGameOver = LoadTexture(PANEL_GAME_OVER);
     fruitIcon = LoadTexture(FRUIT_ICON_URI);
-
+    
     mainFont = LoadFontEx("resources/Lacquer-Regular.ttf", FONTSIZE_TITLE, 0, 0);
     subFont = LoadFontEx("resources/Jua-Regular.ttf", FONTSIZE_TITLE, 0, 0);
-
+    SetTextureFilter(mainFont.texture, TEXTURE_FILTER_BILINEAR);
+    SetTextureFilter(subFont.texture, TEXTURE_FILTER_BILINEAR);
     // config
     displayFPS = configData.debug.showFPS;
 
