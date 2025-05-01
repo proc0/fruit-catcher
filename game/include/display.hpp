@@ -29,6 +29,8 @@ class Display {
     Texture2D fruitIcon;
     Rectangle startButtonCollision;
     Rectangle quitButtonCollision;
+    Font mainFont;
+    Font subFont;
     enum ButtonState {
         NONE,
         HOVER,

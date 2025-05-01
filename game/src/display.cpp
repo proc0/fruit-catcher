@@ -18,7 +18,7 @@ static const char *textTimePlayed = TEXT_TIME_PLAYED;
 static const char *textTotalScore = TEXT_SCORE;
 static const char *textGameWin = TEXT_GAME_WIN;
 
-static const int FONTSIZE_TITLE = 58;
+static const int FONTSIZE_TITLE = 100;
 static const int FONTSIZE_SUBTITLE = 20;
 static const int FONTSIZE_MENUTEXT = 44;
 static const int FONTSIZE_SCORETEXT = 52;
@@ -29,6 +29,9 @@ Display::Display(const ConfigData& configData) {
     panelStartMenu = LoadTexture(START_MENU_IMAGE);
     panelGameOver = LoadTexture(PANEL_GAME_OVER);
     fruitIcon = LoadTexture(FRUIT_ICON_URI);
+
+    mainFont = LoadFontEx("resources/Lacquer-Regular.ttf", FONTSIZE_TITLE, 0, 250);
+    subFont = LoadFontEx("resources/Jua-Regular.ttf", FONTSIZE_SCORETEXT, 0, 250);
 
     // config
     displayFPS = configData.debug.showFPS;
@@ -53,11 +56,13 @@ Display::Display(const ConfigData& configData) {
     };
 
     // Start Menu
-    const int startMenuTitleX = SCREEN_HALFWIDTH - MeasureText(textStartMenuTitle, FONTSIZE_TITLE)*0.5f;
-    const int startMenuTitleY = SCREEN_HALFHEIGHT - 140.0f;
+    const Color titleColor = { (unsigned char)GetRandomValue(10, 255), (unsigned char)GetRandomValue(10, 255), (unsigned char)GetRandomValue(10, 255), 255 };
+    const Vector2 fontTitleXY = MeasureTextEx(mainFont, textStartMenuTitle, FONTSIZE_TITLE, 1.0f);
+    const int startMenuTitleX = SCREEN_HALFWIDTH - fontTitleXY.x*0.5f;
+    const int startMenuTitleY = SCREEN_HALFHEIGHT - fontTitleXY.y + 10;
     startMenuTextParams["startMenuTitle"] = {
         text: textStartMenuTitle,
-        color: BLACK,
+        color: titleColor,
         fontSize: FONTSIZE_TITLE,
         x: startMenuTitleX,
         y: startMenuTitleY,
@@ -139,12 +144,13 @@ Display::Display(const ConfigData& configData) {
     };
 
     // Game Win
-    const int gameWinTitleX = SCREEN_HALFWIDTH - MeasureText(textGameWin, FONTSIZE_MENUTEXT)*0.5f;
-    const int gameWinTitleY = SCREEN_HALFHEIGHT - 100;
+    const Vector2 gameWinXY = MeasureTextEx(mainFont, textGameWin, FONTSIZE_TITLE, 1.0f);
+    const int gameWinTitleX = SCREEN_HALFWIDTH - gameWinXY.x*0.5f;
+    const int gameWinTitleY = SCREEN_HALFHEIGHT - gameWinXY.y;
     gameWinTextParams["gameWinTitle"] = {
         text: textGameWin,
-        color: BLACK,
-        fontSize: FONTSIZE_MENUTEXT,
+        color: titleColor,
+        fontSize: FONTSIZE_TITLE,
         x: gameWinTitleX,
         y: gameWinTitleY,
     };
@@ -154,6 +160,8 @@ Display::~Display(void) {
     UnloadTexture(panelStartMenu);
     UnloadTexture(fruitIcon);
     UnloadTexture(panelGameOver);
+    UnloadFont(mainFont);
+    UnloadFont(subFont);
 }
 
 const bool Display::isStartButtonClicked(void) const {
@@ -216,7 +224,11 @@ void Display::RenderStartMenu(void) const {
 
     for(const auto& textParams : startMenuTextParams) {
         const TextParams& entry = textParams.second;
-        DrawText(entry.text, entry.x, entry.y, entry.fontSize, entry.color);
+        if(textParams.first == "startMenuTitle"){
+            DrawTextEx(mainFont, entry.text, { (float)entry.x, (float)entry.y }, entry.fontSize, 1.0f, entry.color);
+        } else {
+            DrawTextEx(subFont, entry.text, { (float)entry.x, (float)entry.y }, entry.fontSize, 1.0f, entry.color);
+        }
     }
 }
 
@@ -260,24 +272,28 @@ void Display::RenderGameOver() const {
 
     for(const auto& textParams : gameEndTextParams) {
         const TextParams& entry = textParams.second;
-        DrawText(entry.text, entry.x, entry.y, entry.fontSize, entry.color);
+        DrawTextEx(subFont, entry.text, { (float)entry.x, (float)entry.y }, entry.fontSize, 1.0f, entry.color);
     }
 
     for(const auto& textParams : gameOverTextParams) {
         const TextParams& entry = textParams.second;
-        DrawText(entry.text, entry.x, entry.y, entry.fontSize, entry.color);
+        DrawTextEx(subFont, entry.text, { (float)entry.x, (float)entry.y }, entry.fontSize, 1.0f, entry.color);
     }
 }
 
 void Display::RenderWin() const {
     for(const auto& textParams : gameEndTextParams) {
         const TextParams& entry = textParams.second;
-        DrawText(entry.text, entry.x, entry.y, entry.fontSize, entry.color);
+        DrawTextEx(subFont, entry.text, { (float)entry.x, (float)entry.y }, entry.fontSize, 1.0f, entry.color);
     }
 
     for(const auto& textParams : gameWinTextParams) {
         const TextParams& entry = textParams.second;
-        DrawText(entry.text, entry.x, entry.y, entry.fontSize, entry.color);
+        if(textParams.first == "gameWinTitle"){
+            DrawTextEx(mainFont, entry.text, { (float)entry.x, (float)entry.y }, entry.fontSize, 1.0f, entry.color);
+        } else {
+            DrawTextEx(subFont, entry.text, { (float)entry.x, (float)entry.y }, entry.fontSize, 1.0f, entry.color);
+        }
     }
 }
 
