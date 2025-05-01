@@ -30,8 +30,8 @@ Display::Display(const ConfigData& configData) {
     panelGameOver = LoadTexture(PANEL_GAME_OVER);
     fruitIcon = LoadTexture(FRUIT_ICON_URI);
 
-    mainFont = LoadFontEx("resources/Lacquer-Regular.ttf", FONTSIZE_TITLE, 0, 250);
-    subFont = LoadFontEx("resources/Jua-Regular.ttf", FONTSIZE_TITLE, 0, 250);
+    mainFont = LoadFontEx("resources/Lacquer-Regular.ttf", FONTSIZE_TITLE, 0, 0);
+    subFont = LoadFontEx("resources/Jua-Regular.ttf", FONTSIZE_TITLE, 0, 0);
 
     // config
     displayFPS = configData.debug.showFPS;
