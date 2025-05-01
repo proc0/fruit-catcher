@@ -31,7 +31,7 @@ Display::Display(const ConfigData& configData) {
     fruitIcon = LoadTexture(FRUIT_ICON_URI);
 
     mainFont = LoadFontEx("resources/Lacquer-Regular.ttf", FONTSIZE_TITLE, 0, 250);
-    subFont = LoadFontEx("resources/Jua-Regular.ttf", FONTSIZE_SCORETEXT, 0, 250);
+    subFont = LoadFontEx("resources/Jua-Regular.ttf", FONTSIZE_TITLE, 0, 250);
 
     // config
     displayFPS = configData.debug.showFPS;
@@ -95,11 +95,13 @@ Display::Display(const ConfigData& configData) {
     };
 
     // Level Ready
-    const int textReadyX = SCREEN_HALFWIDTH - MeasureText(textLevel, FONTSIZE_TITLE)*0.5f;
-    const int textReadyY = SCREEN_HALFHEIGHT - 100;
+    const char *labelLevel = TextFormat(textLevel, 1);
+    const Vector2 textReadyXY = MeasureTextEx(subFont, labelLevel, FONTSIZE_TITLE, 1.0f);
+    const int textReadyX = SCREEN_HALFWIDTH - textReadyXY.x*0.5f;
+    const int textReadyY = SCREEN_HALFHEIGHT - textReadyXY.y;
     gamePlayTextParams["startLevelReady"] = {
         text: textLevel,
-        color: BLACK,
+        color: WHITE,
         fontSize: FONTSIZE_TITLE,
         x: textReadyX,
         y: textReadyY,
@@ -352,5 +354,5 @@ void Display::RenderReady() const {
     const TextParams &labelReady = gamePlayTextParams.at("startLevelReady");
 
     const char *labelLevel = TextFormat(labelReady.text, level);
-    DrawText(labelLevel, labelReady.x, labelReady.y, labelReady.fontSize, WHITE);
+    DrawTextEx(subFont, labelLevel, { (float)labelReady.x, (float)labelReady.y}, labelReady.fontSize, 1.0f, labelReady.color);
 }

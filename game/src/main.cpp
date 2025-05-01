@@ -8,14 +8,14 @@
 //DONE: Fix background scroll depending on FPS
 //DONE: add WIN screen (based on game over screen)
 //DONE: add LOSE screen (based on game over screen)
+//DONE: add better fonts
 
-//TODO: add better fonts
+//NEXT: Add score number popup when fruit is caught
+//NEXT: add satisfying sound when fruit is caught
+//NEXT: add comic style impact lines when fruit is caught
 //TODO: add eggs that add one life point
 //TODO: add spikes that stun for 1 second
 //TODO: add bucket effects when hit by spike
-//TODO: Add score number popup when fruit is caught
-//TODO: add satisfying sound when fruit is caught
-//TODO: add comic style impact lines when fruit is caught
 //TODO: add more levels, and test for balance
 //TODO: iterate until it's fun
 //TODO: update game name

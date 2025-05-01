@@ -24,8 +24,13 @@ void Game::Update() {
     }
     
     if(IsKeyPressed(KEY_ESCAPE)) {
-        state = PAUSE;
-        ShowCursor();
+        if(state == WIN){
+            state = END;
+        } else {
+            state = PAUSE;
+            ShowCursor();
+        }
+        return;
     }
 
     mousePosition = GetMousePosition();
