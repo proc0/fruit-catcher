@@ -131,6 +131,7 @@ class Fruits {
 
     void CreateFruit(Fruit&, int index);
     void SpawnFruit(Fruit&);
+    void Spawn();
     void UpdateMovementFruit(Fruit&);
     void RenderFruit(const Fruit&) const;
     
@@ -138,10 +139,10 @@ class Fruits {
         Fruits(const ConfigData&, const FruitLevels&);
         ~Fruits();
         void Reset();
-        void Spawn();
-        void SetLevel(int);
+        void SetLevel(int level);
         const std::tuple<int, int> Update(Bucket&);
         void Render() const;
         void UpdateDebug();
         void RenderDebug() const;
+        void UpdateWin();
 };

@@ -6,9 +6,10 @@
 //DONE: make bucket into a transparent jar, every fruit turns into jam at the bottom, layers build up and clear when it gets to the top.
 //DONE: add progressive difficulty, starting with small fruit and more fruits are added faster -- LEVELS
 //DONE: Fix background scroll depending on FPS
+//DONE: add WIN screen (based on game over screen)
+//DONE: add LOSE screen (based on game over screen)
 
-//TODO: add WIN screen (based on game over screen)
-//TODO: add LOSE screen (based on game over screen)
+//TODO: add better fonts
 //TODO: add eggs that add one life point
 //TODO: add spikes that stun for 1 second
 //TODO: add bucket effects when hit by spike
@@ -25,9 +26,9 @@
 
 int main() {
 
-  InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_GAME_TITLE);
   SetConfigFlags(FLAG_VSYNC_HINT);
   SetConfigFlags(FLAG_MSAA_4X_HINT);
+  InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_GAME_TITLE);
   SetTargetFPS(120);
   SetExitKey(KEY_NULL);
   

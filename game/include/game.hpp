@@ -22,17 +22,18 @@ class Game {
         READY,
         PAUSE,
         OVER,
+        WIN,
         END
     };
     State state = START;
     float timeEnd = 0.0f;
-    float timeLevel = 0.0f;
+    float timeCount = 0.0f;
     float timeStart = 0.0f;
     float timeReady = 0.0f;
-    int displayScore = 0;
-    int displayTime = 0;
     int lives = GAME_LIVES;
+    int points = 0;
     int score = 0;
+    int timeLeft = 0;
     bool debug = false;
 
     public:

@@ -89,10 +89,6 @@ void Fruits::SpawnFruit(Fruit &fruit) {
 }
 
 void Fruits::Spawn(void) {
-    if(currentFruits >= fruitLevels[currentLevel].density) {
-        return;
-    }
-
     const FruitSample &fruitSample = fruitLevels[currentLevel].fruitSample;
     const int index = GetRandomValue(0, fruitSample.size()-1);
     const int fruitIndex = static_cast<int>(fruitSample[index]);
@@ -170,7 +166,10 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
     if(fruitTimeInterval <= 0) {
         const FruitLevelData level = fruitLevels[currentLevel];
         fruitTimeInterval = GetRandomValue(level.dropFrequencyMin, level.dropFrequencyMax)/1000.0f;
-        Spawn();
+
+        if(currentFruits < fruitLevels[currentLevel].density) {
+            Spawn();
+        }
     } else {
         fruitTimeInterval -= GetFrameTime();
     }
@@ -207,6 +206,17 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
     }
 
     return std::make_tuple(lives, score);
+}
+
+void Fruits::UpdateWin(){
+    Spawn();
+    for(int i=0; i<FRUIT_TYPE_COUNT; i++){
+        if(fruits[i].position.y > SCREEN_HEIGHT) {
+            fruits[i].active = false;
+            continue;
+        }
+        UpdateMovementFruit(fruits[i]);
+    }
 }
 
 void Fruits::UpdateDebug(void){

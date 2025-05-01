@@ -39,7 +39,9 @@ class Display {
     ButtonState startButtonLastState = NONE;
     ButtonState quitButtonLastState = NONE;
     std::unordered_map<std::string, TextParams> startMenuTextParams;
+    std::unordered_map<std::string, TextParams> gameEndTextParams;
     std::unordered_map<std::string, TextParams> gameOverTextParams;
+    std::unordered_map<std::string, TextParams> gameWinTextParams;
     std::unordered_map<std::string, TextParams> gamePlayTextParams;
     std::unordered_map<std::string, TextureParams> panelTextureParams;
     int score;
@@ -62,6 +64,7 @@ class Display {
         void Update(int lives, int score, int time, int level);
         void Render() const;
         void RenderReady() const;
-        void UpdateGameOver(int score, float timeEnd, float timeStart);
+        void UpdateOnce(int score, float timeEnd, float timeStart);
         void RenderGameOver() const;
+        void RenderWin() const;
 };

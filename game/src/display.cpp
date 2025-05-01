@@ -16,6 +16,7 @@ static const char *textStart = TEXT_GAME_START;
 static const char *textStartMenuTitle = TEXT_START_MENU_TITLE;
 static const char *textTimePlayed = TEXT_TIME_PLAYED;
 static const char *textTotalScore = TEXT_SCORE;
+static const char *textGameWin = TEXT_GAME_WIN;
 
 static const int FONTSIZE_TITLE = 58;
 static const int FONTSIZE_SUBTITLE = 20;
@@ -99,7 +100,7 @@ Display::Display(const ConfigData& configData) {
         y: textReadyY,
     };
 
-    // Game Over
+    // Game End
     const int gameOverTitleX = SCREEN_HALFWIDTH - MeasureText(textGameOver, FONTSIZE_MENUTEXT)*0.5f;
     const int gameOverTitleY = SCREEN_HALFHEIGHT - 100;
     gameOverTextParams["gameOverTitle"] = {
@@ -111,7 +112,7 @@ Display::Display(const ConfigData& configData) {
     };
 
     const int restartButtonX = SCREEN_HALFWIDTH - MeasureText(textRestart, FONTSIZE_MENUTEXT)*0.5f;
-    gameOverTextParams["gameOverRestartButton"] = {
+    gameEndTextParams["gameEndRestartButton"] = {
         text: textRestart,
         color: BLACK,
         fontSize: FONTSIZE_MENUTEXT,
@@ -119,7 +120,7 @@ Display::Display(const ConfigData& configData) {
         y: int(startButtonY),
     };
 
-    gameOverTextParams["gameOverQuitButton"] = {
+    gameEndTextParams["gameEndQuitButton"] = {
         text: textQuit,
         color: BLACK,
         fontSize: FONTSIZE_MENUTEXT,
@@ -129,12 +130,23 @@ Display::Display(const ConfigData& configData) {
 
     const int restartMessageX = SCREEN_HALFWIDTH - MeasureText(textRestartMessage, FONTSIZE_SUBTITLE)*0.5f;
     const int restartMessageY = SCREEN_HEIGHT*0.75f;
-    gameOverTextParams["gameOverRestartMessage"] = {
+    gameEndTextParams["gameEndRestartMessage"] = {
         text: textRestartMessage,
         color: DARKGRAY,
         fontSize: FONTSIZE_SUBTITLE,
         x: restartMessageX,
         y: int(restartMessageY),
+    };
+
+    // Game Win
+    const int gameWinTitleX = SCREEN_HALFWIDTH - MeasureText(textGameWin, FONTSIZE_MENUTEXT)*0.5f;
+    const int gameWinTitleY = SCREEN_HALFHEIGHT - 100;
+    gameWinTextParams["gameWinTitle"] = {
+        text: textGameWin,
+        color: BLACK,
+        fontSize: FONTSIZE_MENUTEXT,
+        x: gameWinTitleX,
+        y: gameWinTitleY,
     };
 }
 
@@ -173,18 +185,18 @@ void Display::UpdateStartMenu(Vector2 mousePosition) {
 
     if(startButtonState == HOVER && startButtonLastState != startButtonState){
         startMenuTextParams["startMenuStartButton"].color = RED;
-        gameOverTextParams["gameOverRestartButton"].color = RED;
+        gameEndTextParams["gameEndRestartButton"].color = RED;
     } else if (startButtonLastState != startButtonState) {
         startMenuTextParams["startMenuStartButton"].color = BLACK;
-        gameOverTextParams["gameOverRestartButton"].color = BLACK;
+        gameEndTextParams["gameEndRestartButton"].color = BLACK;
     }
 
     if(quitButtonState == HOVER && quitButtonLastState != quitButtonState){
         startMenuTextParams["startMenuQuitButton"].color = RED;
-        gameOverTextParams["gameOverQuitButton"].color = RED;
+        gameEndTextParams["gameEndQuitButton"].color = RED;
     } else if(quitButtonLastState != quitButtonState){
         startMenuTextParams["startMenuQuitButton"].color = BLACK;
-        gameOverTextParams["gameOverQuitButton"].color = BLACK;
+        gameEndTextParams["gameEndQuitButton"].color = BLACK;
     }
 
     if(startButtonState == HOVER || quitButtonState == HOVER) {
@@ -208,14 +220,14 @@ void Display::RenderStartMenu(void) const {
     }
 }
 
-void Display::UpdateGameOver(int score, float timeEnd, float timeStart) {
+void Display::UpdateOnce(int score, float timeEnd, float timeStart) {
     // Using snprintf because this function is being called once only (in game update)
     // If function is called multiple times in update, change to using Raylib TextFormat
     // const char *textScore = TextFormat(textTotalScore, score);
     snprintf(textScore, sizeof(textScore), textTotalScore, score);
     const int scoreTextX = SCREEN_HALFWIDTH - MeasureText(textScore, FONTSIZE_SCORETEXT)/2;
     const int scoreTextY = SCREEN_HEIGHT*0.22f;
-    gameOverTextParams["gameOverScore"] = {
+    gameEndTextParams["gameEndScore"] = {
         text: textScore,
         color: GOLD,
         fontSize: FONTSIZE_SCORETEXT,
@@ -228,7 +240,7 @@ void Display::UpdateGameOver(int score, float timeEnd, float timeStart) {
     snprintf(textTime, sizeof(textTime), textTimePlayed, totalMinutes, totalSeconds);
     // const char *textTime = TextFormat(textTimePlayed, totalMinutes, totalSeconds);
     const int timeTextX = SCREEN_HALFWIDTH - MeasureText(textTime, FONTSIZE_SUBTITLE)/2;
-    gameOverTextParams["gameOverTime"] = {
+    gameEndTextParams["gameEndTime"] = {
         text: textTime,
         color: DARKGRAY,
         fontSize: FONTSIZE_SUBTITLE,
@@ -246,7 +258,24 @@ void Display::RenderGameOver() const {
     const TextureParams& panel = panelTextureParams.at("gameOverPanel");
     DrawTexture(panel.texture, panel.x, panel.y, panel.color);
 
+    for(const auto& textParams : gameEndTextParams) {
+        const TextParams& entry = textParams.second;
+        DrawText(entry.text, entry.x, entry.y, entry.fontSize, entry.color);
+    }
+
     for(const auto& textParams : gameOverTextParams) {
+        const TextParams& entry = textParams.second;
+        DrawText(entry.text, entry.x, entry.y, entry.fontSize, entry.color);
+    }
+}
+
+void Display::RenderWin() const {
+    for(const auto& textParams : gameEndTextParams) {
+        const TextParams& entry = textParams.second;
+        DrawText(entry.text, entry.x, entry.y, entry.fontSize, entry.color);
+    }
+
+    for(const auto& textParams : gameWinTextParams) {
         const TextParams& entry = textParams.second;
         DrawText(entry.text, entry.x, entry.y, entry.fontSize, entry.color);
     }

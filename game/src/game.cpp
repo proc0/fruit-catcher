@@ -17,79 +17,71 @@ void Game::Update() {
 
     if(state == PAUSE) {
         if(IsKeyPressed(KEY_ESCAPE)){
-            HideCursor();
             state = PLAY;
+            HideCursor();
             return;
         }
     }
     
     if(IsKeyPressed(KEY_ESCAPE)) {
-        ShowCursor();
         state = PAUSE;
+        ShowCursor();
     }
 
     mousePosition = GetMousePosition();
 
     if(state == PLAY) {
-        // player input
+        // Input
         bucket.Update(mousePosition);
-        // resources
+        // Resources
         const std::tuple<int, int> result = fruits.Update(bucket);
         lives += std::get<0>(result);
-        score += std::get<1>(result);
-        displayScore = score * GAME_SCORE_UNIT;
-        // level and HUD
-        timeLevel += GetFrameTime();
+        points += std::get<1>(result);
+        score = points * GAME_POINT_VALUE;
+        // Level and HUD
         const int duration = level.GetCurrentLevel().duration;
         const int currentLevel = level.GetCurrentLevel().id;
-        displayTime = duration - timeLevel;
-        display.Update(lives, displayScore, displayTime, currentLevel);
+        timeCount += GetFrameTime();
+        timeLeft = duration - timeCount;
+        display.Update(lives, score, timeLeft, currentLevel);
         // Lose
         if(lives <= 0) {
-            //TODO: add a game ending screen
+            state = OVER;
             timeEnd = GetTime();
             level.Reset();
             fruits.SetLevel(0);
-            // fires once to update score and time
-            display.UpdateGameOver(displayScore, timeEnd, timeStart);
+            display.UpdateOnce(score, timeEnd, timeStart);
             ShowCursor();
-            state = OVER;
             return;
         }
         // Progress
-        if(timeLevel >= duration){
-            timeLevel = 0.0f;
-            // Win
+        if(timeCount >= duration){
+            timeCount = 0.0f;
             if(currentLevel == LEVEL_COUNT - 1){
-                //WIN
-                //TODO: make distinction between WIN and LOSE branches
-                //TODO: add a game ending screen
+                state = WIN;
                 timeEnd = GetTime();
                 level.Reset();
                 fruits.SetLevel(0);
-                // fires once to update score and time
-                display.UpdateGameOver(displayScore, timeEnd, timeStart);
+                display.UpdateOnce(score, timeEnd, timeStart);
                 ShowCursor();
-                state = OVER;
                 return;                
             } else {
-                // Next level
+                state = READY;
                 level.NextLevel();
                 fruits.Reset();
                 fruits.SetLevel(currentLevel);
-                state = READY;
                 return;
             }
         }
     }
 
     if(state == READY){
-        // player input
+        // Input
         bucket.Update(mousePosition);
-        // show HUD
-        displayTime = level.GetCurrentLevel().duration;
-        display.Update(lives, displayScore, displayTime, level.GetCurrentLevel().id);
-        // countdown
+        // HUD
+        timeLeft = level.GetCurrentLevel().duration;
+        display.Update(lives, score, timeLeft, level.GetCurrentLevel().id);
+        // Countdown
         timeReady += GetFrameTime();
         if(timeReady >= GAME_LEVEL_READY_TIME){
             timeReady = 0.0f;
@@ -100,20 +92,19 @@ void Game::Update() {
     }
 
     // UI
-    if(state == OVER || state == PAUSE || state == START) {
+    if(state == OVER || state == PAUSE || state == START || state == WIN) {
         display.UpdateStartMenu(mousePosition);
         // Start or Restart action
         if(display.isStartButtonClicked() || IsKeyPressed(KEY_R)){
-            //TODO: move this to a reset?
             fruits.Reset();
             bucket.Reset();
             bucket.Update(mousePosition);
             HideCursor();
             timeStart = GetTime();
             timeReady = 0.0f;
-            timeLevel = 0.0f;
+            timeCount = 0.0f;
+            points = 0;
             score = 0;
-            displayScore = 0;
             lives = GAME_LIVES;
             state = READY;
             return;
@@ -124,6 +115,10 @@ void Game::Update() {
             return;
         }
     }
+
+    if(state == WIN){
+        fruits.UpdateWin();
+    }
 }
 
 void Game::Render() const {
@@ -131,7 +126,7 @@ void Game::Render() const {
     
     stage.Render();
 
-    if(state == PLAY || state == PAUSE || state == OVER) {
+    if(state == PLAY || state == PAUSE || state == OVER || state == WIN) {
         bucket.Render();
         fruits.Render();
         display.Render();
@@ -139,6 +134,10 @@ void Game::Render() const {
 
     if(state == OVER) {
         display.RenderGameOver();
+    }
+
+    if(state == WIN) {
+        display.RenderWin();
     }
 
     if(state == START || state == PAUSE) {
