@@ -43,6 +43,7 @@ class Display {
     std::unordered_map<std::string, TextParams> gamePlayTextParams;
     std::unordered_map<std::string, TextureParams> panelTextureParams;
     int score;
+    int level;
     int lives;
     int time;
     int hudScoreFrameIdx = 0;
@@ -58,7 +59,7 @@ class Display {
         const bool isQuitButtonClicked() const;
         void UpdateStartMenu(Vector2 mousePosition);
         void RenderStartMenu() const;
-        void Update(int lives, int score, int time);
+        void Update(int lives, int score, int time, int level);
         void Render() const;
         void RenderReady() const;
         void UpdateGameOver(int score, float timeEnd, float timeStart);

@@ -41,8 +41,9 @@ void Game::Update() {
         // level and HUD
         timeLevel += GetFrameTime();
         const int duration = level.GetCurrentLevel().duration;
+        const int currentLevel = level.GetCurrentLevel().id;
         displayTime = duration - timeLevel;
-        display.Update(lives, displayScore, displayTime);
+        display.Update(lives, displayScore, displayTime, currentLevel);
         // Lose
         if(lives <= 0) {
             //TODO: add a game ending screen
@@ -59,7 +60,7 @@ void Game::Update() {
         if(timeLevel >= duration){
             timeLevel = 0.0f;
             // Win
-            if(level.GetCurrentLevel().id == LEVEL_COUNT - 1){
+            if(currentLevel == LEVEL_COUNT - 1){
                 //WIN
                 //TODO: make distinction between WIN and LOSE branches
                 //TODO: add a game ending screen
@@ -75,7 +76,7 @@ void Game::Update() {
                 // Next level
                 level.NextLevel();
                 fruits.Reset();
-                fruits.SetLevel(level.GetCurrentLevel().id);
+                fruits.SetLevel(currentLevel);
                 state = READY;
                 return;
             }
@@ -87,7 +88,7 @@ void Game::Update() {
         bucket.Update(mousePosition);
         // show HUD
         displayTime = level.GetCurrentLevel().duration;
-        display.Update(lives, displayScore, displayTime);
+        display.Update(lives, displayScore, displayTime, level.GetCurrentLevel().id);
         // countdown
         timeReady += GetFrameTime();
         if(timeReady >= GAME_LEVEL_READY_TIME){

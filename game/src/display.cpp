@@ -7,9 +7,9 @@
 #define FRUIT_ICON_URI "resources/fruit_icon.png"
 
 static const char *textGameOver = TEXT_GAME_OVER;
+static const char *textLevel = TEXT_LEVEL;
 static const char *textLives = TEXT_LIVES;
 static const char *textQuit = TEXT_GAME_QUIT;
-static const char *textReady = TEXT_READY;
 static const char *textRestart = TEXT_RESTART;
 static const char *textRestartMessage = TEXT_PRESS_R;
 static const char *textStart = TEXT_GAME_START;
@@ -89,10 +89,10 @@ Display::Display(const ConfigData& configData) {
     };
 
     // Level Ready
-    const int textReadyX = SCREEN_HALFWIDTH - MeasureText(textReady, FONTSIZE_TITLE)*0.5f;
+    const int textReadyX = SCREEN_HALFWIDTH - MeasureText(textLevel, FONTSIZE_TITLE)*0.5f;
     const int textReadyY = SCREEN_HALFHEIGHT - 100;
     gamePlayTextParams["startLevelReady"] = {
-        text: textReady,
+        text: textLevel,
         color: BLACK,
         fontSize: FONTSIZE_TITLE,
         x: textReadyX,
@@ -243,7 +243,7 @@ void Display::UpdateGameOver(int score, float timeEnd, float timeStart) {
 }
 
 void Display::RenderGameOver() const {
-    const TextureParams panel = panelTextureParams.at("gameOverPanel");
+    const TextureParams& panel = panelTextureParams.at("gameOverPanel");
     DrawTexture(panel.texture, panel.x, panel.y, panel.color);
 
     for(const auto& textParams : gameOverTextParams) {
@@ -252,10 +252,11 @@ void Display::RenderGameOver() const {
     }
 }
 
-void Display::Update(int _lives, int _score, int _time) {
+void Display::Update(int _lives, int _score, int _time, int _level) {
     livesChanged = _lives != lives;
     scoreChanged = _score != score;
     time = _time;
+    level = _level + 1;
 
     if(livesChanged || scoreChanged){
         score = _score;
@@ -303,6 +304,8 @@ void Display::Render() const {
 }
 
 void Display::RenderReady() const {
-    const TextParams labelReady = gamePlayTextParams.at("startLevelReady");
-    DrawText(labelReady.text, labelReady.x, labelReady.y, labelReady.fontSize, WHITE);
+    const TextParams &labelReady = gamePlayTextParams.at("startLevelReady");
+
+    const char *labelLevel = TextFormat(labelReady.text, level);
+    DrawText(labelLevel, labelReady.x, labelReady.y, labelReady.fontSize, WHITE);
 }

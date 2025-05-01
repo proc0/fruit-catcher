@@ -26,6 +26,8 @@
 int main() {
 
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_GAME_TITLE);
+  SetConfigFlags(FLAG_VSYNC_HINT);
+  SetConfigFlags(FLAG_MSAA_4X_HINT);
   SetTargetFPS(120);
   SetExitKey(KEY_NULL);
   
