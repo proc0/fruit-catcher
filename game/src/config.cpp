@@ -73,6 +73,8 @@ Config::Config(const std::string& filename) {
                     data.levelConfigs[currentLevel].dropFrequencyMin = std::stoi(value);
                 } else if (key == "dropFrequencyMax") {
                     data.levelConfigs[currentLevel].dropFrequencyMax = std::stoi(value);
+                } else if (key == "density") {
+                    data.levelConfigs[currentLevel].density = std::stoi(value);
                 } else if (key == "duration") {
                     data.levelConfigs[currentLevel].duration = std::stoi(value);
                 } else if (key == "reward") {

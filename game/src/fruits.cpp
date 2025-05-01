@@ -34,6 +34,7 @@ void Fruits::Reset(void){
     for(auto& fruit : fruits){
         fruit.active = false;
     }
+    currentFruits = 0;
 }
 
 void Fruits::SetLevel(int level){
@@ -69,7 +70,7 @@ void Fruits::CreateFruit(Fruit &fruit, int index) {
 
 void Fruits::SpawnFruit(Fruit &fruit) {
     fruit.active = true;
-
+    currentFruits++;
     const float posX = GetRandomValue(fruit.width, SCREEN_WIDTH - fruit.height);
     fruit.position = { posX, -fruit.height };
     
@@ -88,6 +89,10 @@ void Fruits::SpawnFruit(Fruit &fruit) {
 }
 
 void Fruits::Spawn(void) {
+    if(currentFruits >= fruitLevels[currentLevel].density) {
+        return;
+    }
+
     const FruitSample &fruitSample = fruitLevels[currentLevel].fruitSample;
     const int index = GetRandomValue(0, fruitSample.size()-1);
     const int fruitIndex = static_cast<int>(fruitSample[index]);
@@ -180,6 +185,7 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
         if(fruit.position.y > SCREEN_HEIGHT) {
             lives--;
             fruit.active = false;
+            currentFruits--;
             continue;
         }
         // fruit hits bucket
@@ -192,6 +198,7 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
                 score++;
                 bucket.UpdateJam(static_FruitDataMap.at(fruit.type).color);
                 fruit.active = false;
+                currentFruits--;
                 continue;
             }
         }

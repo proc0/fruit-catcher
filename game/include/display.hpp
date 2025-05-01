@@ -7,17 +7,17 @@
 
 typedef struct TextParams {
     const char *text;
+    Color color;
+    int fontSize;
     int x;
     int y;
-    int fontSize;
-    Color color;
 } TextParams;
 
 typedef struct TextureParams {
     Texture2D texture;
+    Color color;
     int x;
     int y;
-    Color color;
 } TextureParams;
 
 class Display {

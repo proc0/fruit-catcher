@@ -13,7 +13,7 @@
 #define FRUIT_TYPE_COUNT 15
 #define FRUITS \
     X("APPLE", APPLE, "resources/fruits/red-apple.png", 0.0f, 15.0f, RED, 0.8f) \
-    X("BANANA", BANANA, "resources/fruits/banana.png", 23.0f, 28.0f, YELLOW, 0.9f) \
+    X("BANANA", BANANA, "resources/fruits/banana.png", 23.0f, 28.0f, YELLOW, 0.85f) \
     X("BLACKBERRY", BLACKBERRY, "resources/fruits/black-berry-light.png", 0.0f, 9.0f, PURPLE, 0.3f) \
     X("CHERRY", CHERRY, "resources/fruits/red-cherry.png", -4.0f, 9.0f, RED, 0.3f) \
     X("COCONUT", COCONUT, "resources/fruits/coconut.png", -20.0f, 10.0f, WHITE, 1.0f) \
@@ -91,6 +91,7 @@ typedef struct FruitLevelData {
     FruitSample fruitSample;
     int dropFrequencyMin;
     int dropFrequencyMax;
+    int density;
 } FruitLevelData;
 
 typedef std::array<FruitLevelData, LEVEL_COUNT> FruitLevels;
@@ -124,6 +125,7 @@ class Fruits {
     FruitLevels fruitLevels;
     float fruitTimeInterval = 0.0f;
     int currentLevel = 0;
+    int currentFruits = 0;
     bool displayDebug = false;
     bool showCollisions = false;
 

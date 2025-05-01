@@ -21,7 +21,7 @@ Level::Level(const ConfigData &configData){
 
                 if(currentFruitRatioIndex < FRUIT_TYPE_COUNT){
                     int multiplyFruitNum = frequency * 10.0f;
-                    for(int i=0; i<=multiplyFruitNum; i++) {
+                    for(int i=0; i<multiplyFruitNum; i++) {
                         fruitSample[currentFruitRatioIndex] = fruitType;
                         currentFruitRatioIndex++;
                         if(currentFruitRatioIndex >= FRUIT_TYPE_COUNT){
@@ -43,6 +43,7 @@ Level::Level(const ConfigData &configData){
                 fruitSample: fruitSample,
                 dropFrequencyMin: levelConfig.dropFrequencyMin,
                 dropFrequencyMax: levelConfig.dropFrequencyMax,
+                density: levelConfig.density,
             },
             duration: levelConfig.duration,
             reward: levelConfig.reward,

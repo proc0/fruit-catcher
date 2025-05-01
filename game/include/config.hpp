@@ -12,6 +12,7 @@ typedef struct ConfigLevel {
     std::map<std::string, float> fruitFrequencies;
     int dropFrequencyMin;
     int dropFrequencyMax;
+    int density;
     int duration;
     int reward;
 } ConfigLevel;
