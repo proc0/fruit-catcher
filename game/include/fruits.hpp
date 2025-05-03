@@ -117,14 +117,13 @@ typedef struct Fruit {
     bool debounce = false;
 } Fruit;
 
-typedef struct FruitCatch {
-    Vector2 fruitCenter;
-    Color fruitColor;
-    int fruitScore;
+typedef struct FruitResult {
+    Vector2 location;
+    Color color;
+    int score;
     bool isCatch;
-} FruitCatch;
-
-typedef std::tuple<int, FruitCatch> FruitResult;
+    bool isMiss;
+} FruitResult;
 
 class Fruits {
     Texture2D sprites[FRUIT_TYPE_COUNT];

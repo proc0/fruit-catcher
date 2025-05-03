@@ -41,26 +41,22 @@ void Game::Update() {
         // Process fruits
         const Rectangle bucketCollision = bucket.GetCollision();
         const FruitResult result = fruits.Update(bucketCollision);
-        lives += std::get<0>(result);
-        const FruitCatch fruitCatch = std::get<1>(result);
+        lives -= result.isMiss;
+        score += result.score;
         // Calculate time
         const int duration = level.GetCurrentLevel().duration;
         const int currentLevel = level.GetCurrentLevel().id;
         timeCount += GetFrameTime();
         timeLeft = duration - timeCount;
-
         // Render effects
         const DisplayStats stats = { lives, score, timeLeft, currentLevel };
-        if(fruitCatch.isCatch){
-            score += fruitCatch.fruitScore;
-            bucket.UpdateJam(fruitCatch.fruitColor);
-            const ScorePopup popup = { fruitCatch.fruitCenter, fruitCatch.fruitScore };
-            display.Update(stats, popup);
+        if(result.isCatch){
+            bucket.UpdateJam(result.color);
+            display.Update(stats, { result.location, result.score });
         } else {
             display.Update(stats);
         }
-
-        // Lose
+        // Game Over
         if(lives <= 0) {
             state = OVER;
             timeEnd = GetTime();

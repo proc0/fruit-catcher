@@ -17,6 +17,7 @@
 //TODO: add eggs that add one life point
 //TODO: add spikes that stun for 1 second
 //TODO: add bucket effects when hit by spike
+//TODO: add combo mechanic
 //TODO: add more levels, and test for balance
 //TODO: iterate until it's fun
 //TODO: Look into packaging for different platforms

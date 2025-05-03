@@ -162,11 +162,12 @@ void Fruits::UpdateMovementFruit(Fruit &fruit) {
 const FruitResult Fruits::Update(Rectangle bucketCollision) {
     int lives = 0;
     int score = 0;
-    FruitCatch fruitCatch = {
-        .fruitCenter = { 0.0f, 0.0f },
-        .fruitColor = { 0, 0, 0, 0 },
-        .fruitScore = 0,
+    FruitResult result = {
+        .location = { 0.0f, 0.0f },
+        .color = { 0, 0, 0, 0 },
+        .score = 0,
         .isCatch = false,
+        .isMiss = false,
     };
 
     fruitTimeInterval -= GetFrameTime();
@@ -188,15 +189,23 @@ const FruitResult Fruits::Update(Rectangle bucketCollision) {
         if(!fruit.active){
             continue;
         }
+
+        const Vector2 fruitCenter = { fruit.position.x + fruit.collision.offset.x, fruit.position.y + fruit.collision.offset.y };
         // fruit hits bottom
         if(fruit.position.y > SCREEN_HEIGHT) {
             lives--;
             fruit.active = false;
             currentFruits--;
+            result = {
+                .location = fruitCenter,
+                .color = static_FruitDataMap.at(fruit.type).color,
+                .score = -1,
+                .isCatch = false,
+                .isMiss = true,
+            };
             continue;
         }
         // fruit hits bucket
-        const Vector2 fruitCenter = { fruit.position.x + fruit.collision.offset.x, fruit.position.y + fruit.collision.offset.y };
         if(!fruit.debounce && CheckCollisionCircleRec(fruitCenter, fruit.collision.radius, bucketCollision)) {
             fruit.collided = true;
             // when fruit is above bucket, and fruit is centered with bucket
@@ -208,11 +217,12 @@ const FruitResult Fruits::Update(Rectangle bucketCollision) {
                 if(score > 1){
                     score *= 2;
                 }
-                fruitCatch = {
-                    .fruitCenter = fruitCenter,
-                    .fruitColor = static_FruitDataMap.at(fruit.type).color,
-                    .fruitScore = (int)(static_FruitDataMap.at(fruit.type).rating * 100.0f) * score,
+                result = {
+                    .location = fruitCenter,
+                    .color = static_FruitDataMap.at(fruit.type).color,
+                    .score = (int)(static_FruitDataMap.at(fruit.type).rating * 100.0f) * score,
                     .isCatch = true,
+                    .isMiss = false,
                 };
                 continue;
             }
@@ -221,7 +231,7 @@ const FruitResult Fruits::Update(Rectangle bucketCollision) {
         UpdateMovementFruit(fruit);
     }
 
-    return std::make_tuple(lives, fruitCatch);
+    return result;
 }
 
 void Fruits::UpdateWin(){
