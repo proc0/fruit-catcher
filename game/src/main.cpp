@@ -9,8 +9,8 @@
 //DONE: add WIN screen (based on game over screen)
 //DONE: add LOSE screen (based on game over screen)
 //DONE: add better fonts
+//DONE: Add score number popup when fruit is caught
 
-//NEXT: Add score number popup when fruit is caught
 //NEXT: add satisfying sound when fruit is caught
 //NEXT: add comic style impact lines when fruit is caught
 //WIP: update game name

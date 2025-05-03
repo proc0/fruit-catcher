@@ -20,6 +20,18 @@ typedef struct TextureParams {
     int y;
 } TextureParams;
 
+typedef struct DisplayStats {
+    const int lives;
+    const int score;
+    const int time;
+    const int level;
+} DisplayStats;
+
+typedef struct ScorePopup {
+    const Vector2 location;
+    const int score;
+} ScorePopup;
+
 class Display {
     char textTime[80];
     char textScore[20];
@@ -67,7 +79,10 @@ class Display {
         const bool isQuitButtonClicked() const;
         void UpdateStartMenu(Vector2 mousePosition);
         void RenderStartMenu() const;
-        void Update(int lives, int score, int time, int level, Vector2 fruitCenter, int fruitScore);
+        void UpdateStats(DisplayStats stats);
+        void UpdateScorePopup(ScorePopup popup);
+        void Update(DisplayStats stats, ScorePopup popup);
+        void Update(DisplayStats stats);
         void Render() const;
         void RenderReady() const;
         void UpdateOnce(int score, float timeEnd, float timeStart);

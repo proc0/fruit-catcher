@@ -300,20 +300,29 @@ void Display::RenderWin() const {
     }
 }
 
-void Display::Update(int _lives, int _score, int _time, int _level, Vector2 _fruitCenter, int _fruitScore) {
-    livesChanged = _lives != lives;
-    scoreChanged = _score != score;
-    time = _time;
-    level = _level + 1;
+void Display::Update(DisplayStats stats) {
+    UpdateStats(stats);
+}
 
-    if(_fruitScore > 0){
-        fruitCenter = _fruitCenter;
-        fruitScore = _fruitScore;
-    }
+void Display::Update(DisplayStats stats, ScorePopup popup) { 
+    UpdateScorePopup(popup);
+    UpdateStats(stats);
+}
+
+void Display::UpdateScorePopup(ScorePopup popup) {
+    fruitCenter = popup.location;
+    fruitScore = popup.score;
+}
+
+void Display::UpdateStats(DisplayStats stats) {
+    livesChanged = stats.lives != lives;
+    scoreChanged = stats.score != score;
+    time = stats.time;
+    level = stats.level + 1;
 
     if(livesChanged || scoreChanged){
-        score = _score;
-        lives = _lives;
+        score = stats.score;
+        lives = stats.lives;
     }
 
     const int hudAnimationSize = std::size(hudAnimation) - 1;
@@ -359,11 +368,13 @@ void Display::Render() const {
     if(scoreChanged || hudScoreFrameIdx2 > 0) {
         const char *scorePopupNum = TextFormat("%d", fruitScore);
         const int scorePopupSize = 24 + hudAnimation2[hudScoreFrameIdx2];
-        DrawText(scorePopupNum, fruitCenter.x, fruitCenter.y - 50 + 4, scorePopupSize, BLACK);
-        DrawText(scorePopupNum, fruitCenter.x, fruitCenter.y - 50 - 4, scorePopupSize, BLACK);
-        DrawText(scorePopupNum, fruitCenter.x+4, fruitCenter.y - 50, scorePopupSize, BLACK);
-        DrawText(scorePopupNum, fruitCenter.x-4, fruitCenter.y - 50, scorePopupSize, BLACK);
-        DrawText(scorePopupNum, fruitCenter.x, fruitCenter.y - 50, scorePopupSize, WHITE);
+        const int scorePopupY = fruitCenter.y - 50;
+        // top four is outline
+        DrawText(scorePopupNum, fruitCenter.x, scorePopupY + 2, scorePopupSize, BLACK);
+        DrawText(scorePopupNum, fruitCenter.x, scorePopupY - 2, scorePopupSize, BLACK);
+        DrawText(scorePopupNum, fruitCenter.x + 2, scorePopupY, scorePopupSize, BLACK);
+        DrawText(scorePopupNum, fruitCenter.x - 2, scorePopupY, scorePopupSize, BLACK);
+        DrawText(scorePopupNum, fruitCenter.x, scorePopupY, scorePopupSize, WHITE);
     }
 
     if(displayFPS){

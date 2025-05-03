@@ -38,23 +38,28 @@ void Game::Update() {
     if(state == PLAY) {
         // Input
         bucket.Update(mousePosition);
-        // Resources
+        // Process fruits
         const Rectangle bucketCollision = bucket.GetCollision();
         const FruitResult result = fruits.Update(bucketCollision);
         lives += std::get<0>(result);
-
         const FruitCatch fruitCatch = std::get<1>(result);
-        if(fruitCatch.isCatch){
-            score += fruitCatch.fruitScore;
-            bucket.UpdateJam(fruitCatch.fruitColor);
-        }
-
-        // Level and HUD
+        // Calculate time
         const int duration = level.GetCurrentLevel().duration;
         const int currentLevel = level.GetCurrentLevel().id;
         timeCount += GetFrameTime();
         timeLeft = duration - timeCount;
-        display.Update(lives, score, timeLeft, currentLevel, fruitCatch.fruitCenter, fruitCatch.fruitScore);
+
+        // Render effects
+        const DisplayStats stats = { lives, score, timeLeft, currentLevel };
+        if(fruitCatch.isCatch){
+            score += fruitCatch.fruitScore;
+            bucket.UpdateJam(fruitCatch.fruitColor);
+            const ScorePopup popup = { fruitCatch.fruitCenter, fruitCatch.fruitScore };
+            display.Update(stats, popup);
+        } else {
+            display.Update(stats);
+        }
+
         // Lose
         if(lives <= 0) {
             state = OVER;
@@ -91,7 +96,7 @@ void Game::Update() {
         bucket.Update(mousePosition);
         // HUD
         timeLeft = level.GetCurrentLevel().duration;
-        display.Update(lives, score, timeLeft, level.GetCurrentLevel().id, {0,0}, 0);
+        display.Update({ lives, score, timeLeft, level.GetCurrentLevel().id });
         // Countdown
         timeReady += GetFrameTime();
         if(timeReady >= GAME_LEVEL_READY_TIME){
