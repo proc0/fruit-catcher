@@ -1,6 +1,3 @@
-#include <iostream>
-#include <sstream>
-
 #include "fruits.hpp"
 
 #define FRUIT_MAX_SIZE 150.0f

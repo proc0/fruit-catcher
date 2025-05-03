@@ -1,8 +1,5 @@
 #pragma once
 
-#include "lib.h"
-#include "config.hpp"
-#include "fruits.hpp"
 #include "bucket.hpp"
 #include "display.hpp"
 #include "level.hpp"

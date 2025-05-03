@@ -1,4 +1,3 @@
-#include <iterator>
 #include "display.hpp"
 
 #define START_MENU_IMAGE "resources/start_menu_panel.png"

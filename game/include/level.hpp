@@ -1,8 +1,6 @@
 #pragma once
 
-#include "lib.h"
 #include "fruits.hpp"
-#include "config.hpp"
 
 typedef struct LevelData {
     int id;
