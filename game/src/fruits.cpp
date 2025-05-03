@@ -159,9 +159,17 @@ void Fruits::UpdateMovementFruit(Fruit &fruit) {
     }
 }
 
-const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
+const FruitResult Fruits::Update(Rectangle bucketCollision) {
     int lives = 0;
     int score = 0;
+    FruitCatch fruitCatch = {
+        .fruitCenter = { 0.0f, 0.0f },
+        .fruitColor = { 0, 0, 0, 0 },
+        .fruitScore = 0,
+        .isCatch = false,
+    };
+
+    fruitTimeInterval -= GetFrameTime();
 
     if(fruitTimeInterval <= 0) {
         const FruitLevelData level = fruitLevels[currentLevel];
@@ -188,16 +196,24 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
             continue;
         }
         // fruit hits bucket
-        const Rectangle bucketCollision = bucket.GetCollision();
         const Vector2 fruitCenter = { fruit.position.x + fruit.collision.offset.x, fruit.position.y + fruit.collision.offset.y };
         if(!fruit.debounce && CheckCollisionCircleRec(fruitCenter, fruit.collision.radius, bucketCollision)) {
             fruit.collided = true;
             // when fruit is above bucket, and fruit is centered with bucket
             if(fruitCenter.y - fruit.collision.radius < bucketCollision.y && fruitCenter.x - fruit.collision.radius > bucketCollision.x && fruitCenter.x + fruit.collision.radius < bucketCollision.x + bucketCollision.width){
                 score++;
-                bucket.UpdateJam(static_FruitDataMap.at(fruit.type).color);
-                fruit.active = false;
                 currentFruits--;
+                fruit.active = false;
+                //multiplier
+                if(score > 1){
+                    score *= 2;
+                }
+                fruitCatch = {
+                    .fruitCenter = fruitCenter,
+                    .fruitColor = static_FruitDataMap.at(fruit.type).color,
+                    .fruitScore = (int)(static_FruitDataMap.at(fruit.type).rating * 100.0f) * score,
+                    .isCatch = true,
+                };
                 continue;
             }
         }
@@ -205,7 +221,7 @@ const std::tuple<int, int> Fruits::Update(Bucket &bucket) {
         UpdateMovementFruit(fruit);
     }
 
-    return std::make_tuple(lives, score);
+    return std::make_tuple(lives, fruitCatch);
 }
 
 void Fruits::UpdateWin(){

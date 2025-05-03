@@ -17,7 +17,6 @@
 #define TEXT_LIVES "LIVES"
 
 #define GAME_LIVES 3
-#define GAME_POINT_VALUE 100
 
 static constexpr int SCREEN_WIDTH = 1280;
 static constexpr int SCREEN_HEIGHT = 720;

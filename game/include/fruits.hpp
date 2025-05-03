@@ -8,7 +8,6 @@
 
 #include "lib.h"
 #include "config.hpp"
-#include "bucket.hpp"
 
 #define FRUIT_TYPE_COUNT 15
 #define FRUITS \
@@ -118,6 +117,15 @@ typedef struct Fruit {
     bool debounce = false;
 } Fruit;
 
+typedef struct FruitCatch {
+    Vector2 fruitCenter;
+    Color fruitColor;
+    int fruitScore;
+    bool isCatch;
+} FruitCatch;
+
+typedef std::tuple<int, FruitCatch> FruitResult;
+
 class Fruits {
     Texture2D sprites[FRUIT_TYPE_COUNT];
     Fruit fruits[FRUIT_TYPE_COUNT];
@@ -140,7 +148,7 @@ class Fruits {
         ~Fruits();
         void Reset();
         void SetLevel(int level);
-        const std::tuple<int, int> Update(Bucket&);
+        const FruitResult Update(Rectangle bucketCollision);
         void Render() const;
         void UpdateDebug();
         void RenderDebug() const;

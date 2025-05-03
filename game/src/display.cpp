@@ -300,11 +300,16 @@ void Display::RenderWin() const {
     }
 }
 
-void Display::Update(int _lives, int _score, int _time, int _level) {
+void Display::Update(int _lives, int _score, int _time, int _level, Vector2 _fruitCenter, int _fruitScore) {
     livesChanged = _lives != lives;
     scoreChanged = _score != score;
     time = _time;
     level = _level + 1;
+
+    if(_fruitScore > 0){
+        fruitCenter = _fruitCenter;
+        fruitScore = _fruitScore;
+    }
 
     if(livesChanged || scoreChanged){
         score = _score;
@@ -322,6 +327,13 @@ void Display::Update(int _lives, int _score, int _time, int _level) {
         hudScoreFrameIdx++;
     } else {
         hudScoreFrameIdx = 0;
+    }
+
+    const int hudAnimation2Size = std::size(hudAnimation2) - 1;
+    if(hudScoreFrameIdx2 < hudAnimation2Size && (scoreChanged || hudScoreFrameIdx2 != 0)) {
+        hudScoreFrameIdx2++;
+    } else {
+        hudScoreFrameIdx2 = 0;
     }
 }
 
@@ -343,6 +355,16 @@ void Display::Render() const {
 
     const char *levelTime = TextFormat("%d", time);
     DrawText(levelTime, SCREEN_HALFWIDTH-20, 20, 52, WHITE);
+
+    if(scoreChanged || hudScoreFrameIdx2 > 0) {
+        const char *scorePopupNum = TextFormat("%d", fruitScore);
+        const int scorePopupSize = 24 + hudAnimation2[hudScoreFrameIdx2];
+        DrawText(scorePopupNum, fruitCenter.x, fruitCenter.y - 50 + 4, scorePopupSize, BLACK);
+        DrawText(scorePopupNum, fruitCenter.x, fruitCenter.y - 50 - 4, scorePopupSize, BLACK);
+        DrawText(scorePopupNum, fruitCenter.x+4, fruitCenter.y - 50, scorePopupSize, BLACK);
+        DrawText(scorePopupNum, fruitCenter.x-4, fruitCenter.y - 50, scorePopupSize, BLACK);
+        DrawText(scorePopupNum, fruitCenter.x, fruitCenter.y - 50, scorePopupSize, WHITE);
+    }
 
     if(displayFPS){
         const int fps = GetFPS();
