@@ -10,13 +10,18 @@
 //DONE: add LOSE screen (based on game over screen)
 //DONE: add better fonts
 //DONE: Add score number popup when fruit is caught
+//DONE: add comic style impact lines when fruit is caught
+//DONE: add satisfying sound when fruit is caught
 
-//NEXT: add satisfying sound when fruit is caught
-//NEXT: add comic style impact lines when fruit is caught
+//NEXT: add sound for bounce
 //WIP: update game name
-//TODO: add eggs that add one life point
-//TODO: add spikes that stun for 1 second
-//TODO: add bucket effects when hit by spike
+//NEXT: add eggs that add one life point
+//NEXT: add spikes that stun for 1 second
+//NEXT: add bucket effects when hit by spike
+//NEXT: add effect for catching an egg
+//TODO: add bonus points for filling jam to the top 
+//TODO: add effect for filling jam to the top
+//TODO: make life into hearts
 //TODO: add combo mechanic
 //TODO: add more levels, and test for balance
 //TODO: iterate until it's fun
@@ -32,6 +37,7 @@ int main() {
   
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_GAME_TITLE);
   SetTargetFPS(120);
+  InitAudioDevice();
   SetExitKey(KEY_NULL);
   
   Game FruitJam(GAME_CONFIG_URI);
@@ -52,6 +58,7 @@ int main() {
     }
   }
 
+  CloseAudioDevice();
   CloseWindow();
   
   return 0;

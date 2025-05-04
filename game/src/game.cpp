@@ -51,7 +51,7 @@ void Game::Update() {
         // Render effects
         const DisplayStats stats = { lives, score, timeLeft, currentLevel };
         if(result.isCatch){
-            bucket.UpdateJam(result.color);
+            bucket.UpdateOnCatch(result.color);
             display.Update(stats, { result.location, result.score });
         } else {
             display.Update(stats);
