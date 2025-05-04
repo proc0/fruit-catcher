@@ -56,7 +56,7 @@ Display::Display(const ConfigData& configData) {
     };
 
     // Start Menu
-    const Color titleColor = { (unsigned char)GetRandomValue(130, 255), (unsigned char)GetRandomValue(130, 255), (unsigned char)GetRandomValue(130, 255), 255 };
+    const Color titleColor = { 200, 40, 40, 255 };
     const Vector2 fontTitleXY = MeasureTextEx(mainFont, textStartMenuTitle, FONTSIZE_TITLE, 1.0f);
     const int startMenuTitleX = SCREEN_HALFWIDTH - fontTitleXY.x*0.5f;
     const int startMenuTitleY = SCREEN_HALFHEIGHT - fontTitleXY.y + 10;

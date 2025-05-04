@@ -5,6 +5,7 @@
 #include "lib.h"
 #include "config.hpp"
 
+#define SOUND_SPLAT_LENGTH 5
 #define FRUIT_TYPE_COUNT 15
 #define FRUITS \
     X("APPLE", APPLE, "resources/fruits/red-apple.png", 0.0f, 15.0f, RED, 0.8f) \
@@ -127,7 +128,7 @@ class Fruits {
     Fruit fruits[FRUIT_TYPE_COUNT];
     Fruit fruitsDebug[FRUIT_TYPE_COUNT];
     FruitLevels fruitLevels;
-    Sound soundFall;
+    Sound soundSplat[SOUND_SPLAT_LENGTH];
     float fruitTimeInterval = 0.0f;
     int currentLevel = 0;
     int currentFruits = 0;

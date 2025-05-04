@@ -1,6 +1,7 @@
 #include "fruits.hpp"
 
-#define FRUIT_SOUND_FALL "resources/fruit-fall.wav"
+#define FRUIT_SOUND_SPLAT(buf, idx) sprintf(buf, "resources/splat%d.wav", idx)
+
 #define FRUIT_MAX_SIZE 150.0f
 #define FRUIT_COLLISION_RADIUS 42.0f
 #define FRUIT_TIME_INTERVAL 1.0f
@@ -20,14 +21,21 @@ showCollisions(configData.debug.showCollisions) {
             CloseWindow();
         }
     }
-    soundFall = LoadSound(FRUIT_SOUND_FALL);
+    for(int i = 0; i < SOUND_SPLAT_LENGTH; i++){
+        const int idx = i + 1;
+        char uri[20];
+        FRUIT_SOUND_SPLAT(uri, idx);
+        soundSplat[i] = LoadSound(uri);
+    }
 }
 
 Fruits::~Fruits() {
     for (const auto& sprite : sprites) {
         UnloadTexture(sprite);
     }
-    UnloadSound(soundFall);
+    for(int i = 0; i < SOUND_SPLAT_LENGTH; i++){
+        UnloadSound(soundSplat[i]);
+    }
 }
 
 void Fruits::Reset(void){
@@ -205,7 +213,8 @@ const FruitResult Fruits::Update(Rectangle bucketCollision) {
                 .isMiss = true,
                 .bounced = false,
             };
-            PlaySound(soundFall);
+            const int splatIdx = GetRandomValue(0, SOUND_SPLAT_LENGTH-1);
+            PlaySound(soundSplat[splatIdx]);
             continue;
         }
         // fruit hits bucket

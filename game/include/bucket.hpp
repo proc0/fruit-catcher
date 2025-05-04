@@ -2,7 +2,7 @@
 
 #include "lib.h"
 
-#define SOUND_SPLAT_LENGTH 5
+#define SOUND_THUMP_LENGTH 5
 #define SOUND_CLINK_LENGTH 9
 
 class Bucket {
@@ -11,10 +11,10 @@ class Bucket {
     Texture2D textureJamMiddle;
     Texture2D textureJamBottom;
     Texture2D textureCatchEffect;
-    Sound soundSplats[SOUND_SPLAT_LENGTH];
+    Sound soundThump[SOUND_THUMP_LENGTH];
     Sound soundClinks[SOUND_CLINK_LENGTH];
     Rectangle collision;
-    Color jamColor = PINK;
+    Color jamColor = WHITE;
     Vector2 position;
     Vector2 jamTopPosition;
     Vector2 jamMiddlePosition;
