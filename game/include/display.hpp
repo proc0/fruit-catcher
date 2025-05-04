@@ -30,6 +30,7 @@ typedef struct DisplayStats {
 typedef struct ScorePopup {
     const Vector2 location;
     const int score;
+    const bool isCatch;
 } ScorePopup;
 
 class Display {
@@ -79,10 +80,7 @@ class Display {
         const bool isQuitButtonClicked() const;
         void UpdateStartMenu(Vector2 mousePosition);
         void RenderStartMenu() const;
-        void UpdateStats(DisplayStats stats);
-        void UpdateScorePopup(ScorePopup popup);
         void Update(DisplayStats stats, ScorePopup popup);
-        void Update(DisplayStats stats);
         void Render() const;
         void RenderReady() const;
         void UpdateOnce(int score, float timeEnd, float timeStart);

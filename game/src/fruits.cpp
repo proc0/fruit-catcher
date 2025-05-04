@@ -168,7 +168,7 @@ const FruitResult Fruits::Update(Rectangle bucketCollision) {
         .score = 0,
         .isCatch = false,
         .isMiss = false,
-        .collided = false,
+        .bounced = false,
     };
 
     fruitTimeInterval -= GetFrameTime();
@@ -203,6 +203,7 @@ const FruitResult Fruits::Update(Rectangle bucketCollision) {
                 .score = -1,
                 .isCatch = false,
                 .isMiss = true,
+                .bounced = false,
             };
             PlaySound(soundFall);
             continue;
@@ -225,13 +226,14 @@ const FruitResult Fruits::Update(Rectangle bucketCollision) {
                     .score = (int)(static_FruitDataMap.at(fruit.type).rating * 100.0f) * score,
                     .isCatch = true,
                     .isMiss = false,
+                    .bounced = false,
                 };
                 continue;
             }
 
-            result.collided = true;
+            result.bounced = true;
         }
-        
+
         UpdateMovementFruit(fruit);
     }
 

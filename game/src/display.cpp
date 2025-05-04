@@ -56,7 +56,7 @@ Display::Display(const ConfigData& configData) {
     };
 
     // Start Menu
-    const Color titleColor = { (unsigned char)GetRandomValue(10, 255), (unsigned char)GetRandomValue(10, 255), (unsigned char)GetRandomValue(10, 255), 255 };
+    const Color titleColor = { (unsigned char)GetRandomValue(130, 255), (unsigned char)GetRandomValue(130, 255), (unsigned char)GetRandomValue(130, 255), 255 };
     const Vector2 fontTitleXY = MeasureTextEx(mainFont, textStartMenuTitle, FONTSIZE_TITLE, 1.0f);
     const int startMenuTitleX = SCREEN_HALFWIDTH - fontTitleXY.x*0.5f;
     const int startMenuTitleY = SCREEN_HALFHEIGHT - fontTitleXY.y + 10;
@@ -299,21 +299,7 @@ void Display::RenderWin() const {
     }
 }
 
-void Display::Update(DisplayStats stats) {
-    UpdateStats(stats);
-}
-
-void Display::Update(DisplayStats stats, ScorePopup popup) { 
-    UpdateScorePopup(popup);
-    UpdateStats(stats);
-}
-
-void Display::UpdateScorePopup(ScorePopup popup) {
-    fruitCenter = popup.location;
-    fruitScore = popup.score;
-}
-
-void Display::UpdateStats(DisplayStats stats) {
+void Display::Update(DisplayStats stats, ScorePopup popup) {
     livesChanged = stats.lives != lives;
     scoreChanged = stats.score != score;
     time = stats.time;
@@ -322,6 +308,11 @@ void Display::UpdateStats(DisplayStats stats) {
     if(livesChanged || scoreChanged){
         score = stats.score;
         lives = stats.lives;
+    }
+
+    if(popup.isCatch) {
+        fruitCenter = popup.location;
+        fruitScore = popup.score;
     }
 
     const int hudAnimationSize = std::size(hudAnimation) - 1;
@@ -338,7 +329,7 @@ void Display::UpdateStats(DisplayStats stats) {
     }
 
     const int hudAnimation2Size = std::size(hudAnimation2) - 1;
-    if(hudScoreFrameIdx2 < hudAnimation2Size && hudScoreFrameIdx2 != 0) {
+    if(hudScoreFrameIdx2 < hudAnimation2Size && (hudScoreFrameIdx2 != 0 || popup.isCatch)) {
         hudScoreFrameIdx2++;
     } else {
         hudScoreFrameIdx2 = 0;

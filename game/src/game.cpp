@@ -41,21 +41,17 @@ void Game::Update() {
         const FruitResult result = fruits.Update(bucketCollision);
         lives -= result.isMiss;
         score += result.score;
-        // Input
-        bucket.Update(mousePosition, result.collided);
+        // Process jar
+        bucket.Update(mousePosition, result.bounced, result.isCatch, result.color);
         // Calculate time
         const int duration = level.GetCurrentLevel().duration;
         const int currentLevel = level.GetCurrentLevel().id;
         timeCount += GetFrameTime();
         timeLeft = duration - timeCount;
-        // Render effects
+        // Update UI and HUD effects
         const DisplayStats stats = { lives, score, timeLeft, currentLevel };
-        if(result.isCatch){
-            bucket.UpdateOnCatch(result.color);
-            display.Update(stats, { result.location, result.score });
-        } else {
-            display.Update(stats);
-        }
+        const ScorePopup popup = { result.location, result.score, result.isCatch };
+        display.Update(stats, popup);
         // Game Over
         if(lives <= 0) {
             state = OVER;
@@ -89,10 +85,10 @@ void Game::Update() {
 
     if(state == READY){
         // Input
-        bucket.Update(mousePosition, false);
+        bucket.Update(mousePosition, false, false);
         // HUD
         timeLeft = level.GetCurrentLevel().duration;
-        display.Update({ lives, score, timeLeft, level.GetCurrentLevel().id });
+        display.Update({ lives, score, timeLeft, level.GetCurrentLevel().id }, { { 0, 0 }, 0, false });
         // Countdown
         timeReady += GetFrameTime();
         if(timeReady >= GAME_LEVEL_READY_TIME){
@@ -110,7 +106,7 @@ void Game::Update() {
         if(display.isStartButtonClicked() || IsKeyPressed(KEY_R)){
             fruits.Reset();
             bucket.Reset();
-            bucket.Update(mousePosition, false);
+            bucket.Update(mousePosition, false, false);
             HideCursor();
             timeStart = GetTime();
             timeReady = 0.0f;

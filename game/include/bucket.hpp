@@ -2,14 +2,17 @@
 
 #include "lib.h"
 
+#define SOUND_SPLAT_LENGTH 5
+#define SOUND_CLINK_LENGTH 9
+
 class Bucket {
     Texture2D texture;
     Texture2D textureJamTop;
     Texture2D textureJamMiddle;
     Texture2D textureJamBottom;
     Texture2D textureCatchEffect;
-    Sound soundSplats[5];
-    Sound soundClinks[9];
+    Sound soundSplats[SOUND_SPLAT_LENGTH];
+    Sound soundClinks[SOUND_CLINK_LENGTH];
     Rectangle collision;
     Color jamColor = PINK;
     Vector2 position;
@@ -21,13 +24,14 @@ class Bucket {
     int catchEffectAnimationLength = 40;
     bool isCatching = false;
 
+    void UpdateOnCatch(const Color color);
+    
     public:
         Bucket();
         ~Bucket();
         const Rectangle GetCollision() const;
         void Reset();
-        void Update(const Vector2 mousePosition, bool collided);
-        void UpdateOnCatch(const Color color);
+        void Update(const Vector2 mousePosition, const bool bounced, const bool isCatch, const Color color = WHITE);
         void UpdateDebug();
         void Render() const;
         void RenderDebug() const;

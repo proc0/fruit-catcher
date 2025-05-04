@@ -119,7 +119,7 @@ typedef struct FruitResult {
     int score;
     bool isCatch;
     bool isMiss;
-    bool collided;
+    bool bounced;
 } FruitResult;
 
 class Fruits {
