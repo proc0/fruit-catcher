@@ -5,6 +5,9 @@
 #include "level.hpp"
 #include "stage.hpp"
 
+#define MUSIC_LEVEL_URI "resources/music-level.mp3"
+#define MUSIC_INTRO_URI "resources/music-intro.mp3"
+
 class Game {
     Config config;
     Level level;
@@ -23,6 +26,8 @@ class Game {
         END
     };
     State state = START;
+    Music musicLevel;
+    Music musicIntro;
     float timeEnd = 0.0f;
     float timeCount = 0.0f;
     float timeStart = 0.0f;
@@ -39,7 +44,17 @@ class Game {
             debug(config.GetData().debug.displayDebug),
             display(config.GetData()),
             level(config.GetData()),
-            fruits(config.GetData(), level.GetFruitLevelData()) {};
+            fruits(config.GetData(), level.GetFruitLevelData()) {
+                musicLevel = LoadMusicStream(MUSIC_LEVEL_URI);
+                musicIntro = LoadMusicStream(MUSIC_INTRO_URI);
+                SetMusicVolume(musicLevel, 0.5f);
+                SetMusicVolume(musicIntro, 0.5f);
+                PlayMusicStream(musicIntro);
+            };
+        ~Game() {
+            UnloadMusicStream(musicLevel);
+            UnloadMusicStream(musicIntro);
+        };
         const bool isRunning() const;
         const bool isDebug() const;
         void Update();

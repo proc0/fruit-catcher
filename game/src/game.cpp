@@ -15,6 +15,14 @@ void Game::Update() {
 
     stage.Update();
 
+    if(IsMusicStreamPlaying(musicLevel)){
+        UpdateMusicStream(musicLevel);
+    }
+
+    if(IsMusicStreamPlaying(musicIntro)){
+        UpdateMusicStream(musicIntro);
+    }
+
     if(state == PAUSE) {
         if(IsKeyPressed(KEY_ESCAPE)){
             state = PLAY;
@@ -104,6 +112,7 @@ void Game::Update() {
         display.UpdateStartMenu(mousePosition);
         // Start or Restart action
         if(display.isStartButtonClicked() || IsKeyPressed(KEY_R)){
+            state = READY;
             fruits.Reset();
             bucket.Reset();
             bucket.Update(mousePosition, false, false);
@@ -114,7 +123,8 @@ void Game::Update() {
             points = 0;
             score = 0;
             lives = GAME_LIVES;
-            state = READY;
+            StopMusicStream(musicIntro);
+            PlayMusicStream(musicLevel);
             return;
         }
         // Quit action
