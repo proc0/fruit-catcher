@@ -9,6 +9,7 @@ class Bucket {
     Texture2D textureJamBottom;
     Texture2D textureCatchEffect;
     Sound soundSplats[5];
+    Sound soundClinks[9];
     Rectangle collision;
     Color jamColor = PINK;
     Vector2 position;
@@ -25,7 +26,7 @@ class Bucket {
         ~Bucket();
         const Rectangle GetCollision() const;
         void Reset();
-        void Update(const Vector2 mousePosition);
+        void Update(const Vector2 mousePosition, bool collided);
         void UpdateOnCatch(const Color color);
         void UpdateDebug();
         void Render() const;

@@ -119,6 +119,7 @@ typedef struct FruitResult {
     int score;
     bool isCatch;
     bool isMiss;
+    bool collided;
 } FruitResult;
 
 class Fruits {
@@ -126,6 +127,7 @@ class Fruits {
     Fruit fruits[FRUIT_TYPE_COUNT];
     Fruit fruitsDebug[FRUIT_TYPE_COUNT];
     FruitLevels fruitLevels;
+    Sound soundFall;
     float fruitTimeInterval = 0.0f;
     int currentLevel = 0;
     int currentFruits = 0;

@@ -36,13 +36,13 @@ void Game::Update() {
     mousePosition = GetMousePosition();
 
     if(state == PLAY) {
-        // Input
-        bucket.Update(mousePosition);
         // Process fruits
         const Rectangle bucketCollision = bucket.GetCollision();
         const FruitResult result = fruits.Update(bucketCollision);
         lives -= result.isMiss;
         score += result.score;
+        // Input
+        bucket.Update(mousePosition, result.collided);
         // Calculate time
         const int duration = level.GetCurrentLevel().duration;
         const int currentLevel = level.GetCurrentLevel().id;
@@ -89,7 +89,7 @@ void Game::Update() {
 
     if(state == READY){
         // Input
-        bucket.Update(mousePosition);
+        bucket.Update(mousePosition, false);
         // HUD
         timeLeft = level.GetCurrentLevel().duration;
         display.Update({ lives, score, timeLeft, level.GetCurrentLevel().id });
@@ -110,7 +110,7 @@ void Game::Update() {
         if(display.isStartButtonClicked() || IsKeyPressed(KEY_R)){
             fruits.Reset();
             bucket.Reset();
-            bucket.Update(mousePosition);
+            bucket.Update(mousePosition, false);
             HideCursor();
             timeStart = GetTime();
             timeReady = 0.0f;

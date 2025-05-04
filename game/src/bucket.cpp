@@ -8,6 +8,7 @@
 #define BUCKET_JAM_BOTTOM_URI "resources/jam-bottom.png"
 #define BUCKET_FRUIT_CATCH_EFFECT "resources/fruit-catch.png"
 #define BUCKET_SOUND_FRUIT_SPLAT(buf, idx) sprintf(buf, "resources/fruit-splat%d.wav", idx)
+#define BUCKET_SOUND_FRUIT_CLINK(buf, idx) sprintf(buf, "resources/clink%d.wav", idx)
 #define BUCKET_SOURCE_WIDTH 131
 #define BUCKET_SOURCE_HEIGHT 160
 #define BUCKET_COLLISION_SIZE 115
@@ -43,6 +44,13 @@ Bucket::Bucket(){
         soundSplats[i] = LoadSound(uri);
     }
 
+    for(int j = 0; j < 9; j++){
+        const int _idx = j + 1;
+        char _uri[20];
+        BUCKET_SOUND_FRUIT_CLINK(_uri, _idx);
+        soundClinks[j] = LoadSound(_uri);
+    }
+
     Vector2 mousePosition = GetMousePosition();
     const float bucketPosX = mousePosition.x - texture.width/2;
     const float jamPosX = bucketPosX + JAM_OFFSET_X;
@@ -62,6 +70,9 @@ Bucket::~Bucket(void) {
     for(int i = 0; i < 5; i++){
         UnloadSound(soundSplats[i]);
     }
+    for(int j = 0; j < 9; j++){
+        UnloadSound(soundClinks[j]);
+    }
 }
 
 void Bucket::Reset(void) {
@@ -80,11 +91,11 @@ void Bucket::UpdateOnCatch(const Color color) {
     jamBottomPosition.y = JAM_BOTTOM_POS_Y;
     catchEffectAnimationIdx++;
     isCatching = true;
-    const int splatIdx = GetRandomValue(0, 4);
+    const int splatIdx = GetRandomValue(0, 8);
     PlaySound(soundSplats[splatIdx]);
 }
 
-void Bucket::Update(const Vector2 mousePosition) {
+void Bucket::Update(const Vector2 mousePosition, bool collided) {
     const float bucketPosX = mousePosition.x - texture.width/2;
     position.x = bucketPosX;
     jamTopPosition.x = bucketPosX + JAM_OFFSET_X;
@@ -101,6 +112,11 @@ void Bucket::Update(const Vector2 mousePosition) {
         isCatching = false;
         catchEffectAnimationIdx = 0;
         catchEffectAnimationLength = 40;
+    }
+
+    if(collided){
+        const int clinkIdx = GetRandomValue(0, 7);
+        PlaySound(soundClinks[clinkIdx]);
     }
 }
 

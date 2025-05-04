@@ -338,7 +338,7 @@ void Display::UpdateStats(DisplayStats stats) {
     }
 
     const int hudAnimation2Size = std::size(hudAnimation2) - 1;
-    if(hudScoreFrameIdx2 < hudAnimation2Size && (scoreChanged || hudScoreFrameIdx2 != 0)) {
+    if(hudScoreFrameIdx2 < hudAnimation2Size && hudScoreFrameIdx2 != 0) {
         hudScoreFrameIdx2++;
     } else {
         hudScoreFrameIdx2 = 0;
@@ -364,7 +364,7 @@ void Display::Render() const {
     const char *levelTime = TextFormat("%d", time);
     DrawText(levelTime, SCREEN_HALFWIDTH-20, 20, 52, WHITE);
 
-    if(scoreChanged || hudScoreFrameIdx2 > 0) {
+    if(hudScoreFrameIdx2 > 0) {
         const char *scorePopupNum = TextFormat("%d", fruitScore);
         const int scorePopupSize = 24 + hudAnimation2[hudScoreFrameIdx2];
         const int scorePopupY = fruitCenter.y - 50;

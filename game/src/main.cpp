@@ -12,8 +12,8 @@
 //DONE: Add score number popup when fruit is caught
 //DONE: add comic style impact lines when fruit is caught
 //DONE: add satisfying sound when fruit is caught
+//DONE: add sound for bounce, and fruit fall
 
-//NEXT: add sound for bounce
 //WIP: update game name
 //NEXT: add eggs that add one life point
 //NEXT: add spikes that stun for 1 second
@@ -23,6 +23,7 @@
 //TODO: add effect for filling jam to the top
 //TODO: make life into hearts
 //TODO: add combo mechanic
+//TODO: add BGM
 //TODO: add more levels, and test for balance
 //TODO: iterate until it's fun
 //TODO: Look into packaging for different platforms
