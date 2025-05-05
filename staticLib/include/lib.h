@@ -1,7 +1,9 @@
 #pragma once
 
-#include "raylib.h"
-#include "raymath.h"
+#include <assert.h>
+#include <raylib.h>
+#include <raymath.h>
+
 #include "config.hpp"
 
 #define TEXT_GAME_TITLE "Jam Slam"

@@ -2,10 +2,11 @@
 
 #include "config.hpp"
 
-Config::Config(const std::string& filename) {
-    std::ifstream file(filename);
+Config::Config(const std::string& filepath) {
+    std::ifstream file(filepath);
+
     if (!file || !file.is_open()) {
-        std::cerr << "Error opening config file: " << filename << std::endl;
+        std::cerr << "Error opening config file: " << filepath << std::endl;
         return;
     }
     

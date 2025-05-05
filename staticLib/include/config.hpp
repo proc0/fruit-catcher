@@ -32,6 +32,7 @@ class Config {
     ConfigData data;
 
     public:
-        Config(const std::string& filename);
+        Config(const std::string& filepath);
+        ~Config()=default;
         const ConfigData& GetData() const;
 };

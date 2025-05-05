@@ -39,8 +39,8 @@ class Game {
     bool debug = false;
 
     public:
-        Game(const std::string& configFile): 
-            config(configFile),
+        Game(const std::string& filepath): 
+            config(filepath),
             debug(config.GetData().debug.displayDebug),
             display(config.GetData()),
             level(config.GetData()),

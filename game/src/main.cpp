@@ -17,7 +17,7 @@
 //DONE: update game name
 
 //NEXT: add eggs that add one life point
-//NEXT: add spikes that stun for 1 second
+//NEXT: add spikes that stun for 1 second... after three spikes jar shatters?
 //NEXT: add bucket effects when hit by spike
 //NEXT: add effect for catching an egg
 //TODO: add more levels, and test for balance
