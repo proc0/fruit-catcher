@@ -13,19 +13,19 @@
 //DONE: add comic style impact lines when fruit is caught
 //DONE: add satisfying sound when fruit is caught
 //DONE: add sound for bounce, and fruit fall
+//DONE: add BGM
 
 //WIP: update game name
 //NEXT: add eggs that add one life point
 //NEXT: add spikes that stun for 1 second
 //NEXT: add bucket effects when hit by spike
 //NEXT: add effect for catching an egg
+//TODO: add more levels, and test for balance
+//TODO: iterate until it's fun
 //TODO: add bonus points for filling jam to the top 
 //TODO: add effect for filling jam to the top
 //TODO: make life into hearts
 //TODO: add combo mechanic
-//TODO: add BGM
-//TODO: add more levels, and test for balance
-//TODO: iterate until it's fun
 //TODO: Look into packaging for different platforms
 //TODO: Look into adding this to itch.io
 //TODO: Do Emscriptem build
