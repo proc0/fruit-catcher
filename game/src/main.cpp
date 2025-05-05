@@ -14,8 +14,8 @@
 //DONE: add satisfying sound when fruit is caught
 //DONE: add sound for bounce, and fruit fall
 //DONE: add BGM
+//DONE: update game name
 
-//WIP: update game name
 //NEXT: add eggs that add one life point
 //NEXT: add spikes that stun for 1 second
 //NEXT: add bucket effects when hit by spike
@@ -27,6 +27,7 @@
 //TODO: make life into hearts
 //TODO: add combo mechanic
 //TODO: Look into packaging for different platforms
+//TODO: Update Readme
 //TODO: Look into adding this to itch.io
 //TODO: Do Emscriptem build
 //TODO: Look into creating a debug build instead of including debug functions always, use define macros to read compiler variables

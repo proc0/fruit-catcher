@@ -2,6 +2,7 @@
 
 #include "raylib.h"
 #include "raymath.h"
+#include "config.hpp"
 
 #define TEXT_GAME_TITLE "Jam Slam"
 #define TEXT_START_MENU_TITLE "Jam\n   Slam"

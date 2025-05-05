@@ -3,7 +3,6 @@
 #include <array>
 
 #include "lib.h"
-#include "config.hpp"
 
 #define SOUND_SPLAT_LENGTH 5
 #define FRUIT_TYPE_COUNT 15

@@ -3,7 +3,6 @@
 #include <unordered_map>
 
 #include "lib.h"
-#include "config.hpp"
 
 typedef struct TextParams {
     const char *text;
