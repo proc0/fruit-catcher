@@ -1,6 +1,6 @@
 #include "game.hpp"
 
-#define GAME_CONFIG_URI "game/FruitCatcher.ini"
+#define GAME_CONFIG_URI "game/jamslam.ini"
 
 
 //DONE: make bucket into a transparent jar, every fruit turns into jam at the bottom, layers build up and clear when it gets to the top.
@@ -41,20 +41,20 @@ int main() {
   InitAudioDevice();
   SetExitKey(KEY_NULL);
   
-  Game FruitJam(GAME_CONFIG_URI);
+  Game JamSlam(GAME_CONFIG_URI);
 
-  if(FruitJam.isDebug()){
-    FruitJam.UpdateDebug();
-    while (!WindowShouldClose() && FruitJam.isRunning()) {
+  if(JamSlam.isDebug()){
+    JamSlam.UpdateDebug();
+    while (!WindowShouldClose() && JamSlam.isRunning()) {
       BeginDrawing();
-      FruitJam.RenderDebug();
+      JamSlam.RenderDebug();
       EndDrawing();
     }
   } else {
-    while (!WindowShouldClose() && FruitJam.isRunning()) {
-      FruitJam.Update();
+    while (!WindowShouldClose() && JamSlam.isRunning()) {
+      JamSlam.Update();
       BeginDrawing();
-      FruitJam.Render();
+      JamSlam.Render();
       EndDrawing();
     }
   }
