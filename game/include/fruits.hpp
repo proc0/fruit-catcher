@@ -5,7 +5,7 @@
 #include "lib.h"
 
 #define SOUND_SPLAT_LENGTH 5
-#define FRUIT_TYPE_COUNT 15
+#define FRUIT_TYPE_COUNT 17
 #define FRUITS \
     FRUIT("APPLE", APPLE, "resources/fruits/red-apple.png", 0.0f, 15.0f, RED, 0.8f) \
     FRUIT("BANANA", BANANA, "resources/fruits/banana.png", 23.0f, 28.0f, YELLOW, 0.85f) \
@@ -21,7 +21,9 @@
     FRUIT("PLUM", PLUM, "resources/fruits/plum.png", 4.0f, 10.0f, PURPLE, 0.8f) \
     FRUIT("RASPBERRY", RASPBERRY, "resources/fruits/raspberry.png", 0.0f, 9.0f, RED, 0.3f) \
     FRUIT("STRAWBERRY", STRAWBERRY, "resources/fruits/strawberry.png", -8.0f, 12.0f, RED, 0.4f) \
-    FRUIT("WATERMELON", WATERMELON, "resources/fruits/watermelon.png", 0.0f, 0.0f, RED, 1.0f)
+    FRUIT("WATERMELON", WATERMELON, "resources/fruits/watermelon.png", 0.0f, 0.0f, RED, 1.0f) \
+    FRUIT("EGG", EGG, "resources/fruits/egg.png", 0.0f, 0.0f, GREEN, 1.0f) \
+    FRUIT("SPIKE", SPIKE, "resources/fruits/spike.png", 0.0f, 0.0f, BLACK, 1.0f) 
 
 typedef enum class FruitType {
 #define FRUIT(STRING, ENUM, URI, OFFSETX, OFFSETY, COLOR, RATING) ENUM,
@@ -69,9 +71,9 @@ static const char* static_FruitToString(const FruitType fruitType) {
 typedef std::array<FruitType, FRUIT_TYPE_COUNT> FruitSample;
 
 typedef struct FruitLevelData {
-    int levelId;
     std::map<FruitType, float> fruitFrequencies;
     FruitSample fruitSample;
+    int levelId;
     int dropFrequencyMin;
     int dropFrequencyMax;
     int density;
@@ -105,9 +107,10 @@ typedef struct FruitResult {
     Vector2 location;
     Color color;
     int score;
+    int lives;
     bool isCatch;
-    bool isMiss;
     bool bounced;
+    bool isSpike;
 } FruitResult;
 
 class Fruits {

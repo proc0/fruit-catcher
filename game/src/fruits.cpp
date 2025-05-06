@@ -168,15 +168,14 @@ void Fruits::UpdateMovementFruit(Fruit &fruit) {
 }
 
 const FruitResult Fruits::Update(Rectangle bucketCollision) {
-    int lives = 0;
-    int score = 0;
     FruitResult result = {
         .location = { 0.0f, 0.0f },
         .color = { 0, 0, 0, 0 },
         .score = 0,
+        .lives = 0,
         .isCatch = false,
-        .isMiss = false,
         .bounced = false,
+        .isSpike = false,
     };
 
     fruitTimeInterval -= GetFrameTime();
@@ -202,15 +201,14 @@ const FruitResult Fruits::Update(Rectangle bucketCollision) {
         const Vector2 fruitCenter = { fruit.position.x + fruit.collision.offset.x, fruit.position.y + fruit.collision.offset.y };
         // fruit hits bottom
         if(fruit.position.y > SCREEN_HEIGHT) {
-            lives--;
             fruit.active = false;
             currentFruits--;
             result = {
                 .location = fruitCenter,
                 .color = static_FruitDataMap.at(fruit.type).color,
                 .score = -1,
+                .lives = -1,
                 .isCatch = false,
-                .isMiss = true,
                 .bounced = false,
             };
             const int splatIdx = GetRandomValue(0, SOUND_SPLAT_LENGTH-1);
@@ -220,22 +218,32 @@ const FruitResult Fruits::Update(Rectangle bucketCollision) {
         // fruit hits bucket
         if(!fruit.debounce && CheckCollisionCircleRec(fruitCenter, fruit.collision.radius, bucketCollision)) {
             fruit.collided = true;
-            // when fruit is above bucket, and fruit is centered with bucket
-            if(fruitCenter.y - fruit.collision.radius < bucketCollision.y && fruitCenter.x - fruit.collision.radius > bucketCollision.x && fruitCenter.x + fruit.collision.radius < bucketCollision.x + bucketCollision.width){
-                score++;
-                currentFruits--;
-                fruit.active = false;
-                //multiplier
-                if(score > 1){
-                    score *= 2;
-                }
+
+            if(fruit.type == FruitType::SPIKE){
                 result = {
                     .location = fruitCenter,
                     .color = static_FruitDataMap.at(fruit.type).color,
-                    .score = (int)(static_FruitDataMap.at(fruit.type).rating * 100.0f) * score,
+                    .score = 0,
+                    .lives = 0,
                     .isCatch = true,
-                    .isMiss = false,
                     .bounced = false,
+                    .isSpike = true,
+                };
+                continue;
+            }
+            // when fruit is above bucket, and fruit is centered with bucket
+            if(fruitCenter.y - fruit.collision.radius < bucketCollision.y && fruitCenter.x - fruit.collision.radius > bucketCollision.x && fruitCenter.x + fruit.collision.radius < bucketCollision.x + bucketCollision.width){
+                currentFruits--;
+                fruit.active = false;
+
+                result = {
+                    .location = fruitCenter,
+                    .color = static_FruitDataMap.at(fruit.type).color,
+                    .score = (int)(static_FruitDataMap.at(fruit.type).rating * 100.0f),
+                    .lives = (int)(fruit.type == FruitType::EGG),
+                    .isCatch = true,
+                    .bounced = false,
+                    .isSpike = false,
                 };
                 continue;
             }

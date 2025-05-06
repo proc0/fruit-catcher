@@ -47,10 +47,10 @@ void Game::Update() {
         // Process fruits
         const Rectangle bucketCollision = bucket.GetCollision();
         const FruitResult result = fruits.Update(bucketCollision);
-        lives -= result.isMiss;
+        lives += result.lives;
         score += result.score;
         // Process jar
-        bucket.Update(mousePosition, result.bounced, result.isCatch, result.color);
+        bucket.Update(mousePosition, result.bounced, result.isCatch, result.isSpike, result.color);
         // Calculate time
         const int duration = level.GetCurrentLevel().duration;
         const int currentLevel = level.GetCurrentLevel().id;
@@ -93,7 +93,7 @@ void Game::Update() {
 
     if(state == READY){
         // Input
-        bucket.Update(mousePosition, false, false);
+        bucket.Update(mousePosition, false, false, false);
         // HUD
         timeLeft = level.GetCurrentLevel().duration;
         display.Update({ lives, score, timeLeft, level.GetCurrentLevel().id }, { { 0, 0 }, 0, false });
@@ -115,7 +115,7 @@ void Game::Update() {
             state = READY;
             fruits.Reset();
             bucket.Reset();
-            bucket.Update(mousePosition, false, false);
+            bucket.Update(mousePosition, false, false, false);
             HideCursor();
             timeStart = GetTime();
             timeReady = 0.0f;

@@ -31,7 +31,7 @@ class Bucket {
         ~Bucket();
         const Rectangle GetCollision() const;
         void Reset();
-        void Update(const Vector2 mousePosition, const bool bounced, const bool isCatch, const Color color = WHITE);
+        void Update(const Vector2 mousePosition, const bool bounced, const bool isCatch, const bool isSpike, const Color color = WHITE);
         void UpdateDebug();
         void Render() const;
         void RenderDebug() const;

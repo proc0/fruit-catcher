@@ -14,22 +14,25 @@
 //DONE: add sound for bounce, and fruit fall
 //DONE: add BGM
 //DONE: update game name
+//DONE: add eggs that add one life point
 
-//NEXT: add eggs that add one life point
-//NEXT: add spikes that stun for 1 second... after three spikes jar shatters?
-//NEXT: add bucket effects when hit by spike
-//NEXT: add effect for catching an egg
-//TODO: add more levels, and test for balance
+//WIP: add spikes that stun for 1 second... after three spikes jar shatters?
+//WIP: add bucket effects when hit by spike
+//WIP: add effect for catching an egg
+//NEXT: add more levels, and test for balance
+//NEXT: make life into hearts
+//NEXT: add combo mechanic
 //TODO: iterate until it's fun
-//TODO: add bonus points for filling jam to the top 
-//TODO: add effect for filling jam to the top
-//TODO: make life into hearts
-//TODO: add combo mechanic
 //TODO: Look into packaging for different platforms
 //TODO: Update Readme
 //TODO: Look into adding this to itch.io
 //TODO: Do Emscriptem build
 //TODO: Look into creating a debug build instead of including debug functions always, use define macros to read compiler variables
+//OPTIONAL
+//TODO: add effect for filling jam to the top
+//TODO: add bonus points for filling jam to the top 
+//TODO: add reward mechanic for each level?
+//TODO: make egg rotate
 
 int main() {
 

@@ -94,7 +94,7 @@ void Bucket::UpdateOnCatch(const Color color) {
     PlaySound(soundThump[splatIdx]);
 }
 
-void Bucket::Update(const Vector2 mousePosition, const bool bounced, const bool isCatch, const Color color) {
+void Bucket::Update(const Vector2 mousePosition, const bool bounced, const bool isCatch, const bool isSpike, const Color color) {
     const float bucketPosX = mousePosition.x - texture.width/2;
     position.x = bucketPosX;
     jamTopPosition.x = bucketPosX + JAM_OFFSET_X;
@@ -107,9 +107,11 @@ void Bucket::Update(const Vector2 mousePosition, const bool bounced, const bool 
         UpdateOnCatch(color);
     }
     
-    if(bounced){
-        const int clinkIdx = GetRandomValue(0, SOUND_CLINK_LENGTH-1);
-        PlaySound(soundClinks[clinkIdx]);
+    if(isSpike){
+        // add stun
+    } else if(bounced){
+        const int randomSoundIdx = GetRandomValue(0, SOUND_CLINK_LENGTH-1);
+        PlaySound(soundClinks[randomSoundIdx]);
     }
 
     if(isCatching && catchEffectAnimationIdx < 5 && catchEffectAnimationLength > 0){

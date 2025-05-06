@@ -20,7 +20,7 @@ Level::Level(const ConfigData &configData){
                 _frequencies[fruitType] = frequency;
 
                 if(currentFruitRatioIndex < FRUIT_TYPE_COUNT){
-                    int multiplyFruitNum = frequency * 10.0f;
+                    int multiplyFruitNum = frequency * (float)FRUIT_TYPE_COUNT;
                     for(int i=0; i<multiplyFruitNum; i++) {
                         fruitSample[currentFruitRatioIndex] = fruitType;
                         currentFruitRatioIndex++;
@@ -29,18 +29,29 @@ Level::Level(const ConfigData &configData){
                         }
                     }
                 }
+
+                if(currentFruitRatioIndex >= FRUIT_TYPE_COUNT){
+                    break;
+                }
             } catch(const std::exception &e){
                 std::cerr << "Could not convert string to fruit type, from config file." << e.what() << std::endl;
                 break;
             }
         }
 
+        if(currentFruitRatioIndex < FRUIT_TYPE_COUNT){
+            int missingFruits = FRUIT_TYPE_COUNT - currentFruitRatioIndex;
+            for(int i=0; i<missingFruits; i++){
+                fruitSample[i+currentFruitRatioIndex] = FruitType::STRAWBERRY;
+            }
+        }
+
         levels[levelConfig.id] = (LevelData){
             id: levelConfig.id,
             fruitLevelData: {
-                levelId: levelConfig.id,
                 fruitFrequencies: _frequencies,
                 fruitSample: fruitSample,
+                levelId: levelConfig.id,
                 dropFrequencyMin: levelConfig.dropFrequencyMin,
                 dropFrequencyMax: levelConfig.dropFrequencyMax,
                 density: levelConfig.density,
