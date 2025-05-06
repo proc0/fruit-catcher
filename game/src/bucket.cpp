@@ -7,7 +7,6 @@
 #define BUCKET_JAM_MIDDLE_URI "resources/jam-middle.png"
 #define BUCKET_JAM_BOTTOM_URI "resources/jam-bottom.png"
 #define BUCKET_FRUIT_CATCH_EFFECT "resources/fruit-catch.png"
-#define BUCKET_SOUND_FRUIT_THUMP(buf, idx) sprintf(buf, "resources/thump%d.wav", idx)
 #define BUCKET_SOUND_FRUIT_CLINK(buf, idx) sprintf(buf, "resources/clink%d.wav", idx)
 #define BUCKET_SOURCE_WIDTH 131
 #define BUCKET_SOURCE_HEIGHT 160
@@ -37,12 +36,6 @@ Bucket::Bucket(){
     textureJamBottom = LoadTexture(BUCKET_JAM_BOTTOM_URI);
     textureCatchEffect = LoadTexture(BUCKET_FRUIT_CATCH_EFFECT);
 
-    for(int i = 0; i < SOUND_THUMP_LENGTH; i++){
-        const int idx = i + 1;
-        char uri[20];
-        BUCKET_SOUND_FRUIT_THUMP(uri, idx);
-        soundThump[i] = LoadSound(uri);
-    }
 
     for(int j = 0; j < SOUND_CLINK_LENGTH; j++){
         const int _idx = j + 1;
@@ -67,9 +60,6 @@ Bucket::~Bucket(void) {
     UnloadTexture(textureJamMiddle);
     UnloadTexture(textureJamBottom);
     UnloadTexture(textureCatchEffect);
-    for(int i = 0; i < SOUND_THUMP_LENGTH; i++){
-        UnloadSound(soundThump[i]);
-    }
     for(int j = 0; j < SOUND_CLINK_LENGTH; j++){
         UnloadSound(soundClinks[j]);
     }
@@ -90,8 +80,6 @@ void Bucket::UpdateOnCatch(const Color color) {
     jamMiddlePosition.y = JAM_MIDDLE_POS_Y(jamHeight);
     jamBottomPosition.y = JAM_BOTTOM_POS_Y;
     catchEffectAnimationIdx++;
-    const int splatIdx = GetRandomValue(0, SOUND_THUMP_LENGTH-1);
-    PlaySound(soundThump[splatIdx]);
 }
 
 void Bucket::Update(const Vector2 mousePosition, const bool bounced, const bool isCatch, const bool isSpike, const Color color) {
@@ -108,7 +96,7 @@ void Bucket::Update(const Vector2 mousePosition, const bool bounced, const bool 
     }
     
     if(isSpike){
-        // add stun
+        isStunned = true;
     } else if(bounced){
         const int randomSoundIdx = GetRandomValue(0, SOUND_CLINK_LENGTH-1);
         PlaySound(soundClinks[randomSoundIdx]);
@@ -123,6 +111,20 @@ void Bucket::Update(const Vector2 mousePosition, const bool bounced, const bool 
         isCatching = false;
         catchEffectAnimationIdx = 0;
         catchEffectAnimationLength = 40;
+    }
+
+    if(isStunned && stunLockIdx < 30){
+        const int negate = GetRandomValue(0, 1) ? -1 : 1;
+        const float displaceX = stunLock[stunLockIdx] * negate;
+        position.x += displaceX;
+        jamTopPosition.x += displaceX;
+        jamMiddlePosition.x += displaceX;
+        jamBottomPosition.x += displaceX;
+        collision.x += displaceX;
+        stunLockIdx++;
+    } else {
+        isStunned = false;
+        stunLockIdx = 0;
     }
 }
 
@@ -141,7 +143,7 @@ void Bucket::Render(void) const {
         DrawTextureRec(textureJamMiddle, JAM_MIDDLE_SOURCE_RECTANGLE(float(jamHeight)), jamMiddlePosition, jamColor);
         DrawTextureRec(textureJamBottom, JAM_BOTTOM_SOURCE_RECTANGLE, jamBottomPosition, jamColor);
     }
-    
+
     DrawTextureRec(texture, BUCKET_SOURCE_RECTANGLE, position, WHITE);
 
     if(isCatching){

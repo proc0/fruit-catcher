@@ -15,10 +15,10 @@
 //DONE: add BGM
 //DONE: update game name
 //DONE: add eggs that add one life point
+//DONE: add spikes that stun for 1 second... after three spikes jar shatters?
+//DONE: add bucket effects when hit by spike
+//DONE: add effect for catching an egg
 
-//WIP: add spikes that stun for 1 second... after three spikes jar shatters?
-//WIP: add bucket effects when hit by spike
-//WIP: add effect for catching an egg
 //NEXT: add more levels, and test for balance
 //NEXT: make life into hearts
 //NEXT: add combo mechanic

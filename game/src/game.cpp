@@ -114,6 +114,8 @@ void Game::Update() {
         if(display.isStartButtonClicked() || IsKeyPressed(KEY_R)){
             state = READY;
             fruits.Reset();
+            fruits.SetLevel(0);
+            level.Reset();
             bucket.Reset();
             bucket.Update(mousePosition, false, false, false);
             HideCursor();

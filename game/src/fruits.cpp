@@ -1,7 +1,8 @@
 #include "fruits.hpp"
 
 #define FRUIT_SOUND_SPLAT(buf, idx) sprintf(buf, "resources/splat%d.wav", idx)
-
+#define FRUIT_SOUND_SPIKE "resources/spike.wav"
+#define FRUIT_SOUND_EGG "resources/eggpop.wav"
 #define FRUIT_MAX_SIZE 150.0f
 #define FRUIT_COLLISION_RADIUS 42.0f
 #define FRUIT_TIME_INTERVAL 1.0f
@@ -21,12 +22,23 @@ showCollisions(configData.debug.showCollisions) {
             CloseWindow();
         }
     }
+
     for(int i = 0; i < SOUND_SPLAT_LENGTH; i++){
         const int idx = i + 1;
         char uri[20];
         FRUIT_SOUND_SPLAT(uri, idx);
         soundSplat[i] = LoadSound(uri);
     }
+
+    for(int i = 0; i < SOUND_THUMP_LENGTH; i++){
+        const int idx = i + 1;
+        char uri[20];
+        BUCKET_SOUND_FRUIT_THUMP(uri, idx);
+        soundThump[i] = LoadSound(uri);
+    }
+
+    soundSpike = LoadSound("resources/spike.wav");
+    soundEgg = LoadSound("resources/eggpop.wav");
 }
 
 Fruits::~Fruits() {
@@ -36,6 +48,11 @@ Fruits::~Fruits() {
     for(int i = 0; i < SOUND_SPLAT_LENGTH; i++){
         UnloadSound(soundSplat[i]);
     }
+    for(int i = 0; i < SOUND_THUMP_LENGTH; i++){
+        UnloadSound(soundThump[i]);
+    }
+    UnloadSound(soundSpike);
+    UnloadSound(soundEgg);
 }
 
 void Fruits::Reset(void){
@@ -203,6 +220,11 @@ const FruitResult Fruits::Update(Rectangle bucketCollision) {
         if(fruit.position.y > SCREEN_HEIGHT) {
             fruit.active = false;
             currentFruits--;
+            
+            if(fruit.type == FruitType::SPIKE){ 
+                continue;
+            }
+
             result = {
                 .location = fruitCenter,
                 .color = static_FruitDataMap.at(fruit.type).color,
@@ -223,12 +245,14 @@ const FruitResult Fruits::Update(Rectangle bucketCollision) {
                 result = {
                     .location = fruitCenter,
                     .color = static_FruitDataMap.at(fruit.type).color,
-                    .score = 0,
-                    .lives = 0,
+                    .score = -1,
+                    .lives = -1,
                     .isCatch = true,
                     .bounced = false,
                     .isSpike = true,
                 };
+                PlaySound(soundSpike);
+                UpdateMovementFruit(fruit);
                 continue;
             }
             // when fruit is above bucket, and fruit is centered with bucket
@@ -245,6 +269,15 @@ const FruitResult Fruits::Update(Rectangle bucketCollision) {
                     .bounced = false,
                     .isSpike = false,
                 };
+
+                if(fruit.type == FruitType::EGG){
+                    PlaySound(soundEgg);
+                } else {
+                    const int splatIdx = GetRandomValue(0, SOUND_THUMP_LENGTH-1);
+                    PlaySound(soundThump[splatIdx]);
+                }
+
+                UpdateMovementFruit(fruit);
                 continue;
             }
 

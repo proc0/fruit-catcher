@@ -5,6 +5,9 @@
 #include "lib.h"
 
 #define SOUND_SPLAT_LENGTH 5
+#define SOUND_THUMP_LENGTH 5
+#define BUCKET_SOUND_FRUIT_THUMP(buf, idx) sprintf(buf, "resources/thump%d.wav", idx)
+
 #define FRUIT_TYPE_COUNT 17
 #define FRUITS \
     FRUIT("APPLE", APPLE, "resources/fruits/red-apple.png", 0.0f, 15.0f, RED, 0.8f) \
@@ -119,6 +122,10 @@ class Fruits {
     Fruit fruitsDebug[FRUIT_TYPE_COUNT];
     FruitLevels fruitLevels;
     Sound soundSplat[SOUND_SPLAT_LENGTH];
+    Sound soundThump[SOUND_THUMP_LENGTH];
+
+    Sound soundSpike;
+    Sound soundEgg;
     float fruitTimeInterval = 0.0f;
     int currentLevel = 0;
     int currentFruits = 0;
