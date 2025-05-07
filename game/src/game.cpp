@@ -116,6 +116,7 @@ void Game::Update() {
             state = READY;
             fruits.Reset();
             fruits.SetLevel(0);
+            fruits.Unmute();
             level.Reset();
             bucket.Reset();
             bucket.Update(mousePosition, false, false, false);

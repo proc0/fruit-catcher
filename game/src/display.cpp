@@ -353,7 +353,12 @@ void Display::Render() const {
     DrawText(scoreNum, 115, 75, scoreFontsize, scoreColor);
 
     const char *levelTime = TextFormat("%d", time);
-    DrawText(levelTime, SCREEN_HALFWIDTH-20, 20, 52, WHITE);
+    const static constexpr int levelTimePosY = SCREEN_HALFWIDTH-20;
+    DrawText(levelTime, levelTimePosY, 20, 52, WHITE);
+
+    const char *levelNumber = TextFormat(TEXT_LEVEL, level);
+    const static constexpr int levelNumberPosY = SCREEN_HALFWIDTH-48;
+    DrawText(levelNumber, levelNumberPosY, 80, 32, WHITE);
 
     if(hudScoreFrameIdx2 > 0) {
         const char *scorePopupNum = TextFormat("%d", fruitScore);

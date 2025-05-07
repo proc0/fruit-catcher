@@ -42,6 +42,8 @@ showCollisions(configData.debug.showCollisions) {
 
     // intro fruits
     currentLevel = GetRandomValue(0, LEVEL_COUNT-1);
+    // mute fruits in intro
+    isMute = true;
 }
 
 Fruits::~Fruits() {
@@ -149,6 +151,18 @@ void Fruits::Spawn(void) {
     SpawnFruit(fruit);
 }
 
+void Fruits::Mute(){
+    isMute = true;
+}
+
+void Fruits::Unmute(){
+    isMute = false;
+}
+
+const bool Fruits::IsMute() const {
+    return isMute;
+}
+
 void Fruits::UpdateMovementFruit(Fruit &fruit) {
     // Velocity Verlet Integration
     // (i)   x(t+Δt) = x(t) + v(t)Δt + 1/2a(t)Δt^2
@@ -237,7 +251,9 @@ const FruitResult Fruits::Update(Rectangle bucketCollision) {
                 .bounced = false,
             };
             const int splatIdx = GetRandomValue(0, SOUND_SPLAT_LENGTH-1);
-            PlaySound(soundSplat[splatIdx]);
+            if(!isMute){
+                PlaySound(soundSplat[splatIdx]);
+            }
             continue;
         }
         // fruit hits bucket

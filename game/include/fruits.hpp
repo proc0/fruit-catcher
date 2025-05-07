@@ -132,6 +132,7 @@ class Fruits {
     int currentFruits = 0;
     bool displayDebug = false;
     bool showCollisions = false;
+    bool isMute = false;
 
     void CreateFruit(Fruit&, int index);
     void SpawnFruit(Fruit&);
@@ -145,6 +146,9 @@ class Fruits {
         void Reset();
         void SetLevel(int level);
         const FruitResult Update(Rectangle bucketCollision);
+        void Mute();
+        const bool IsMute() const;
+        void Unmute();
         void Render() const;
         void UpdateDebug();
         void RenderDebug() const;
