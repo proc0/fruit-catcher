@@ -27,6 +27,8 @@
 //NEXT: add combo mechanic
 //TODO: add effect for filling jam to the top
 //TODO: add bonus points for filling jam to the top 
+//TODO: Add bg elements to show max vertical movement (i.e. a vineyard with wooden frames, and one of the wood planks extends horizontally where max Y is)
+//TODO: Add "level #" to HUD
 
 //TODO: Look into packaging for different platforms
 //TODO: Update Readme

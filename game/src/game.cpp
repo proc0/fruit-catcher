@@ -138,6 +138,7 @@ void Game::Update() {
     }
 
     if(state == START){
+        // intro fruits
         fruits.Update({ 0, 0, 0, 0 });
     }
 
@@ -159,15 +160,7 @@ void Game::Render() const {
 
     if(state == OVER) {
         display.RenderGameOver();
-    }
-
-    if(state == WIN) {
-        display.RenderWin();
-    }
-
-    if(state == START || state == PAUSE) {
-        fruits.Render();
-        display.RenderStartMenu();
+        return;
     }
 
     if(state == READY) {
@@ -175,6 +168,20 @@ void Game::Render() const {
         bucket.Render();
         display.Render();
         display.RenderReady();
+        return;
+    }
+
+    if(state == START){
+        fruits.Render();
+    }
+
+    if(state == START || state == PAUSE) {
+        display.RenderStartMenu();
+        return;
+    }
+    
+    if(state == WIN) {
+        display.RenderWin();
     }
 }
 
