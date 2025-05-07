@@ -64,8 +64,6 @@ void Game::Update() {
         if(lives <= 0) {
             state = OVER;
             timeEnd = GetTime();
-            level.Reset();
-            fruits.SetLevel(0);
             display.UpdateOnce(score, timeEnd, timeStart);
             ShowCursor();
             return;
@@ -139,6 +137,10 @@ void Game::Update() {
         }
     }
 
+    if(state == START){
+        fruits.Update({ 0, 0, 0, 0 });
+    }
+
     if(state == WIN){
         fruits.UpdateWin();
     }
@@ -164,6 +166,7 @@ void Game::Render() const {
     }
 
     if(state == START || state == PAUSE) {
+        fruits.Render();
         display.RenderStartMenu();
     }
 

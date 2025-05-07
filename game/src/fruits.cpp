@@ -39,6 +39,9 @@ showCollisions(configData.debug.showCollisions) {
 
     soundSpike = LoadSound("resources/spike.wav");
     soundEgg = LoadSound("resources/eggpop.wav");
+
+    // intro fruits
+    currentLevel = GetRandomValue(0, LEVEL_COUNT-1);
 }
 
 Fruits::~Fruits() {

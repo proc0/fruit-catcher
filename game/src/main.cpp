@@ -21,21 +21,23 @@
 //DONE: add effect for catching an egg
 
 //BACKLOG
-//NEXT: add more levels, and test for balance
+//WIP: add more levels, and test for balance
+//WIP: iterate until it's fun
 //NEXT: make life into hearts
 //NEXT: add combo mechanic
-//TODO: iterate until it's fun
+//TODO: add effect for filling jam to the top
+//TODO: add bonus points for filling jam to the top 
+
 //TODO: Look into packaging for different platforms
 //TODO: Update Readme
 //TODO: Look into adding this to itch.io
 //TODO: Do Emscriptem build
 
 //OPTIONAL
-//TODO: add effect for filling jam to the top
-//TODO: add bonus points for filling jam to the top 
 //TODO: Look into creating a debug build instead of including debug functions always, use define macros to read compiler variables
-//TODO: add reward mechanic for each level?
+//TODO: create reward mechanic for each level?
 //TODO: make egg rotate
+//TODO: update Start menu layout, make game name have transparent background (only start, quit buttons have panel)
 
 int main() {
 
