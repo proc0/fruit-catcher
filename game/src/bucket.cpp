@@ -80,7 +80,7 @@ const Rectangle Bucket::GetCollision(void) const {
 }
 
 void Bucket::UpdateOnCatch(const Color color, const int bucketPosY) {
-    jamColor = ColorLerp(color, jamColor, 0.5f);
+    jamColor = ColorLerp(jamColor, color, 0.1f);
     jamHeight++;
     jamTopPosition.y = JAM_TOP_MOUSE_POS_Y(jamHeight) + bucketPosY;
     jamMiddlePosition.y = JAM_MIDDLE_MOUSE_POS_Y(jamHeight) + bucketPosY;
