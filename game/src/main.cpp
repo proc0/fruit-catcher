@@ -19,16 +19,19 @@
 //DONE: add spikes that stun for 1 second... after three spikes jar shatters?
 //DONE: add bucket effects when hit by spike
 //DONE: add effect for catching an egg
+//DONE: Add "level #" to HUD
 
 //BACKLOG
 //WIP: add more levels, and test for balance
 //WIP: iterate until it's fun
+    //make bananas one of the harder fruits?
 //NEXT: make life into hearts
-//NEXT: add combo mechanic
-//TODO: add effect for filling jam to the top
-//TODO: add bonus points for filling jam to the top 
+//TODO: rearrange HUD, place elements in bottom?
+//NEXT: add jar bounce combo mechanic
+//NEXT: add fruit catch combo mechanic
+//TODO: add effect for filling jam to the top 
+//TODO: add jar ability - grows bigger after jam gets to top
 //TODO: Add bg elements to show max vertical movement (i.e. a vineyard with wooden frames, and one of the wood planks extends horizontally where max Y is)
-//TODO: Add "level #" to HUD
 
 //TODO: Look into packaging for different platforms
 //TODO: Update Readme
