@@ -5,7 +5,7 @@
 #include <sstream>
 #include <string>
 
-#define LEVEL_COUNT 3
+#define LEVEL_COUNT 10
 
 typedef struct ConfigLevel {
     int id;

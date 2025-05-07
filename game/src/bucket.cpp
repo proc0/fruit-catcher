@@ -15,19 +15,25 @@
 #define BUCKET_POS_Y SCREEN_HEIGHT - BUCKET_SOURCE_HEIGHT
 
 #define JAM_OFFSET_X 12
-#define JAM_OFFSET_Y 90
+#define JAM_OFFSET_Y 120
 #define JAM_TOP_SOURCE_WIDTH 105
 #define JAM_TOP_SOURCE_HEIGHT 30
 #define JAM_MIDDLE_SOURCE_WIDTH 105
 #define JAM_MIDDLE_SOURCE_HEIGHT 1
 #define JAM_BOTTOM_SOURCE_WIDTH 105
 #define JAM_BOTTOM_SOURCE_HEIGHT 30
+
 #define JAM_TOP_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, JAM_TOP_SOURCE_WIDTH, JAM_TOP_SOURCE_HEIGHT}
 #define JAM_MIDDLE_SOURCE_RECTANGLE(jamHeight) CLITERAL(Rectangle){0, 0, JAM_MIDDLE_SOURCE_WIDTH, jamHeight}
 #define JAM_BOTTOM_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, JAM_BOTTOM_SOURCE_WIDTH, JAM_BOTTOM_SOURCE_HEIGHT}
+
 #define JAM_TOP_POS_Y(jamHeight) BUCKET_POS_Y + JAM_OFFSET_Y - JAM_TOP_SOURCE_HEIGHT - jamHeight
 #define JAM_MIDDLE_POS_Y(jamHeight) BUCKET_POS_Y + JAM_OFFSET_Y - jamHeight
 #define JAM_BOTTOM_POS_Y BUCKET_POS_Y + JAM_OFFSET_Y
+
+#define JAM_TOP_MOUSE_POS_Y(jamHeight) JAM_OFFSET_Y - JAM_TOP_SOURCE_HEIGHT - jamHeight
+#define JAM_MIDDLE_MOUSE_POS_Y(jamHeight) JAM_OFFSET_Y - jamHeight
+#define JAM_BOTTOM_MOUSE_POS_Y JAM_OFFSET_Y
 
 Bucket::Bucket(){
     texture = LoadTexture(BUCKET_IMAGE_URI);
@@ -73,12 +79,12 @@ const Rectangle Bucket::GetCollision(void) const {
     return collision;
 }
 
-void Bucket::UpdateOnCatch(const Color color) {
+void Bucket::UpdateOnCatch(const Color color, const int bucketPosY) {
     jamColor = ColorLerp(color, jamColor, 0.5f);
     jamHeight++;
-    jamTopPosition.y = JAM_TOP_POS_Y(jamHeight);
-    jamMiddlePosition.y = JAM_MIDDLE_POS_Y(jamHeight);
-    jamBottomPosition.y = JAM_BOTTOM_POS_Y;
+    jamTopPosition.y = JAM_TOP_MOUSE_POS_Y(jamHeight) + bucketPosY;
+    jamMiddlePosition.y = JAM_MIDDLE_MOUSE_POS_Y(jamHeight) + bucketPosY;
+    jamBottomPosition.y = JAM_BOTTOM_MOUSE_POS_Y + bucketPosY;
     catchEffectAnimationIdx++;
 }
 
@@ -90,9 +96,24 @@ void Bucket::Update(const Vector2 mousePosition, const bool bounced, const bool 
     jamBottomPosition.x = bucketPosX + JAM_OFFSET_X;
     collision.x = mousePosition.x - BUCKET_COLLISION_SIZE/2;
 
+    int bucketPosY = mousePosition.y;
+    if(bucketPosY < BUCKET_POS_Y - 100){
+        bucketPosY = BUCKET_POS_Y - 100;
+    }
+
+    if(bucketPosY < 0){
+        bucketPosY = 0;
+    }
+
+    position.y = bucketPosY;
+    jamTopPosition.y = JAM_TOP_MOUSE_POS_Y(jamHeight) + bucketPosY;
+    jamMiddlePosition.y = JAM_MIDDLE_MOUSE_POS_Y(jamHeight) + bucketPosY;
+    jamBottomPosition.y = JAM_BOTTOM_MOUSE_POS_Y + bucketPosY;
+    collision.y = bucketPosY;
+
     if(isCatch){
         isCatching = true;
-        UpdateOnCatch(color);
+        UpdateOnCatch(color, bucketPosY);
     }
     
     if(isSpike){

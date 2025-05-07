@@ -9,6 +9,7 @@
 #define BUCKET_SOUND_FRUIT_THUMP(buf, idx) sprintf(buf, "resources/thump%d.wav", idx)
 
 #define FRUIT_TYPE_COUNT 17
+#define FRUIT_SAMPLE_COUNT 34
 #define FRUITS \
     FRUIT("APPLE", APPLE, "resources/fruits/red-apple.png", 0.0f, 15.0f, RED, 0.8f) \
     FRUIT("BANANA", BANANA, "resources/fruits/banana.png", 23.0f, 28.0f, YELLOW, 0.85f) \
@@ -71,7 +72,7 @@ static const char* static_FruitToString(const FruitType fruitType) {
 
 #undef FRUITS
 
-typedef std::array<FruitType, FRUIT_TYPE_COUNT> FruitSample;
+typedef std::array<FruitType, FRUIT_SAMPLE_COUNT> FruitSample;
 
 typedef struct FruitLevelData {
     std::map<FruitType, float> fruitFrequencies;

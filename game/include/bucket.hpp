@@ -24,7 +24,8 @@ class Bucket {
     int catchEffectAnimationLength = 40;
     bool isCatching = false;
     bool isStunned = false;
-    void UpdateOnCatch(const Color color);
+    
+    void UpdateOnCatch(const Color color, const int bucketPosY);
     
     public:
         Bucket();

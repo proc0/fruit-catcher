@@ -2,6 +2,7 @@
 
 #define GAME_CONFIG_URI "game/jamslam.ini"
 
+//HISTORY
 //DONE: make bucket into a transparent jar, every fruit turns into jam at the bottom, layers build up and clear when it gets to the top.
 //DONE: add progressive difficulty, starting with small fruit and more fruits are added faster -- LEVELS
 //DONE: Fix background scroll depending on FPS
@@ -19,6 +20,7 @@
 //DONE: add bucket effects when hit by spike
 //DONE: add effect for catching an egg
 
+//BACKLOG
 //NEXT: add more levels, and test for balance
 //NEXT: make life into hearts
 //NEXT: add combo mechanic
@@ -27,10 +29,11 @@
 //TODO: Update Readme
 //TODO: Look into adding this to itch.io
 //TODO: Do Emscriptem build
-//TODO: Look into creating a debug build instead of including debug functions always, use define macros to read compiler variables
+
 //OPTIONAL
 //TODO: add effect for filling jam to the top
 //TODO: add bonus points for filling jam to the top 
+//TODO: Look into creating a debug build instead of including debug functions always, use define macros to read compiler variables
 //TODO: add reward mechanic for each level?
 //TODO: make egg rotate
 
