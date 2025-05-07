@@ -82,10 +82,9 @@ void Game::Update() {
                 ShowCursor();
                 return;                
             } else {
-                state = READY;
                 level.NextLevel();
-                fruits.Reset();
                 fruits.SetLevel(level.GetCurrentLevel().id);
+                state = READY;
                 return;
             }
         }
@@ -93,7 +92,11 @@ void Game::Update() {
 
     if(state == READY){
         // Input
-        bucket.Update(mousePosition, false, false, false);
+        const Rectangle bucketCollision = bucket.GetCollision();
+        const FruitResult result = fruits.Update(bucketCollision);
+        lives += result.lives;
+        score += result.score;
+        bucket.Update(mousePosition, result.bounced, result.isCatch, result.isSpike, result.color);
         // HUD
         timeLeft = level.GetCurrentLevel().duration;
         display.Update({ lives, score, timeLeft, level.GetCurrentLevel().id }, { { 0, 0 }, 0, false });
@@ -147,8 +150,8 @@ void Game::Render() const {
     stage.Render();
 
     if(state == PLAY || state == PAUSE || state == OVER || state == WIN) {
-        bucket.Render();
         fruits.Render();
+        bucket.Render();
         display.Render();
     }
 
@@ -165,6 +168,7 @@ void Game::Render() const {
     }
 
     if(state == READY) {
+        fruits.Render();
         bucket.Render();
         display.Render();
         display.RenderReady();
