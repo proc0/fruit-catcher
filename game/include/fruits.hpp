@@ -13,10 +13,10 @@
 
 #define GRAVITY 982.0f
 
-#define FRUIT_TYPE_COUNT 17
-#define FRUIT_SAMPLE_COUNT 34
-#define FRUIT_MAX_SIZE 150.0f
-#define FRUIT_COLLISION_RADIUS 42.0f
+#define LENGTH_FRUIT_TYPES 17
+#define LENGTH_FRUIT_SAMPLE 34
+#define SIZE_FRUIT_TEXTURE 150.0f
+#define SIZE_FRUIT_COLLISION 42.0f
 
 #ifndef FRUITS
 #define FRUITS \
@@ -82,7 +82,7 @@ static const char* static_FruitToString(const FruitType fruitType) {
 #undef FRUITS
 #endif
 
-typedef std::array<FruitType, FRUIT_SAMPLE_COUNT> FruitSample;
+typedef std::array<FruitType, LENGTH_FRUIT_SAMPLE> FruitSample;
 
 typedef struct FruitLevelData {
     std::map<FruitType, float> fruitFrequencies;
@@ -139,9 +139,9 @@ class Fruits {
     Sound soundSpike;
     Sound soundEgg;
 
-    Fruit fruits[FRUIT_TYPE_COUNT];
-    Fruit fruitsDebug[FRUIT_TYPE_COUNT];
-    Texture2D sprites[FRUIT_TYPE_COUNT];
+    Fruit fruits[LENGTH_FRUIT_TYPES];
+    Fruit fruitsDebug[LENGTH_FRUIT_TYPES];
+    Texture2D sprites[LENGTH_FRUIT_TYPES];
     FruitLevels fruitLevels;
 
     float fruitTimeInterval = 0.0f;

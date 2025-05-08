@@ -15,18 +15,18 @@ Level::Level(const ConfigData &configData){
                 const FruitType fruitType = static_StringToFruit(fruitString);
                 _frequencies[fruitType] = frequency;
 
-                if(currentFruitRatioIndex < FRUIT_SAMPLE_COUNT){
-                    int multiplyFruitNum = std::round(frequency * (float)FRUIT_SAMPLE_COUNT);
+                if(currentFruitRatioIndex < LENGTH_FRUIT_SAMPLE){
+                    int multiplyFruitNum = std::round(frequency * (float)LENGTH_FRUIT_SAMPLE);
                     for(int i=0; i<multiplyFruitNum; i++) {
                         fruitSample[currentFruitRatioIndex] = fruitType;
                         currentFruitRatioIndex++;
-                        if(currentFruitRatioIndex >= FRUIT_SAMPLE_COUNT){
+                        if(currentFruitRatioIndex >= LENGTH_FRUIT_SAMPLE){
                             break;
                         }
                     }
                 }
 
-                if(currentFruitRatioIndex >= FRUIT_SAMPLE_COUNT){
+                if(currentFruitRatioIndex >= LENGTH_FRUIT_SAMPLE){
                     break;
                 }
             } catch(const std::exception &e){
@@ -35,8 +35,8 @@ Level::Level(const ConfigData &configData){
             }
         }
 
-        if(currentFruitRatioIndex < FRUIT_SAMPLE_COUNT){
-            int missingFruits = FRUIT_SAMPLE_COUNT - currentFruitRatioIndex;
+        if(currentFruitRatioIndex < LENGTH_FRUIT_SAMPLE){
+            int missingFruits = LENGTH_FRUIT_SAMPLE - currentFruitRatioIndex;
             for(int i=0; i<missingFruits; i++){
                 fruitSample[i+currentFruitRatioIndex] = FruitType::STRAWBERRY;
             }

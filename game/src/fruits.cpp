@@ -16,7 +16,7 @@ showCollisions(configData.debug.showCollisions) {
         }
     }
 
-    // sounds
+    // sounds - todo try template function here
     for(int i = 0; i < LENGTH_SOUND_SPLATS; i++){
         char uriSplat[20];
         URI_SOUND_SPLAT(uriSplat, i + 1);
@@ -76,11 +76,11 @@ void Fruits::CreateFruit(Fruit &fruit, int index) {
     
     FruitData fruitData = static_FruitDataMap.at(fruit.type);
     const int longSide = fruitWidth > fruitHeight ? fruitWidth : fruitHeight;
-    const float ratio = longSide / FRUIT_MAX_SIZE;
+    const float ratio = longSide / SIZE_FRUIT_TEXTURE;
     
     fruit.collision = { 
         offset: fruitData.offset,
-        radius: FRUIT_COLLISION_RADIUS * ratio 
+        radius: SIZE_FRUIT_COLLISION * ratio 
     };
     fruit.bounces = 1;
     fruit.mass = ratio;
@@ -119,7 +119,7 @@ void Fruits::Spawn(void) {
 
     int availableIndex = -1;
     bool skipCreate = false;
-    for(int i=0; i<FRUIT_TYPE_COUNT; i++){
+    for(int i=0; i<LENGTH_FRUIT_TYPES; i++){
         if(fruits[i].active) {
             continue;
         }
@@ -212,7 +212,7 @@ const FruitResults Fruits::Update(Rectangle bucketCollision) {
         fruitTimeInterval -= GetFrameTime();
     }
 
-    for(int i=0; i<FRUIT_TYPE_COUNT; i++){
+    for(int i=0; i<LENGTH_FRUIT_TYPES; i++){
         Fruit &fruit = fruits[i];
 
         if(!fruit.active){
@@ -322,7 +322,7 @@ const FruitResults Fruits::Update(Rectangle bucketCollision) {
 
 void Fruits::UpdateWin(){
     Spawn();
-    for(int i=0; i<FRUIT_TYPE_COUNT; i++){
+    for(int i=0; i<LENGTH_FRUIT_TYPES; i++){
         if(fruits[i].position.y > SCREEN_HEIGHT) {
             fruits[i].active = false;
             continue;
@@ -334,7 +334,7 @@ void Fruits::UpdateWin(){
 void Fruits::UpdateDebug(void){
     int colNum = 0;
     int rowNum = 0;
-    for(int i=0; i<FRUIT_TYPE_COUNT; i++){
+    for(int i=0; i<LENGTH_FRUIT_TYPES; i++){
         Fruit& fruit = fruitsDebug[i];
 
         CreateFruit(fruit, i);
