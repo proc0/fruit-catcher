@@ -299,7 +299,51 @@ void Display::RenderWin() const {
     }
 }
 
-void Display::Update(DisplayStats stats, ScorePopup popup) {
+void Display::MergeFruitResults(const FruitDisplayResults &results) {
+    if(fruitDisplayResults.size() == 0) {
+        fruitDisplayResults = results;
+        return;
+    }
+
+    if(results.size() == 0){
+        // when no results, cleanup fruit cache after animation is done
+        const int hudAnimation2Size = std::size(hudAnimation2) - 1;
+        for(FruitDisplayResult& result : fruitDisplayResults){
+            if(result.hudAnimationIdx >= hudAnimation2Size) {
+                result.discard = true;
+            }
+        }
+        return;
+    }
+
+    for(const auto &remoteResult : results){
+        bool updated = false;
+        for(int i=0; i < fruitDisplayResults.size(); i++){
+            FruitDisplayResult &localResult = fruitDisplayResults[i];
+            // cleanup tagged cache
+            if(localResult.discard){
+                fruitDisplayResults.erase(fruitDisplayResults.begin() + i);
+                continue;
+            }
+            // copy everything except hudAnimationIdx
+            if(localResult.id == remoteResult.id){
+                updated = true;
+                localResult.bounced = remoteResult.bounced;
+                localResult.isCatch = remoteResult.isCatch;
+                localResult.isSpike = remoteResult.isSpike;
+                localResult.location = remoteResult.location;
+                localResult.score = remoteResult.score;
+                localResult.lives = remoteResult.lives;
+            }
+        }
+
+        if(!updated){
+            fruitDisplayResults.push_back(remoteResult);
+        }
+    }
+}
+
+void Display::Update(const DisplayStats stats, const FruitDisplayResults results) {
     livesChanged = stats.lives != lives;
     scoreChanged = stats.score != score;
     time = stats.time;
@@ -310,9 +354,17 @@ void Display::Update(DisplayStats stats, ScorePopup popup) {
         lives = stats.lives;
     }
 
-    if(popup.isCatch) {
-        fruitCenter = popup.location;
-        fruitScore = popup.score;
+    MergeFruitResults(results);
+
+    const int hudAnimation2Size = std::size(hudAnimation2) - 1;
+    for(FruitDisplayResult& result : fruitDisplayResults){    
+        if(!result.isSpike && result.hudAnimationIdx < hudAnimation2Size && (result.isCatch || result.bounced)) {
+            result.hudAnimationIdx++;
+        }
+        
+        if(result.hudAnimationIdx >= hudAnimation2Size) {
+            result.discard = true;
+        }
     }
 
     const int hudAnimationSize = std::size(hudAnimation) - 1;
@@ -326,13 +378,6 @@ void Display::Update(DisplayStats stats, ScorePopup popup) {
         hudScoreFrameIdx++;
     } else {
         hudScoreFrameIdx = 0;
-    }
-
-    const int hudAnimation2Size = std::size(hudAnimation2) - 1;
-    if(hudScoreFrameIdx2 < hudAnimation2Size && (hudScoreFrameIdx2 != 0 || popup.isCatch)) {
-        hudScoreFrameIdx2++;
-    } else {
-        hudScoreFrameIdx2 = 0;
     }
 }
 
@@ -360,16 +405,33 @@ void Display::Render() const {
     const static constexpr int levelNumberPosY = SCREEN_HALFWIDTH-48;
     DrawText(levelNumber, levelNumberPosY, 80, 32, WHITE);
 
-    if(hudScoreFrameIdx2 > 0) {
-        const char *scorePopupNum = TextFormat("%d", fruitScore);
-        const int scorePopupSize = 24 + hudAnimation2[hudScoreFrameIdx2];
-        const int scorePopupY = fruitCenter.y - 50;
-        // top four is outline
-        DrawText(scorePopupNum, fruitCenter.x, scorePopupY + 2, scorePopupSize, BLACK);
-        DrawText(scorePopupNum, fruitCenter.x, scorePopupY - 2, scorePopupSize, BLACK);
-        DrawText(scorePopupNum, fruitCenter.x + 2, scorePopupY, scorePopupSize, BLACK);
-        DrawText(scorePopupNum, fruitCenter.x - 2, scorePopupY, scorePopupSize, BLACK);
-        DrawText(scorePopupNum, fruitCenter.x, scorePopupY, scorePopupSize, WHITE);
+    if(fruitDisplayResults.size() > 0){
+        for(const FruitDisplayResult& result : fruitDisplayResults){    
+            // if one of the fruit cache results has an animation in progress
+            if(result.hudAnimationIdx > 0 && result.hudAnimationIdx < 29) {
+                const char* formatString;
+                int formatNumber;
+                if(result.bounced){
+                    formatString = "x%d";
+                    formatNumber = result.bounces;
+                } else if(result.isCatch){
+                    formatString = "%d";
+                    formatNumber = result.score;
+                }
+                
+                const char *popupText = TextFormat(formatString, formatNumber);
+                const int popupSize = 24 + hudAnimation2[result.hudAnimationIdx];
+                const int popupY = result.location.y - 50;
+                const int popupX = result.location.x;
+                // text stroke
+                DrawText(popupText, popupX, popupY + 2, popupSize, BLACK);
+                DrawText(popupText, popupX, popupY - 2, popupSize, BLACK);
+                DrawText(popupText, popupX + 2, popupY, popupSize, BLACK);
+                DrawText(popupText, popupX - 2, popupY, popupSize, BLACK);
+                // popup text, either score or bounce multiplier
+                DrawText(popupText, popupX, popupY, popupSize, WHITE);
+            }
+        }
     }
 
     if(displayFPS){

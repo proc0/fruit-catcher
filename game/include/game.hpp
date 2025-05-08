@@ -37,6 +37,13 @@ class Game {
     int score = 0;
     int timeLeft = 0;
     bool debug = false;
+    
+    const FruitDisplayResult DisplayFruitResult(const FruitResult& results) const;
+    const FruitDisplayResults DisplayFruitResults(const FruitResults& results) const;
+    const BucketDisplayResult DisplayBucketResult(const FruitResults& results) const;
+
+    const int GetScore(const FruitResults& results) const;
+    const int GetLives(const FruitResults& results) const;
 
     public:
         Game(const std::string& filepath): 

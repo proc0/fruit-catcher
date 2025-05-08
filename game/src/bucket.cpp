@@ -10,7 +10,7 @@
 #define BUCKET_SOUND_FRUIT_CLINK(buf, idx) sprintf(buf, "resources/clink%d.wav", idx)
 #define BUCKET_SOURCE_WIDTH 131
 #define BUCKET_SOURCE_HEIGHT 160
-#define BUCKET_COLLISION_SIZE 115
+#define BUCKET_COLLISION_SIZE 120
 #define BUCKET_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, BUCKET_SOURCE_WIDTH, BUCKET_SOURCE_HEIGHT}
 #define BUCKET_POS_Y SCREEN_HEIGHT - BUCKET_SOURCE_HEIGHT
 
@@ -88,7 +88,9 @@ void Bucket::UpdateOnCatch(const Color color, const int bucketPosY) {
     catchEffectAnimationIdx++;
 }
 
-void Bucket::Update(const Vector2 mousePosition, const bool bounced, const bool isCatch, const bool isSpike, const Color color) {
+// old params: const bool bounced, const bool isCatch, const bool isSpike, const Color color
+// note: processes single result item, instead of a list of results, works for now
+void Bucket::Update(const Vector2 mousePosition, const BucketDisplayResult result) {
     const float bucketPosX = mousePosition.x - texture.width/2;
     position.x = bucketPosX;
     jamTopPosition.x = bucketPosX + JAM_OFFSET_X;
@@ -111,14 +113,14 @@ void Bucket::Update(const Vector2 mousePosition, const bool bounced, const bool 
     jamBottomPosition.y = JAM_BOTTOM_MOUSE_POS_Y + bucketPosY;
     collision.y = bucketPosY;
 
-    if(isCatch){
+    if(result.isCatch){
         isCatching = true;
-        UpdateOnCatch(color, bucketPosY);
+        UpdateOnCatch(result.color, bucketPosY);
     }
     
-    if(isSpike){
+    if(result.isSpike){
         isStunned = true;
-    } else if(bounced){
+    } else if(result.isBounce){
         const int randomSoundIdx = GetRandomValue(0, SOUND_CLINK_LENGTH-1);
         PlaySound(soundClinks[randomSoundIdx]);
     }

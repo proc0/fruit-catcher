@@ -32,6 +32,22 @@ typedef struct ScorePopup {
     const bool isCatch;
 } ScorePopup;
 
+typedef struct FruitDisplayResult {
+    Vector2 location;
+    Color color;
+    int id;
+    int score;
+    int lives;
+    int bounces;
+    int hudAnimationIdx;
+    bool isCatch;
+    bool bounced;
+    bool isSpike;
+    bool discard;
+} FruitDisplayResult;
+
+typedef std::vector<FruitDisplayResult> FruitDisplayResults;
+
 class Display {
     char textTime[80];
     char textScore[20];
@@ -59,6 +75,7 @@ class Display {
     std::unordered_map<std::string, TextParams> gameWinTextParams;
     std::unordered_map<std::string, TextParams> gamePlayTextParams;
     std::unordered_map<std::string, TextureParams> panelTextureParams;
+    FruitDisplayResults fruitDisplayResults;
     Vector2 fruitCenter;
     int score = 0;
     int level = 0;
@@ -68,9 +85,12 @@ class Display {
     int hudScoreFrameIdx = 0;
     int hudScoreFrameIdx2 = 0;
     int hudLivesFrameIdx = 0;
+    int delayFruitResultsClearFrames = 360;
     bool scoreChanged = false;
     bool livesChanged = false;
     bool displayFPS = false;
+
+    void MergeFruitResults(const FruitDisplayResults &results);
 
     public:
         Display(const ConfigData& configData);
@@ -79,7 +99,7 @@ class Display {
         const bool isQuitButtonClicked() const;
         void UpdateStartMenu(Vector2 mousePosition);
         void RenderStartMenu() const;
-        void Update(DisplayStats stats, ScorePopup popup);
+        void Update(const DisplayStats stats, const FruitDisplayResults results);
         void Render() const;
         void RenderReady() const;
         void UpdateOnce(int score, float timeEnd, float timeStart);

@@ -100,7 +100,9 @@ typedef struct Fruit {
     float rotation = 0.0f;
     float width = 0.0f;
     float height = 0.0f;
+    int id;
     FruitType type = FruitType::APPLE;
+    int bounces = 0;
     bool active = false;
     bool created = false;
     bool collided = false;
@@ -110,12 +112,16 @@ typedef struct Fruit {
 typedef struct FruitResult {
     Vector2 location;
     Color color;
+    int id;
     int score;
     int lives;
+    int bounces = 0;
     bool isCatch;
     bool bounced;
     bool isSpike;
 } FruitResult;
+
+typedef std::vector<FruitResult> FruitResults;
 
 class Fruits {
     Texture2D sprites[FRUIT_TYPE_COUNT];
@@ -124,9 +130,9 @@ class Fruits {
     FruitLevels fruitLevels;
     Sound soundSplat[SOUND_SPLAT_LENGTH];
     Sound soundThump[SOUND_THUMP_LENGTH];
-
     Sound soundSpike;
     Sound soundEgg;
+
     float fruitTimeInterval = 0.0f;
     int currentLevel = 0;
     int currentFruits = 0;
@@ -145,7 +151,7 @@ class Fruits {
         ~Fruits();
         void Reset();
         void SetLevel(int level);
-        const FruitResult Update(Rectangle bucketCollision);
+        const FruitResults Update(Rectangle bucketCollision);
         void Mute();
         const bool IsMute() const;
         void Unmute();
