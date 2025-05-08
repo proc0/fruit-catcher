@@ -4,9 +4,8 @@
 
 typedef struct LevelData {
     int id;
-    FruitLevelData fruitLevelData;
+    FruitLevel fruitLevelData;
     int duration;
-    int reward;
 } LevelData;
 
 class Level {

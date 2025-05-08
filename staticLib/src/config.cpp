@@ -1,14 +1,16 @@
 #include <fstream>
-#include <cassert>
+#include <sstream>
+
 #include "config.hpp"
 
 Config::Config(const std::string& filepath) {
     std::ifstream file(filepath);
     assert(file && file.is_open());
 
-    int level = 0;
-    std::string section;
     std::string line;
+    std::string section;
+    SectionLevel level = {};
+
     while (std::getline(file, line)) {
         // remove comments
         size_t commentSymbol = line.find(';');
@@ -27,56 +29,56 @@ Config::Config(const std::string& filepath) {
             continue;
         }
 
-        std::istringstream stream(line);
         std::string key;
         std::string value;
-        if (std::getline(stream, key, '=') && std::getline(stream, value)) {
+        std::istringstream streamLine(line);
+
+        if (std::getline(streamLine, key, '=') && std::getline(streamLine, value)) {
             if (section == "Debug") {
-                if (key == "showCollisions") {
-                    data.debug.showCollisions = value == "true" ? true : false;
+                if (key == "showCages") {
+                    data.debug.showCages = value == "true" ? true : false;
                 } else if (key == "showFPS") {
                     data.debug.showFPS = value == "true" ? true : false;
-                } else if (key == "displayDebug") {
-                    data.debug.displayDebug = value == "true" ? true : false;
+                } else if (key == "modeDebug") {
+                    data.debug.modeDebug = value == "true" ? true : false;
                 } else {
                     std::cerr << "Unknown key in debug section: " << key << std::endl;
                     continue;
                 }
             }
-            // TODO: add more validation and checks
+
             if (section == "Level") {
                 if (key == "id") {
-                    level = std::stoi(value);
-                    data.levelConfigs[level].id = level;
-                } else if (key == "fruitFrequencies") {
-                    std::istringstream issVal(value);
+                    level.id = std::stoi(value);
+                } else if (key == "sample") {
+                    std::istringstream streamValue(value);
                     std::string fruitString;
-                    while(std::getline(issVal, fruitString, ',')){
+                    while(std::getline(streamValue, fruitString, ',')){
                         try {
-                            const int delimiterIndex = fruitString.find(':');
-                            const std::string fruitName = fruitString.substr(0, delimiterIndex);
-                            const float frequency = std::stof(fruitString.substr(delimiterIndex+1,4));
+                            const int splitSymbol = fruitString.find(':');
+                            const std::string fruitName = fruitString.substr(0, splitSymbol);
+                            const float frequency = std::stof(fruitString.substr(splitSymbol+1,4));
 
-                            data.levelConfigs[level].fruitFrequencies[fruitName] = frequency;
+                            level.sample[fruitName] = frequency;
                         } catch (const std::exception& e) {
-                            std::cerr << "Incorrect format for fruitFrequencies.: " << e.what() << std::endl;
+                            std::cerr << "Incorrect format for sample.: " << e.what() << std::endl;
                             break;
                         }
                     }
-                } else if (key == "dropFrequencyMin") {
-                    data.levelConfigs[level].dropFrequencyMin = std::stoi(value);
-                } else if (key == "dropFrequencyMax") {
-                    data.levelConfigs[level].dropFrequencyMax = std::stoi(value);
+                } else if (key == "minDropTime") {
+                    level.minDropTime = std::stoi(value);
+                } else if (key == "maxDropTime") {
+                    level.maxDropTime = std::stoi(value);
                 } else if (key == "density") {
-                    data.levelConfigs[level].density = std::stoi(value);
+                    level.density = std::stoi(value);
                 } else if (key == "duration") {
-                    data.levelConfigs[level].duration = std::stoi(value);
-                } else if (key == "reward") {
-                    data.levelConfigs[level].reward = std::stoi(value);
+                    level.duration = std::stoi(value);
                 } else {
                     std::cerr << "Unknown key in level section: " << key << std::endl;
                     continue;
                 }
+
+                data.levels.push_back(level);
             }
         }
     }

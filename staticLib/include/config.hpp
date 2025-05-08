@@ -1,31 +1,31 @@
 #pragma once
 
+#include <cassert>
 #include <iostream>
-#include <map>
-#include <sstream>
 #include <string>
+#include <vector>
+#include <unordered_map>
 
-#define LEVEL_COUNT 10
+typedef std::unordered_map<std::string, float> MapSample;
 
-typedef struct ConfigLevel {
+typedef struct SectionLevel {
+    MapSample sample;
     int id;
-    std::map<std::string, float> fruitFrequencies;
-    int dropFrequencyMin;
-    int dropFrequencyMax;
-    int density;
+    int minDropTime;
+    int maxDropTime;
     int duration;
-    int reward;
-} ConfigLevel;
+    int density;
+} SectionLevel;
 
-typedef struct ConfigDebug {
-    bool displayDebug;
-    bool showCollisions;
+typedef struct SectionDebug {
+    bool modeDebug;
+    bool showCages;
     bool showFPS;
-} ConfigDebug;
+} SectionDebug;
 
 typedef struct ConfigData {
-    ConfigDebug debug;
-    ConfigLevel levelConfigs[LEVEL_COUNT];
+    SectionDebug debug;
+    std::vector<SectionLevel> levels;
 } ConfigData;
 
 class Config {

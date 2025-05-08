@@ -33,6 +33,7 @@
 ////introduce spikes earlier
 ////subtract density from level 4, make it easier, make level 6 easier (less density, separate banana from coconut)
 ////review score numbers and multiplers (should it be x10 or x100, how big does score get until end?)
+//TODO: add max combo multiplier (99?)
 //NEXT: make life into hearts
 //TODO: rearrange HUD, place elements in bottom
 //TODO: add effect for filling jam to the top 

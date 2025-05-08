@@ -1,9 +1,9 @@
 #include "fruits.hpp"
 
-Fruits::Fruits(const ConfigData& configData, const FruitLevels& levelData): 
-fruitLevels(levelData),
-displayDebug(configData.debug.displayDebug),
-showCollisions(configData.debug.showCollisions) {
+Fruits::Fruits(const ConfigData& config, const FruitLevels& levels): 
+fruitLevels(levels),
+displayDebug(config.debug.modeDebug),
+showCollisions(config.debug.showCages) {
     // textures
     for (const auto& fruitData : static_FruitDataMap) {
         try {
@@ -113,9 +113,9 @@ void Fruits::SpawnFruit(Fruit &fruit) {
 }
 
 void Fruits::Spawn(void) {
-    const FruitSample &fruitSample = fruitLevels[currentLevel].fruitSample;
-    const int index = GetRandomValue(0, fruitSample.size()-1);
-    const int fruitIndex = static_cast<int>(fruitSample[index]);
+    const LevelSample &sample = fruitLevels[currentLevel].levelSample;
+    const int index = GetRandomValue(0, sample.size()-1);
+    const int fruitIndex = static_cast<int>(sample[index]);
 
     int availableIndex = -1;
     bool skipCreate = false;
@@ -124,7 +124,7 @@ void Fruits::Spawn(void) {
             continue;
         }
         
-        if(fruits[i].type == fruitSample[index]){
+        if(fruits[i].type == sample[index]){
             skipCreate = true;
             availableIndex = i;
             break;
@@ -202,8 +202,8 @@ const FruitResults Fruits::Update(Rectangle bucketCollision) {
     fruitTimeInterval -= GetFrameTime();
 
     if(fruitTimeInterval <= 0) {
-        const FruitLevelData level = fruitLevels[currentLevel];
-        fruitTimeInterval = GetRandomValue(level.dropFrequencyMin, level.dropFrequencyMax)/1000.0f;
+        const FruitLevel level = fruitLevels[currentLevel];
+        fruitTimeInterval = GetRandomValue(level.minDropTime, level.maxDropTime)/1000.0f;
 
         if(currentFruits < fruitLevels[currentLevel].density) {
             Spawn();

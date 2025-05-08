@@ -1,24 +1,24 @@
 #include "level.hpp"
 
 Level::Level(const ConfigData &configData){
-    for(const ConfigLevel &levelConfig : configData.levelConfigs){
-        assert(levelConfig.id < LEVEL_COUNT || levelConfig.id >= 0);
+    for(const SectionLevel &level : configData.levels){
+        assert(level.id < LEVEL_COUNT || level.id >= 0);
 
-        FruitSample fruitSample;
+        LevelSample levelSample;
         int currentFruitRatioIndex = 0;
-        std::map<FruitType, float> _frequencies;
-        for(const auto &pair : levelConfig.fruitFrequencies){
+        MapFruitSample fruitSample;
+        for(const auto &pair : level.sample){
             const std::string fruitString = pair.first;
             const float frequency = pair.second;
 
             try {
                 const FruitType fruitType = static_StringToFruit(fruitString);
-                _frequencies[fruitType] = frequency;
+                fruitSample[fruitType] = frequency;
 
                 if(currentFruitRatioIndex < LENGTH_FRUIT_SAMPLE){
                     int multiplyFruitNum = std::round(frequency * (float)LENGTH_FRUIT_SAMPLE);
                     for(int i=0; i<multiplyFruitNum; i++) {
-                        fruitSample[currentFruitRatioIndex] = fruitType;
+                        levelSample[currentFruitRatioIndex] = fruitType;
                         currentFruitRatioIndex++;
                         if(currentFruitRatioIndex >= LENGTH_FRUIT_SAMPLE){
                             break;
@@ -38,32 +38,31 @@ Level::Level(const ConfigData &configData){
         if(currentFruitRatioIndex < LENGTH_FRUIT_SAMPLE){
             int missingFruits = LENGTH_FRUIT_SAMPLE - currentFruitRatioIndex;
             for(int i=0; i<missingFruits; i++){
-                fruitSample[i+currentFruitRatioIndex] = FruitType::STRAWBERRY;
+                levelSample[i+currentFruitRatioIndex] = FruitType::STRAWBERRY;
             }
         }
 
-        levels[levelConfig.id] = (LevelData){
-            id: levelConfig.id,
+        levels[level.id] = (LevelData){
+            id: level.id,
             fruitLevelData: {
-                fruitFrequencies: _frequencies,
                 fruitSample: fruitSample,
-                levelId: levelConfig.id,
-                dropFrequencyMin: levelConfig.dropFrequencyMin,
-                dropFrequencyMax: levelConfig.dropFrequencyMax,
-                density: levelConfig.density,
+                levelSample: levelSample,
+                levelId: level.id,
+                minDropTime: level.minDropTime,
+                maxDropTime: level.maxDropTime,
+                density: level.density,
             },
-            duration: levelConfig.duration,
-            reward: levelConfig.reward,
+            duration: level.duration,
         };
     }
 
-    if(configData.debug.displayDebug){
+    if(configData.debug.modeDebug){
         for(const auto &level : levels){
             std::cout << level.id  << std::endl;
-            for(auto &freq : level.fruitLevelData.fruitFrequencies){
+            for(auto &freq : level.fruitLevelData.fruitSample){
                 std::cout << "fruits: " << static_FruitToString(freq.first) << " " << freq.second << std::endl;
             }
-            std::cout << level.fruitLevelData.dropFrequencyMin << " " << level.fruitLevelData.dropFrequencyMax << " " << level.duration << " " << level.reward << std::endl;
+            std::cout << level.fruitLevelData.minDropTime << " " << level.fruitLevelData.maxDropTime << " " << level.duration << " " << std::endl;
         }
     }
 }

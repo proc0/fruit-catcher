@@ -52,7 +52,7 @@ typedef struct FruitData {
     const FruitType type;
 } FruitData;
 
-static const std::map<FruitType, FruitData> static_FruitDataMap = {
+static const std::unordered_map<FruitType, FruitData> static_FruitDataMap = {
 #define FRUIT(STRING, ENUM, URI, OFFSETX, OFFSETY, COLOR, RATING) { FruitType::ENUM, \
     { uri: URI, color: COLOR, offset: { OFFSETX, OFFSETY }, rating: RATING, type: FruitType::ENUM }},
     FRUITS
@@ -60,7 +60,7 @@ static const std::map<FruitType, FruitData> static_FruitDataMap = {
 };
 
 static const FruitType static_StringToFruit(const std::string& fruitString) {
-    static const std::map<std::string, FruitType> fruitMap = {
+    static const std::unordered_map<std::string, FruitType> fruitMap = {
 #define FRUIT(STRING, ENUM, URI, OFFSETX, OFFSETY, COLOR, RATING) { STRING, FruitType::ENUM },
     FRUITS
 #undef FRUIT
@@ -82,18 +82,19 @@ static const char* static_FruitToString(const FruitType fruitType) {
 #undef FRUITS
 #endif
 
-typedef std::array<FruitType, LENGTH_FRUIT_SAMPLE> FruitSample;
+typedef std::unordered_map<FruitType, float> MapFruitSample;
+typedef std::array<FruitType, LENGTH_FRUIT_SAMPLE> LevelSample;
 
-typedef struct FruitLevelData {
-    std::map<FruitType, float> fruitFrequencies;
-    FruitSample fruitSample;
+typedef struct FruitLevel {
+    MapFruitSample fruitSample;
+    LevelSample levelSample;
     int levelId;
-    int dropFrequencyMin;
-    int dropFrequencyMax;
+    int minDropTime;
+    int maxDropTime;
     int density;
-} FruitLevelData;
+} FruitLevel;
 
-typedef std::array<FruitLevelData, LEVEL_COUNT> FruitLevels;
+typedef std::array<FruitLevel, LEVEL_COUNT> FruitLevels;
 
 typedef struct FruitCollision {
     Vector2 offset {};
@@ -162,7 +163,7 @@ class Fruits {
         ~Fruits();
         void Reset();
         void SetLevel(int level);
-        const FruitResults Update(Rectangle bucketCollision);
+        const FruitResults Update(const Rectangle bucketCollision);
         void Mute();
         const bool IsMute() const;
         void Unmute();

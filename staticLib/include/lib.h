@@ -1,9 +1,7 @@
 #pragma once
 
-#include <assert.h>
 #include <raylib.h>
 #include <raymath.h>
-#include <vector>
 
 #include "config.hpp"
 
@@ -21,6 +19,7 @@
 #define TEXT_LIVES "LIVES"
 
 #define GAME_LIVES 3
+#define LEVEL_COUNT 10
 
 static constexpr int SCREEN_WIDTH = 1280;
 static constexpr int SCREEN_HEIGHT = 720;

@@ -48,7 +48,7 @@ class Game {
     public:
         Game(const std::string& filepath): 
             config(filepath),
-            debug(config.GetData().debug.displayDebug),
+            debug(config.GetData().debug.modeDebug),
             display(config.GetData()),
             level(config.GetData()),
             fruits(config.GetData(), level.GetFruitLevelData()) {
