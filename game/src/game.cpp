@@ -10,6 +10,77 @@ const bool Game::isRunning() const {
     return state != END;
 }
 
+const FruitDisplayResult Game::DisplayFruitResult(const FruitResult& result) const {
+    const FruitDisplayResult displayResult = (FruitDisplayResult){
+        .location = result.location,
+        .color = result.color,
+        .id = result.id,
+        .score = result.score,
+        .lives = result.lives,
+        .bounces = result.bounces,
+        .hudAnimationIdx = 0,
+        .isCatch = result.isCatch,
+        .bounced = result.bounced,
+        .isSpike = result.isSpike,
+        .discard = false,
+    };
+    return displayResult;
+}
+
+const FruitDisplayResults Game::DisplayFruitResults(const FruitResults& results) const {
+    FruitDisplayResults displayResults;
+    for(const FruitResult& result : results){
+        displayResults.push_back(DisplayFruitResult(result));
+    }
+    return displayResults;
+}
+
+// reducing the fruit results into one result struct for bucket...
+// might need to mirror how display processes a list of results as well
+const BucketDisplayResult Game::DisplayBucketResult(const FruitResults& results) const {
+    bool isCatch = false;
+    bool isSpike = false;
+    bool isBounce = false;
+    Color color = WHITE;
+
+    // if any are true, set flag as true
+    for(const FruitResult& result : results){
+        if(result.isCatch){
+            isCatch = true;
+            color = result.color;
+        } else if(result.isSpike){
+            isSpike = true;
+        }
+
+        if(result.bounced){
+            isBounce = true;
+        }
+    }
+
+    return (BucketDisplayResult){
+        .isCatch = isCatch,
+        .isSpike = isSpike,
+        .isBounce = isBounce,
+        .color = color,
+    };
+}
+
+const int Game::GetScore(const FruitResults& results) const {
+    int score = 0;
+    for(const FruitResult& result : results){
+        score += result.score;
+    }
+    return score;
+}
+
+const int Game::GetLives(const FruitResults& results) const {
+    int lives = 0;
+    for(const FruitResult& result : results){
+        lives += result.lives;
+    }
+    return lives;
+}
+
 void Game::Update() {
     if(state == END) return;
 
@@ -46,11 +117,14 @@ void Game::Update() {
     if(state == PLAY) {
         // Process fruits
         const Rectangle bucketCollision = bucket.GetCollision();
-        const FruitResult result = fruits.Update(bucketCollision);
-        lives += result.lives;
-        score += result.score;
+        const FruitResults results = fruits.Update(bucketCollision);
+        const FruitDisplayResults displayResults = DisplayFruitResults(results);
+        const BucketDisplayResult bucketResults = DisplayBucketResult(results);
+
+        lives += GetLives(results);
+        score += GetScore(results);
         // Process jar
-        bucket.Update(mousePosition, result.bounced, result.isCatch, result.isSpike, result.color);
+        bucket.Update(mousePosition, bucketResults);
         // Calculate time
         const int duration = level.GetCurrentLevel().duration;
         const int currentLevel = level.GetCurrentLevel().id;
@@ -58,8 +132,7 @@ void Game::Update() {
         timeLeft = duration - timeCount;
         // Update UI and HUD effects
         const DisplayStats stats = { lives, score, timeLeft, currentLevel };
-        const ScorePopup popup = { result.location, result.score, result.isCatch };
-        display.Update(stats, popup);
+        display.Update(stats, displayResults);
         // Game Over
         if(lives <= 0) {
             state = OVER;
@@ -91,13 +164,17 @@ void Game::Update() {
     if(state == READY){
         // Input
         const Rectangle bucketCollision = bucket.GetCollision();
-        const FruitResult result = fruits.Update(bucketCollision);
-        lives += result.lives;
-        score += result.score;
-        bucket.Update(mousePosition, result.bounced, result.isCatch, result.isSpike, result.color);
+        const FruitResults results = fruits.Update(bucketCollision);
+        const FruitDisplayResults displayResults = DisplayFruitResults(results);
+        const BucketDisplayResult bucketResults = DisplayBucketResult(results);
+        
+        lives += GetLives(results);
+        score += GetScore(results);
+        // Process jar
+        bucket.Update(mousePosition, bucketResults);
         // HUD
         timeLeft = level.GetCurrentLevel().duration;
-        display.Update({ lives, score, timeLeft, level.GetCurrentLevel().id }, { { 0, 0 }, 0, false });
+        display.Update({ lives, score, timeLeft, level.GetCurrentLevel().id }, displayResults);
         // Countdown
         timeReady += GetFrameTime();
         if(timeReady >= GAME_LEVEL_READY_TIME){
@@ -119,7 +196,7 @@ void Game::Update() {
             fruits.Unmute();
             level.Reset();
             bucket.Reset();
-            bucket.Update(mousePosition, false, false, false);
+            bucket.Update(mousePosition, {false, false, false, WHITE});
             HideCursor();
             timeStart = GetTime();
             timeReady = 0.0f;

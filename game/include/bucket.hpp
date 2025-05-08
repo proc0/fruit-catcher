@@ -4,6 +4,13 @@
 
 #define SOUND_CLINK_LENGTH 9
 
+typedef struct BucketDisplayResult {
+    const bool isCatch;
+    const bool isSpike;
+    const bool isBounce;
+    const Color color;
+} BucketDisplayResult;
+
 class Bucket {
     Texture2D texture;
     Texture2D textureJamTop;
@@ -32,7 +39,7 @@ class Bucket {
         ~Bucket();
         const Rectangle GetCollision() const;
         void Reset();
-        void Update(const Vector2 mousePosition, const bool bounced, const bool isCatch, const bool isSpike, const Color color = WHITE);
+        void Update(const Vector2 mousePosition, const BucketDisplayResult results);
         void UpdateDebug();
         void Render() const;
         void RenderDebug() const;

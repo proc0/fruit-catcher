@@ -77,6 +77,7 @@ void Fruits::SetLevel(int level){
 
 void Fruits::CreateFruit(Fruit &fruit, int index) {
     fruit.type = (FruitType)index;
+    fruit.id = GetTime();
 
     Texture2D fruitSprite = sprites[index];
     const float fruitWidth = (float)fruitSprite.width;
@@ -93,13 +94,14 @@ void Fruits::CreateFruit(Fruit &fruit, int index) {
         offset: fruitData.offset,
         radius: FRUIT_COLLISION_RADIUS * ratio 
     };
-
+    fruit.bounces = 0;
     fruit.mass = ratio;
     fruit.created = true;
 }
 
 void Fruits::SpawnFruit(Fruit &fruit) {
     fruit.active = true;
+    fruit.id = GetTime();
     currentFruits++;
     const float posX = GetRandomValue(fruit.width, SCREEN_WIDTH - fruit.height);
     fruit.position = { posX, -fruit.height };
@@ -114,6 +116,8 @@ void Fruits::SpawnFruit(Fruit &fruit) {
 
     fruit.velocity = { 0.0f, 0.0f };
     fruit.rotation = 0.0f;
+
+    fruit.bounces = 0;
     fruit.collided = false;
     fruit.debounce = false;
 }
@@ -201,16 +205,9 @@ void Fruits::UpdateMovementFruit(Fruit &fruit) {
     }
 }
 
-const FruitResult Fruits::Update(Rectangle bucketCollision) {
-    FruitResult result = {
-        .location = { 0.0f, 0.0f },
-        .color = { 0, 0, 0, 0 },
-        .score = 0,
-        .lives = 0,
-        .isCatch = false,
-        .bounced = false,
-        .isSpike = false,
-    };
+const FruitResults Fruits::Update(Rectangle bucketCollision) {
+
+    FruitResults results = {};
 
     fruitTimeInterval -= GetFrameTime();
 
@@ -242,14 +239,17 @@ const FruitResult Fruits::Update(Rectangle bucketCollision) {
                 continue;
             }
 
-            result = {
+            results.push_back({
                 .location = fruitCenter,
                 .color = static_FruitDataMap.at(fruit.type).color,
+                .id = fruit.id,
                 .score = -1,
                 .lives = -1,
+                .bounces = fruit.bounces,
                 .isCatch = false,
                 .bounced = false,
-            };
+            });
+
             const int splatIdx = GetRandomValue(0, SOUND_SPLAT_LENGTH-1);
             if(!isMute){
                 PlaySound(soundSplat[splatIdx]);
@@ -261,15 +261,17 @@ const FruitResult Fruits::Update(Rectangle bucketCollision) {
             fruit.collided = true;
 
             if(fruit.type == FruitType::SPIKE){
-                result = {
+                results.push_back({
                     .location = fruitCenter,
                     .color = static_FruitDataMap.at(fruit.type).color,
+                    .id = fruit.id,
                     .score = -1,
                     .lives = -1,
+                    .bounces = fruit.bounces,
                     .isCatch = true,
                     .bounced = false,
                     .isSpike = true,
-                };
+                });
                 PlaySound(soundSpike);
                 UpdateMovementFruit(fruit);
                 continue;
@@ -278,16 +280,18 @@ const FruitResult Fruits::Update(Rectangle bucketCollision) {
             if(fruitCenter.y - fruit.collision.radius < bucketCollision.y && fruitCenter.x - fruit.collision.radius > bucketCollision.x && fruitCenter.x + fruit.collision.radius < bucketCollision.x + bucketCollision.width){
                 currentFruits--;
                 fruit.active = false;
-
-                result = {
+                const int multiplier = fruit.bounces > 0 ? fruit.bounces : 1;
+                results.push_back({
                     .location = fruitCenter,
                     .color = static_FruitDataMap.at(fruit.type).color,
-                    .score = (int)(static_FruitDataMap.at(fruit.type).rating * 100.0f),
+                    .id = fruit.id,
+                    .score = (int)(static_FruitDataMap.at(fruit.type).rating * 10.0f * multiplier),
                     .lives = (int)(fruit.type == FruitType::EGG),
+                    .bounces = fruit.bounces,
                     .isCatch = true,
                     .bounced = false,
                     .isSpike = false,
-                };
+                });
 
                 if(fruit.type == FruitType::EGG){
                     PlaySound(soundEgg);
@@ -300,13 +304,24 @@ const FruitResult Fruits::Update(Rectangle bucketCollision) {
                 continue;
             }
 
-            result.bounced = true;
+            fruit.bounces++;
+            results.push_back({
+                .location = fruitCenter,
+                .color = static_FruitDataMap.at(fruit.type).color,
+                .id = fruit.id,
+                .score = 0,
+                .lives = 0,
+                .bounces = fruit.bounces,
+                .isCatch = false,
+                .bounced = true,
+                .isSpike = false,
+            });
         }
 
         UpdateMovementFruit(fruit);
     }
 
-    return result;
+    return results;
 }
 
 void Fruits::UpdateWin(){

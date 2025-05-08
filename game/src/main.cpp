@@ -20,15 +20,16 @@
 //DONE: add bucket effects when hit by spike
 //DONE: add effect for catching an egg
 //DONE: Add "level #" to HUD
+//DONE: add jar bounce combo mechanic
 
 //BACKLOG
 //WIP: add more levels, and test for balance
 //WIP: iterate until it's fun
-    //make bananas one of the harder fruits?
+//make bananas one of the harder fruits?
+//increase pear difficulty rating
+//introduce spikes earlier
 //NEXT: make life into hearts
 //TODO: rearrange HUD, place elements in bottom?
-//NEXT: add jar bounce combo mechanic
-//NEXT: add fruit catch combo mechanic
 //TODO: add effect for filling jam to the top 
 //TODO: add jar ability - grows bigger after jam gets to top
 //TODO: Add bg elements to show max vertical movement (i.e. a vineyard with wooden frames, and one of the wood planks extends horizontally where max Y is)
@@ -38,7 +39,8 @@
 //TODO: Look into adding this to itch.io
 //TODO: Do Emscriptem build
 
-//OPTIONAL
+//REVIEW
+//TODO: add fruit catch combo mechanic
 //TODO: Look into creating a debug build instead of including debug functions always, use define macros to read compiler variables
 //TODO: create reward mechanic for each level?
 //TODO: make egg rotate
