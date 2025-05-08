@@ -2,11 +2,7 @@
 
 Level::Level(const ConfigData &configData){
     for(const ConfigLevel &levelConfig : configData.levelConfigs){
-        //TODO: look into making this an assert
-        if(levelConfig.id >= LEVEL_COUNT || levelConfig.id < 0){
-            std::cerr << "Too many levels defined in config file, or wrong level indices." << std::endl;
-            break;
-        }
+        assert(levelConfig.id < LEVEL_COUNT || levelConfig.id >= 0);
 
         FruitSample fruitSample;
         int currentFruitRatioIndex = 0;
@@ -61,13 +57,14 @@ Level::Level(const ConfigData &configData){
         };
     }
 
-    // debug
-    for(const auto &level : levels){
-        std::cout << level.id  << std::endl;
-        for(auto &freq : level.fruitLevelData.fruitFrequencies){
-            std::cout << "fruits: " << static_FruitToString(freq.first) << " " << freq.second << std::endl;
+    if(configData.debug.displayDebug){
+        for(const auto &level : levels){
+            std::cout << level.id  << std::endl;
+            for(auto &freq : level.fruitLevelData.fruitFrequencies){
+                std::cout << "fruits: " << static_FruitToString(freq.first) << " " << freq.second << std::endl;
+            }
+            std::cout << level.fruitLevelData.dropFrequencyMin << " " << level.fruitLevelData.dropFrequencyMax << " " << level.duration << " " << level.reward << std::endl;
         }
-        std::cout << level.fruitLevelData.dropFrequencyMin << " " << level.fruitLevelData.dropFrequencyMax << " " << level.duration << " " << level.reward << std::endl;
     }
 }
 

@@ -2,7 +2,6 @@
 
 #define GAME_CONFIG_URI "game/jamslam.ini"
 
-//HISTORY
 //DONE: make bucket into a transparent jar, every fruit turns into jam at the bottom, layers build up and clear when it gets to the top.
 //DONE: add progressive difficulty, starting with small fruit and more fruits are added faster -- LEVELS
 //DONE: Fix background scroll depending on FPS
@@ -22,18 +21,24 @@
 //DONE: Add "level #" to HUD
 //DONE: add jar bounce combo mechanic
 
-//BACKLOG
+//WIP: Refactor -
+//// fix variable prefixes
+//// rename and refactor config and result variables
+//// make naming more consistent
+//NEXT: move this backlog
 //WIP: add more levels, and test for balance
 //WIP: iterate until it's fun
-//make bananas one of the harder fruits?
-//increase pear difficulty rating
-//introduce spikes earlier
+////make bananas one of the harder fruits?
+////increase pear difficulty rating
+////introduce spikes earlier
+////subtract density from level 4, make it easier, make level 6 easier (less density, separate banana from coconut)
+////review score numbers and multiplers (should it be x10 or x100, how big does score get until end?)
 //NEXT: make life into hearts
-//TODO: rearrange HUD, place elements in bottom?
+//TODO: rearrange HUD, place elements in bottom
 //TODO: add effect for filling jam to the top 
 //TODO: add jar ability - grows bigger after jam gets to top
 //TODO: Add bg elements to show max vertical movement (i.e. a vineyard with wooden frames, and one of the wood planks extends horizontally where max Y is)
-
+//--dev complete--
 //TODO: Look into packaging for different platforms
 //TODO: Update Readme
 //TODO: Look into adding this to itch.io

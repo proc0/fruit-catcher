@@ -49,17 +49,23 @@ typedef struct FruitDisplayResult {
 typedef std::vector<FruitDisplayResult> FruitDisplayResults;
 
 class Display {
-    char textTime[80];
-    char textScore[20];
-    const int hudAnimation[15] = {0,1,2,6,10,12,14,18,18,14,10,8,4,1,0};
-    const int hudAnimation2[30] = {0,1,2,6,10,12,14,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,14,10,8,4,1,0};
     Texture2D panelStartMenu;
     Texture2D panelGameOver;
     Texture2D fruitIcon;
-    Rectangle startButtonCollision;
-    Rectangle quitButtonCollision;
     Font mainFont;
     Font subFont;
+    std::unordered_map<std::string, TextParams> startMenuTextParams;
+    std::unordered_map<std::string, TextParams> gameEndTextParams;
+    std::unordered_map<std::string, TextParams> gameOverTextParams;
+    std::unordered_map<std::string, TextParams> gameWinTextParams;
+    std::unordered_map<std::string, TextParams> gamePlayTextParams;
+    std::unordered_map<std::string, TextureParams> panelTextureParams;
+    const int hudAnimation2[30] = {0,1,2,6,10,12,14,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,14,10,8,4,1,0};
+    const int hudAnimation[15] = {0,1,2,6,10,12,14,18,18,14,10,8,4,1,0};
+    char textTime[80];
+    char textScore[20];
+    Rectangle startButtonCollision;
+    Rectangle quitButtonCollision;
     enum ButtonState {
         NONE,
         HOVER,
@@ -69,12 +75,6 @@ class Display {
     ButtonState quitButtonState = NONE;
     ButtonState startButtonLastState = NONE;
     ButtonState quitButtonLastState = NONE;
-    std::unordered_map<std::string, TextParams> startMenuTextParams;
-    std::unordered_map<std::string, TextParams> gameEndTextParams;
-    std::unordered_map<std::string, TextParams> gameOverTextParams;
-    std::unordered_map<std::string, TextParams> gameWinTextParams;
-    std::unordered_map<std::string, TextParams> gamePlayTextParams;
-    std::unordered_map<std::string, TextureParams> panelTextureParams;
     FruitDisplayResults fruitDisplayResults;
     Vector2 fruitCenter;
     int score = 0;
@@ -83,9 +83,7 @@ class Display {
     int time = 0;
     int fruitScore = 0;
     int hudScoreFrameIdx = 0;
-    int hudScoreFrameIdx2 = 0;
     int hudLivesFrameIdx = 0;
-    int delayFruitResultsClearFrames = 360;
     bool scoreChanged = false;
     bool livesChanged = false;
     bool displayFPS = false;

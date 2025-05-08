@@ -4,12 +4,21 @@
 
 #include "lib.h"
 
-#define SOUND_SPLAT_LENGTH 5
-#define SOUND_THUMP_LENGTH 5
-#define BUCKET_SOUND_FRUIT_THUMP(buf, idx) sprintf(buf, "resources/thump%d.wav", idx)
+#define URI_SOUND_SPIKE_HIT "resources/spike.wav"
+#define URI_SOUND_EGG_CATCH "resources/eggpop.wav"
+#define LENGTH_SOUND_SPLATS 5
+#define URI_SOUND_SPLAT(buf, idx) sprintf(buf, "resources/splat%d.wav", idx)
+#define LENGTH_SOUND_THUMPS 5
+#define URI_SOUND_THUMP(buf, idx) sprintf(buf, "resources/thump%d.wav", idx)
+
+#define GRAVITY 982.0f
 
 #define FRUIT_TYPE_COUNT 17
 #define FRUIT_SAMPLE_COUNT 34
+#define FRUIT_MAX_SIZE 150.0f
+#define FRUIT_COLLISION_RADIUS 42.0f
+
+#ifndef FRUITS
 #define FRUITS \
     FRUIT("LEMON", LEMON, "resources/fruits/lemon.png", 0.0f, 0.0f, YELLOW, 0.3f) \
     FRUIT("CHERRY", CHERRY, "resources/fruits/red-cherry.png", -4.0f, 9.0f, RED, 0.3f) \
@@ -36,16 +45,16 @@ typedef enum class FruitType {
 } FruitType;
 
 typedef struct FruitData {
-    const FruitType type;
     const std::string uri;
-    const Vector2 offset;
     const Color color;
+    const Vector2 offset;
     const float rating;
+    const FruitType type;
 } FruitData;
 
 static const std::map<FruitType, FruitData> static_FruitDataMap = {
 #define FRUIT(STRING, ENUM, URI, OFFSETX, OFFSETY, COLOR, RATING) { FruitType::ENUM, \
-    { type: FruitType::ENUM, uri: URI, offset: { OFFSETX, OFFSETY }, color: COLOR, rating: RATING }},
+    { uri: URI, color: COLOR, offset: { OFFSETX, OFFSETY }, rating: RATING, type: FruitType::ENUM }},
     FRUITS
 #undef FRUIT
 };
@@ -71,6 +80,7 @@ static const char* static_FruitToString(const FruitType fruitType) {
 }
 
 #undef FRUITS
+#endif
 
 typedef std::array<FruitType, FRUIT_SAMPLE_COUNT> FruitSample;
 
@@ -86,22 +96,22 @@ typedef struct FruitLevelData {
 typedef std::array<FruitLevelData, LEVEL_COUNT> FruitLevels;
 
 typedef struct FruitCollision {
-    Vector2 offset;
-    float radius;
+    Vector2 offset {};
+    float radius = 0.0f;
 } FruitCollision;
 
 typedef struct Fruit {
-    FruitCollision collision;
-    Vector2 position = { 0.0f, 0.0f };
-    Vector2 origin = { 0.0f, 0.0f };
-    Vector2 velocity = { 0.0f, 0.0f };
-    Vector2 force = { 0.0f, 0.0f };
+    FruitCollision collision {};
+    Vector2 force {};
+    Vector2 origin {};
+    Vector2 position {};
+    Vector2 velocity {};
     float mass = 0.0f;
     float rotation = 0.0f;
     float width = 0.0f;
     float height = 0.0f;
-    int id;
     FruitType type = FruitType::APPLE;
+    int id = 0;
     int bounces = 0;
     bool active = false;
     bool created = false;
@@ -110,28 +120,29 @@ typedef struct Fruit {
 } Fruit;
 
 typedef struct FruitResult {
-    Vector2 location;
-    Color color;
-    int id;
-    int score;
-    int lives;
+    Color color {};
+    Vector2 location {};
+    int id = 0;
+    int score = 0;
+    int lives = 0;
     int bounces = 0;
-    bool isCatch;
-    bool bounced;
-    bool isSpike;
+    bool isCatch = false;
+    bool bounced = false;
+    bool isSpike = false;
 } FruitResult;
 
 typedef std::vector<FruitResult> FruitResults;
 
 class Fruits {
-    Texture2D sprites[FRUIT_TYPE_COUNT];
-    Fruit fruits[FRUIT_TYPE_COUNT];
-    Fruit fruitsDebug[FRUIT_TYPE_COUNT];
-    FruitLevels fruitLevels;
-    Sound soundSplat[SOUND_SPLAT_LENGTH];
-    Sound soundThump[SOUND_THUMP_LENGTH];
+    Sound soundSplat[LENGTH_SOUND_SPLATS];
+    Sound soundThump[LENGTH_SOUND_THUMPS];
     Sound soundSpike;
     Sound soundEgg;
+
+    Fruit fruits[FRUIT_TYPE_COUNT];
+    Fruit fruitsDebug[FRUIT_TYPE_COUNT];
+    Texture2D sprites[FRUIT_TYPE_COUNT];
+    FruitLevels fruitLevels;
 
     float fruitTimeInterval = 0.0f;
     int currentLevel = 0;
