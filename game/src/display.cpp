@@ -411,12 +411,14 @@ void Display::Render() const {
             if(result.hudAnimationIdx > 0 && result.hudAnimationIdx < 29) {
                 const char* formatString;
                 int formatNumber;
-                if(result.bounced){
+                if(result.bounced && result.bounces < MAX_FRUIT_BOUNCES){
                     formatString = "x%d";
                     formatNumber = result.bounces;
                 } else if(result.isCatch){
                     formatString = "%d";
                     formatNumber = result.score;
+                } else {
+                    continue;
                 }
                 
                 const char *popupText = TextFormat(formatString, formatNumber);

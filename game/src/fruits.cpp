@@ -179,20 +179,21 @@ void Fruits::UpdateMovementFruit(Fruit &fruit) {
     fruit.rotation += acceleration.x * halfTime;
     
     // on collision
-    if(fruit.collided && !fruit.debounce) {
+    if(fruit.collided && !fruit.debounce && fruit.bounces < MAX_FRUIT_BOUNCES) {
         // reverse direction
         fruit.velocity *= -1;
         fruit.collided = false;
         fruit.debounce = true;
     }
 
-    if(fruit.velocity.y < 0) {
+    if(fruit.velocity.y < 0 || fruit.bounces > MAX_FRUIT_BOUNCES) {
         // add gravity on bounce
         fruit.velocity.y += GRAVITY * deltaTime;
     } else {
         // reset debounce on fall
         fruit.debounce = false;
     }
+
 }
 
 const FruitResults Fruits::Update(Rectangle bucketCollision) {
