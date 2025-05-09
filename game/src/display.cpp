@@ -71,7 +71,7 @@ Display::Display(const ConfigData& configData) {
     };
 
     // Button Collisions - using the same buttons for Start, Pause, and Game Over screens
-    const float startButtonX = SCREEN_HALFWIDTH - MeasureText(textStart, FONTSIZE_MENUTEXT)*0.65f;
+    const float startButtonX = SCREEN_HALFWIDTH - MeasureText(textStart, FONTSIZE_MENUTEXT)*0.6f;
     const float startButtonY = SCREEN_HALFHEIGHT + 30.0f;
     const float startButtonWidth = MeasureText(textStart, FONTSIZE_MENUTEXT);
     startButtonCollision = { startButtonX, startButtonY, startButtonWidth, FONTSIZE_MENUTEXT };
@@ -120,7 +120,7 @@ Display::Display(const ConfigData& configData) {
         y: gameOverTitleY,
     };
 
-    const int restartButtonX = SCREEN_HALFWIDTH - MeasureText(textRestart, FONTSIZE_MENUTEXT)*0.5f;
+    const int restartButtonX = SCREEN_HALFWIDTH - MeasureText(textRestart, FONTSIZE_MENUTEXT)*0.6f;
     gameEndTextParams["gameEndRestartButton"] = {
         text: textRestart,
         color: BLACK,

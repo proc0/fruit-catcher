@@ -262,8 +262,8 @@ const FruitResults Fruits::Update(Rectangle bucketCollision) {
                     .score = -1,
                     .lives = -1,
                     .bounces = fruit.bounces,
-                    .isCatch = true,
-                    .bounced = false,
+                    .isCatch = false,
+                    .bounced = true,
                     .isSpike = true,
                 });
 

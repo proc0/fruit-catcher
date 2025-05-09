@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cstdio>
 
-#define BUCKET_IMAGE_URI "resources/bucket.png"
+#define URI_IMAGE_JAR "resources/bucket.png"
 #define BUCKET_JAM_TOP_URI "resources/jam-top.png"
 #define BUCKET_JAM_MIDDLE_URI "resources/jam-middle.png"
 #define BUCKET_JAM_BOTTOM_URI "resources/jam-bottom.png"
@@ -10,8 +10,12 @@
 #define BUCKET_SOUND_FRUIT_CLINK(buf, idx) sprintf(buf, "resources/clink%d.wav", idx)
 #define BUCKET_SOURCE_WIDTH 131
 #define BUCKET_SOURCE_HEIGHT 160
-#define BUCKET_COLLISION_SIZE 120
-#define BUCKET_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, BUCKET_SOURCE_WIDTH, BUCKET_SOURCE_HEIGHT}
+#define WIDTH_TEXTURE_BIG_JAR 144
+#define HEIGHT_TEXTURE_BIG_JAR 176
+#define SIZE_COLLISION_JAR 120
+#define SIZE_COLLISION_BIG_JAR 160
+#define RECTANGLE_JAR CLITERAL(Rectangle){0, 0, BUCKET_SOURCE_WIDTH, BUCKET_SOURCE_HEIGHT}
+#define RECTANGLE_BIG_JAR CLITERAL(Rectangle){0, 0, WIDTH_TEXTURE_BIG_JAR, HEIGHT_TEXTURE_BIG_JAR}
 #define BUCKET_POS_Y SCREEN_HEIGHT - BUCKET_SOURCE_HEIGHT
 
 #define JAM_OFFSET_X 12
@@ -27,21 +31,50 @@
 #define JAM_MIDDLE_SOURCE_RECTANGLE(jamHeight) CLITERAL(Rectangle){0, 0, JAM_MIDDLE_SOURCE_WIDTH, jamHeight}
 #define JAM_BOTTOM_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, JAM_BOTTOM_SOURCE_WIDTH, JAM_BOTTOM_SOURCE_HEIGHT}
 
-#define JAM_TOP_POS_Y(jamHeight) BUCKET_POS_Y + JAM_OFFSET_Y - JAM_TOP_SOURCE_HEIGHT - jamHeight
-#define JAM_MIDDLE_POS_Y(jamHeight) BUCKET_POS_Y + JAM_OFFSET_Y - jamHeight
-#define JAM_BOTTOM_POS_Y BUCKET_POS_Y + JAM_OFFSET_Y
+// #define JAM_TOP_POS_Y(jamHeight) BUCKET_POS_Y + JAM_OFFSET_Y - JAM_TOP_SOURCE_HEIGHT - jamHeight
+// #define JAM_MIDDLE_POS_Y(jamHeight) BUCKET_POS_Y + JAM_OFFSET_Y - jamHeight
+// #define JAM_BOTTOM_POS_Y BUCKET_POS_Y + JAM_OFFSET_Y
 
 #define JAM_TOP_MOUSE_POS_Y(jamHeight) JAM_OFFSET_Y - JAM_TOP_SOURCE_HEIGHT - jamHeight
 #define JAM_MIDDLE_MOUSE_POS_Y(jamHeight) JAM_OFFSET_Y - jamHeight
 #define JAM_BOTTOM_MOUSE_POS_Y JAM_OFFSET_Y
 
-Bucket::Bucket(){
-    texture = LoadTexture(BUCKET_IMAGE_URI);
-    textureJamTop = LoadTexture(BUCKET_JAM_TOP_URI);
-    textureJamMiddle = LoadTexture(BUCKET_JAM_MIDDLE_URI);
-    textureJamBottom = LoadTexture(BUCKET_JAM_BOTTOM_URI);
-    textureCatchEffect = LoadTexture(BUCKET_FRUIT_CATCH_EFFECT);
+#define SIZE_SCALE_BIG_JAR 1.1f
 
+Bucket::Bucket(){
+    const Image jarImage = LoadImage(URI_IMAGE_JAR);
+    Image bigJarImage = ImageCopy(jarImage);
+    const Image imageJamTop = LoadImage(BUCKET_JAM_TOP_URI);
+    Image imageBigJamTop = ImageCopy(imageJamTop);
+    const Image imageJamMiddle = LoadImage(BUCKET_JAM_MIDDLE_URI);
+    Image imageBigJamMiddle = ImageCopy(imageJamMiddle);
+    const Image imageJamBottom = LoadImage(BUCKET_JAM_BOTTOM_URI);
+    Image imageBigJamBottom = ImageCopy(imageJamBottom);
+
+    ImageResize(&bigJarImage, bigJarImage.width*SIZE_SCALE_BIG_JAR, bigJarImage.height*SIZE_SCALE_BIG_JAR);
+    ImageResize(&imageBigJamTop, imageBigJamTop.width*SIZE_SCALE_BIG_JAR, imageBigJamTop.height*SIZE_SCALE_BIG_JAR);
+    ImageResize(&imageBigJamMiddle, imageBigJamMiddle.width*SIZE_SCALE_BIG_JAR, imageBigJamMiddle.height*SIZE_SCALE_BIG_JAR);
+    ImageResize(&imageBigJamBottom, imageBigJamBottom.width*SIZE_SCALE_BIG_JAR, imageBigJamBottom.height*SIZE_SCALE_BIG_JAR);
+
+    textureBigJar = LoadTextureFromImage(bigJarImage);
+    textureJar = LoadTextureFromImage(jarImage);
+    textureJamTop = LoadTextureFromImage(imageJamTop);
+    textureBigJamTop = LoadTextureFromImage(imageBigJamTop);
+    textureJamMiddle = LoadTextureFromImage(imageJamMiddle);
+    textureBigJamMiddle = LoadTextureFromImage(imageBigJamMiddle);
+    textureJamBottom = LoadTextureFromImage(imageJamBottom);
+    textureBigJamBottom = LoadTextureFromImage(imageBigJamBottom);
+
+    UnloadImage(jarImage);
+    UnloadImage(bigJarImage);
+    UnloadImage(imageJamTop);
+    UnloadImage(imageBigJamTop);
+    UnloadImage(imageJamMiddle);
+    UnloadImage(imageBigJamMiddle);
+    UnloadImage(imageJamBottom);
+    UnloadImage(imageBigJamBottom);
+
+    textureCatchEffect = LoadTexture(BUCKET_FRUIT_CATCH_EFFECT);
 
     for(int j = 0; j < SOUND_CLINK_LENGTH; j++){
         const int _idx = j + 1;
@@ -51,19 +84,24 @@ Bucket::Bucket(){
     }
 
     Vector2 mousePosition = GetMousePosition();
-    const float bucketPosX = mousePosition.x - texture.width/2;
-    const float jamPosX = bucketPosX + JAM_OFFSET_X;
-    position = { bucketPosX, BUCKET_POS_Y * 1.18 };
-    jamTopPosition = { jamPosX, JAM_TOP_POS_Y(0) };
-    jamMiddlePosition = { jamPosX, JAM_MIDDLE_POS_Y(0) };
-    jamBottomPosition = { jamPosX, JAM_BOTTOM_POS_Y };
-    collision = { mousePosition.x - BUCKET_COLLISION_SIZE/2, BUCKET_POS_Y, BUCKET_COLLISION_SIZE, BUCKET_COLLISION_SIZE };
+    // const float bucketPosX = mousePosition.x - textureJar.width/2;
+    // const float jamPosX = bucketPosX + JAM_OFFSET_X;
+    // position = { bucketPosX, BUCKET_POS_Y * 1.18 };
+    // jamTopPosition = { jamPosX, JAM_TOP_POS_Y(0) };
+    // jamMiddlePosition = { jamPosX, JAM_MIDDLE_POS_Y(0) };
+    // jamBottomPosition = { jamPosX, JAM_BOTTOM_POS_Y };
+    collisionJar = { mousePosition.x - SIZE_COLLISION_JAR/2, BUCKET_POS_Y, SIZE_COLLISION_JAR, SIZE_COLLISION_JAR };
 }
 
 Bucket::~Bucket(void) {
-    UnloadTexture(texture);
+    UnloadTexture(textureJar);
+    UnloadTexture(textureBigJar);
     UnloadTexture(textureJamTop);
+    UnloadTexture(textureBigJamTop);
     UnloadTexture(textureJamMiddle);
+    UnloadTexture(textureBigJamMiddle);
+    UnloadTexture(textureJamMiddle);
+    UnloadTexture(textureBigJamBottom);
     UnloadTexture(textureJamBottom);
     UnloadTexture(textureCatchEffect);
     for(int j = 0; j < SOUND_CLINK_LENGTH; j++){
@@ -73,30 +111,32 @@ Bucket::~Bucket(void) {
 
 void Bucket::Reset(void) {
     jamHeight = 0;
+    jarState = SMALL;
+    jamColor = WHITE;
 }
 
 const Rectangle Bucket::GetCollision(void) const {
-    return collision;
-}
-
-void Bucket::UpdateOnCatch(const Color color, const int bucketPosY) {
-    jamColor = ColorLerp(jamColor, color, 0.1f);
-    jamHeight++;
-    jamTopPosition.y = JAM_TOP_MOUSE_POS_Y(jamHeight) + bucketPosY;
-    jamMiddlePosition.y = JAM_MIDDLE_MOUSE_POS_Y(jamHeight) + bucketPosY;
-    jamBottomPosition.y = JAM_BOTTOM_MOUSE_POS_Y + bucketPosY;
-    catchEffectAnimationIdx++;
+    return collisionJar;
 }
 
 // old params: const bool bounced, const bool isCatch, const bool isSpike, const Color color
 // note: processes single result item, instead of a list of results, works for now
 void Bucket::Update(const Vector2 mousePosition, const BucketDisplayResult result) {
-    const float bucketPosX = mousePosition.x - texture.width/2;
+    //////////
+    float bucketPosX = mousePosition.x - textureJar.width/2;
+    if(jarState == BIG){
+        bucketPosX = mousePosition.x - textureBigJar.width/2;
+    }
+
     position.x = bucketPosX;
     jamTopPosition.x = bucketPosX + JAM_OFFSET_X;
     jamMiddlePosition.x = bucketPosX + JAM_OFFSET_X;
     jamBottomPosition.x = bucketPosX + JAM_OFFSET_X;
-    collision.x = mousePosition.x - BUCKET_COLLISION_SIZE/2;
+    if(jarState == BIG){
+        collisionJar.x = mousePosition.x - SIZE_COLLISION_BIG_JAR/2;
+    } else {
+        collisionJar.x = mousePosition.x - SIZE_COLLISION_JAR/2;
+    }
 
     int bucketPosY = mousePosition.y;
     if(bucketPosY < BUCKET_POS_Y - 100){
@@ -107,22 +147,38 @@ void Bucket::Update(const Vector2 mousePosition, const BucketDisplayResult resul
         bucketPosY = 0;
     }
 
-    position.y = bucketPosY;
-    jamTopPosition.y = JAM_TOP_MOUSE_POS_Y(jamHeight) + bucketPosY;
-    jamMiddlePosition.y = JAM_MIDDLE_MOUSE_POS_Y(jamHeight) + bucketPosY;
-    jamBottomPosition.y = JAM_BOTTOM_MOUSE_POS_Y + bucketPosY;
-    collision.y = bucketPosY;
-
-    if(result.isCatch){
-        isCatching = true;
-        UpdateOnCatch(result.color, bucketPosY);
-    }
-    
     if(result.isSpike){
         isStunned = true;
+        jamHeight *= 0.3f;
+        jarState = SMALL;
     } else if(result.isBounce){
         const int randomSoundIdx = GetRandomValue(0, SOUND_CLINK_LENGTH-1);
         PlaySound(soundClinks[randomSoundIdx]);
+    }
+
+    position.y = bucketPosY;
+
+    int jarPosY = bucketPosY;
+    if(jarState == BIG){
+        jarPosY += 18;
+    } 
+    jamTopPosition.y = JAM_TOP_MOUSE_POS_Y(jamHeight) + jarPosY;
+    jamMiddlePosition.y = JAM_MIDDLE_MOUSE_POS_Y(jamHeight) + jarPosY;
+    jamBottomPosition.y = JAM_BOTTOM_MOUSE_POS_Y + jarPosY;
+    collisionJar.y = jarPosY;
+
+    if(result.isCatch){
+        isCatching = true;
+        catchEffectAnimationIdx++;
+
+        jamColor = ColorLerp(jamColor, result.color, 0.1f);
+        jamHeight++;
+        if(jamHeight > 80){
+            jarState = BIG;
+            jamHeight = 0;
+            jamColor = jamColor;
+            return;
+        }
     }
 
     if(isCatching && catchEffectAnimationIdx < 5 && catchEffectAnimationLength > 0){
@@ -143,7 +199,7 @@ void Bucket::Update(const Vector2 mousePosition, const BucketDisplayResult resul
         jamTopPosition.x += displaceX;
         jamMiddlePosition.x += displaceX;
         jamBottomPosition.x += displaceX;
-        collision.x += displaceX;
+        collisionJar.x += displaceX;
         stunLockIdx++;
     } else {
         isStunned = false;
@@ -152,22 +208,32 @@ void Bucket::Update(const Vector2 mousePosition, const BucketDisplayResult resul
 }
 
 void Bucket::UpdateDebug(void) {
-    const float bucketPosX = SCREEN_WIDTH/2 - texture.width/2;
+    const float bucketPosX = SCREEN_WIDTH/2 - textureJar.width/2;
     position.x = bucketPosX;
     jamTopPosition.x = bucketPosX + JAM_OFFSET_X;
     jamMiddlePosition.x = bucketPosX + JAM_OFFSET_X;
     jamBottomPosition.x = bucketPosX + JAM_OFFSET_X;
-    collision.x = SCREEN_WIDTH/2 - BUCKET_COLLISION_SIZE/2;
+    collisionJar.x = SCREEN_WIDTH/2 - SIZE_COLLISION_JAR/2;
 }
 
 void Bucket::Render(void) const {
-    if(jamHeight > 0){
-        DrawTextureRec(textureJamTop, JAM_TOP_SOURCE_RECTANGLE, jamTopPosition, jamColor);
-        DrawTextureRec(textureJamMiddle, JAM_MIDDLE_SOURCE_RECTANGLE(float(jamHeight)), jamMiddlePosition, jamColor);
-        DrawTextureRec(textureJamBottom, JAM_BOTTOM_SOURCE_RECTANGLE, jamBottomPosition, jamColor);
-    }
+    if(jarState == BIG) {
+        if(jamHeight > 0){
+            DrawTextureRec(textureBigJamTop, JAM_TOP_SOURCE_RECTANGLE, jamTopPosition, jamColor);
+            DrawTextureRec(textureBigJamMiddle, JAM_MIDDLE_SOURCE_RECTANGLE(float(jamHeight)), jamMiddlePosition, jamColor);
+            DrawTextureRec(textureBigJamBottom, JAM_BOTTOM_SOURCE_RECTANGLE, jamBottomPosition, jamColor);
+        }
 
-    DrawTextureRec(texture, BUCKET_SOURCE_RECTANGLE, position, WHITE);
+        DrawTextureRec(textureBigJar, RECTANGLE_BIG_JAR, position, WHITE);
+    } else {
+        if(jamHeight > 0){
+            DrawTextureRec(textureJamTop, JAM_TOP_SOURCE_RECTANGLE, jamTopPosition, jamColor);
+            DrawTextureRec(textureJamMiddle, JAM_MIDDLE_SOURCE_RECTANGLE(float(jamHeight)), jamMiddlePosition, jamColor);
+            DrawTextureRec(textureJamBottom, JAM_BOTTOM_SOURCE_RECTANGLE, jamBottomPosition, jamColor);
+        }
+
+        DrawTextureRec(textureJar, RECTANGLE_JAR, position, WHITE);
+    }
 
     if(isCatching){
         DrawTexturePro(textureCatchEffect, {float(113*catchEffectAnimationIdx), 0, 113, 100 }, { position.x, position.y-55, 113, 100 }, {0, 0}, 0.0f, WHITE);
@@ -177,5 +243,5 @@ void Bucket::Render(void) const {
 void Bucket::RenderDebug(void) const {
     Render();
 
-    DrawRectangleLinesEx(collision, 2, GREEN);
+    DrawRectangleLinesEx(collisionJar, 2, GREEN);
 }

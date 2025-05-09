@@ -25,6 +25,8 @@
 //DONE: move this backlog
 //DONE: make life into hearts
 //DONE: rearrange HUD, place elements in bottom
+//DONE: add jar ability - grows bigger after jam gets to top
+//DONE: update Start menu layout, make game name have transparent background (only start, quit buttons have panel)
 
 //WIP: add more levels, and test for balance
 //WIP: iterate until it's fun
@@ -35,17 +37,11 @@
 ////review score numbers and multiplers (should it be x10 or x100, how big does score get until end?)]
 
 //NEXT: add effect for filling jam to the top 
-//NEXT: add jar ability - grows bigger after jam gets to top
 //NEXT: Add bg elements to show max vertical movement (i.e. a vineyard with wooden frames, and one of the wood planks extends horizontally where max Y is)
 //--dev complete--
+//TODO: fix bugs
+///// orange shows up in level 4???
 //TODO: Look into packaging for different platforms
 //TODO: Update Readme
 //TODO: Look into adding this to itch.io
 //TODO: Do Emscriptem build
-
-//REVIEW
-//TODO: add fruit catch combo mechanic
-//TODO: Look into creating a debug build instead of including debug functions always, use define macros to read compiler variables
-//TODO: create reward mechanic for each level?
-//TODO: make egg rotate
-//TODO: update Start menu layout, make game name have transparent background (only start, quit buttons have panel)
