@@ -52,6 +52,7 @@ class Display {
     Texture2D panelStartMenu;
     Texture2D panelGameOver;
     Texture2D fruitIcon;
+    Texture2D heartIcon;
     Font mainFont;
     Font subFont;
     std::unordered_map<std::string, TextParams> startMenuTextParams;

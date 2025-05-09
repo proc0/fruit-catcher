@@ -16,6 +16,7 @@ class Game {
     Display display;
     Stage stage;
     Vector2 mousePosition;
+    Vector2 debugCoordinates;
     enum State {
         START,
         PLAY,

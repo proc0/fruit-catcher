@@ -15,8 +15,8 @@ int main() {
   Game JamSlam(GAME_CONFIG_URI);
 
   if(JamSlam.isDebug()){
-    JamSlam.UpdateDebug();
     while (!WindowShouldClose() && JamSlam.isRunning()) {
+      JamSlam.UpdateDebug();
       BeginDrawing();
       JamSlam.RenderDebug();
       EndDrawing();

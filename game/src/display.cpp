@@ -1,13 +1,14 @@
 #include "display.hpp"
 
-#define START_MENU_IMAGE "resources/start_menu_panel.png"
+#define URI_PANEL_START_MENU "resources/paper_panel.png"
 #define PANEL_GAME_OVER "resources/game_over_panel.png"
 #define HUD_PANEL "resources/hud_panel.png"
 #define FRUIT_ICON_URI "resources/fruit_icon.png"
+#define URI_ICON_HEART "resources/heart.png"
 
 static const char *textGameOver = TEXT_GAME_OVER;
 static const char *textLevel = TEXT_LEVEL;
-static const char *textLives = TEXT_LIVES;
+// static const char *textLives = TEXT_LIVES;
 static const char *textQuit = TEXT_GAME_QUIT;
 static const char *textRestart = TEXT_RESTART;
 static const char *textRestartMessage = TEXT_PRESS_R;
@@ -17,7 +18,7 @@ static const char *textTimePlayed = TEXT_TIME_PLAYED;
 static const char *textTotalScore = TEXT_SCORE;
 static const char *textGameWin = TEXT_GAME_WIN;
 
-static const int FONTSIZE_TITLE = 100;
+static const int FONTSIZE_TITLE = 124;
 static const int FONTSIZE_SUBTITLE = 20;
 static const int FONTSIZE_MENUTEXT = 44;
 static const int FONTSIZE_SCORETEXT = 52;
@@ -25,9 +26,10 @@ static constexpr int SCREEN_HALFWIDTH = SCREEN_WIDTH*0.5f;
 static constexpr int SCREEN_HALFHEIGHT = SCREEN_HEIGHT*0.5f;
 
 Display::Display(const ConfigData& configData) {
-    panelStartMenu = LoadTexture(START_MENU_IMAGE);
+    panelStartMenu = LoadTexture(URI_PANEL_START_MENU);
     panelGameOver = LoadTexture(PANEL_GAME_OVER);
     fruitIcon = LoadTexture(FRUIT_ICON_URI);
+    heartIcon = LoadTexture(URI_ICON_HEART);
     
     mainFont = LoadFontEx("resources/Lacquer-Regular.ttf", FONTSIZE_TITLE, 0, 0);
     subFont = LoadFontEx("resources/Jua-Regular.ttf", FONTSIZE_TITLE, 0, 0);
@@ -38,7 +40,7 @@ Display::Display(const ConfigData& configData) {
 
     // panel params
     const int startMenuPanelX = SCREEN_HALFWIDTH - panelStartMenu.width/2;
-    const int startMenuPanelY = SCREEN_HALFHEIGHT - panelStartMenu.height/2;
+    const int startMenuPanelY = SCREEN_HALFHEIGHT;
     panelTextureParams["startMenuPanel"] = {
         texture: panelStartMenu,
         color: WHITE,
@@ -59,7 +61,7 @@ Display::Display(const ConfigData& configData) {
     const Color titleColor = { 200, 40, 40, 255 };
     const Vector2 fontTitleXY = MeasureTextEx(mainFont, textStartMenuTitle, FONTSIZE_TITLE, 1.0f);
     const int startMenuTitleX = SCREEN_HALFWIDTH - fontTitleXY.x*0.5f;
-    const int startMenuTitleY = SCREEN_HALFHEIGHT - fontTitleXY.y + 10;
+    const int startMenuTitleY = SCREEN_HALFHEIGHT - fontTitleXY.y - 10;
     startMenuTextParams["startMenuTitle"] = {
         text: textStartMenuTitle,
         color: titleColor,
@@ -69,7 +71,7 @@ Display::Display(const ConfigData& configData) {
     };
 
     // Button Collisions - using the same buttons for Start, Pause, and Game Over screens
-    const float startButtonX = SCREEN_HALFWIDTH - MeasureText(textStart, FONTSIZE_MENUTEXT)*0.5f;
+    const float startButtonX = SCREEN_HALFWIDTH - MeasureText(textStart, FONTSIZE_MENUTEXT)*0.65f;
     const float startButtonY = SCREEN_HALFHEIGHT + 30.0f;
     const float startButtonWidth = MeasureText(textStart, FONTSIZE_MENUTEXT);
     startButtonCollision = { startButtonX, startButtonY, startButtonWidth, FONTSIZE_MENUTEXT };
@@ -162,6 +164,7 @@ Display::~Display(void) {
     UnloadTexture(panelStartMenu);
     UnloadTexture(fruitIcon);
     UnloadTexture(panelGameOver);
+    UnloadTexture(heartIcon);
     UnloadFont(mainFont);
     UnloadFont(subFont);
 }
@@ -383,40 +386,49 @@ void Display::Update(const DisplayStats stats, const FruitDisplayResults results
 
 void Display::Render() const {
     // Lives
-    DrawText(textLives, 28, 32, 18, WHITE);
+    DrawTexture(heartIcon, 30, 640, WHITE);
+    DrawText("x", 90, 645, 32, WHITE);
     const char *livesNum = TextFormat("%d", lives);
     const int livesFontsize = 72 + hudAnimation[hudLivesFrameIdx];
     const Color livesColor = hudLivesFrameIdx != 0 ? RED : WHITE;
-    DrawText(livesNum, 28, 55, livesFontsize, livesColor);
-    
+    // text stroke
+    DrawText(livesNum, 115, 630 + 2, livesFontsize, BLACK);
+    DrawText(livesNum, 115, 630 - 2, livesFontsize, BLACK);
+    DrawText(livesNum, 115 + 2, 630, livesFontsize, BLACK);
+    DrawText(livesNum, 115 - 2, 630, livesFontsize, BLACK);
+    DrawText(livesNum, 115, 630, livesFontsize, livesColor);
+
     // Score
-    DrawTexture(fruitIcon, 100, 32, WHITE);
-    DrawText("x", 100, 85, 18, WHITE);
+    DrawTexture(fruitIcon, 1000, 20, WHITE);
+    DrawText("x", 1060, 25, 32, WHITE);
     const char *scoreNum = TextFormat("%d", score);
     const int scoreFontsize = 32 + hudAnimation[hudScoreFrameIdx];
     const Color scoreColor = hudScoreFrameIdx != 0 ? GOLD : WHITE;
-    DrawText(scoreNum, 115, 75, scoreFontsize, scoreColor);
-
-    const char *levelTime = TextFormat("%d", time);
-    const static constexpr int levelTimePosY = SCREEN_HALFWIDTH-20;
-    DrawText(levelTime, levelTimePosY, 20, 52, WHITE);
+    DrawText(scoreNum, 1085, 25, scoreFontsize, scoreColor);
 
     const char *levelNumber = TextFormat(TEXT_LEVEL, level);
-    const static constexpr int levelNumberPosY = SCREEN_HALFWIDTH-48;
-    DrawText(levelNumber, levelNumberPosY, 80, 32, WHITE);
+    const static constexpr int levelNumberPosX = SCREEN_HALFWIDTH-46;
+    DrawText(levelNumber, levelNumberPosX, 20, 32, WHITE);
+
+    const char *levelTime = TextFormat("%d", time);
+    const static constexpr int levelTimePosX = SCREEN_HALFWIDTH-20;
+    DrawText(levelTime, levelTimePosX, 65, 52, WHITE);
 
     if(fruitDisplayResults.size() > 0){
         for(const FruitDisplayResult& result : fruitDisplayResults){    
             // if one of the fruit cache results has an animation in progress
             if(result.hudAnimationIdx > 0 && result.hudAnimationIdx < 29) {
                 const char* formatString;
+                Color textColor;
                 int formatNumber;
                 if(result.bounced && result.bounces < MAX_FRUIT_BOUNCES){
                     formatString = "x%d";
                     formatNumber = result.bounces;
+                    textColor = YELLOW;
                 } else if(result.isCatch){
                     formatString = "%d";
                     formatNumber = result.score;
+                    textColor = WHITE;
                 } else {
                     continue;
                 }
@@ -431,7 +443,7 @@ void Display::Render() const {
                 DrawText(popupText, popupX + 2, popupY, popupSize, BLACK);
                 DrawText(popupText, popupX - 2, popupY, popupSize, BLACK);
                 // popup text, either score or bounce multiplier
-                DrawText(popupText, popupX, popupY, popupSize, WHITE);
+                DrawText(popupText, popupX, popupY, popupSize, textColor);
             }
         }
     }
@@ -448,4 +460,5 @@ void Display::RenderReady() const {
 
     const char *labelLevel = TextFormat(labelReady.text, level);
     DrawTextEx(subFont, labelLevel, { (float)labelReady.x, (float)labelReady.y}, labelReady.fontSize, 1.0f, labelReady.color);
+    // DrawText(labelLevel, (float)labelReady.x, (float)labelReady.y, labelReady.fontSize, labelReady.color);
 }

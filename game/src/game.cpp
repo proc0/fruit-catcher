@@ -103,7 +103,7 @@ void Game::Update() {
     }
     
     if(IsKeyPressed(KEY_ESCAPE)) {
-        if(state == WIN){
+        if(state == WIN || state == START){
             state = END;
         } else {
             state = PAUSE;
@@ -230,7 +230,8 @@ void Game::Render() const {
     
     stage.Render();
 
-    if(state == PLAY || state == PAUSE || state == OVER || state == WIN) {
+    // PLAY || PAUSE || OVER || READY || WIN
+    if(state != START && state != END) {
         fruits.Render();
         bucket.Render();
         display.Render();
@@ -242,9 +243,6 @@ void Game::Render() const {
     }
 
     if(state == READY) {
-        fruits.Render();
-        bucket.Render();
-        display.Render();
         display.RenderReady();
         return;
     }
@@ -264,6 +262,9 @@ void Game::Render() const {
 }
 
 void Game::UpdateDebug() {
+    if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+        debugCoordinates = GetMousePosition();
+    }
     if(state != END){
         stage.Update();
 
@@ -278,4 +279,6 @@ void Game::RenderDebug() const {
         fruits.RenderDebug();
         bucket.RenderDebug();
     }
+    const char* coords = TextFormat("(%d,%d)", (int)debugCoordinates.x, (int)debugCoordinates.y);
+    DrawText(coords, (int)debugCoordinates.x, (int)debugCoordinates.y, 33, BLACK);
 }

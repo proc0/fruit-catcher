@@ -23,6 +23,8 @@
 //// make naming more consistent
 //DONE: add max combo multiplier (13)
 //DONE: move this backlog
+//DONE: make life into hearts
+//DONE: rearrange HUD, place elements in bottom
 
 //WIP: add more levels, and test for balance
 //WIP: iterate until it's fun
@@ -32,11 +34,9 @@
 ////subtract density from level 4, make it easier, make level 6 easier (less density, separate banana from coconut) x
 ////review score numbers and multiplers (should it be x10 or x100, how big does score get until end?)]
 
-//NEXT: make life into hearts
-//TODO: rearrange HUD, place elements in bottom
-//TODO: add effect for filling jam to the top 
-//TODO: add jar ability - grows bigger after jam gets to top
-//TODO: Add bg elements to show max vertical movement (i.e. a vineyard with wooden frames, and one of the wood planks extends horizontally where max Y is)
+//NEXT: add effect for filling jam to the top 
+//NEXT: add jar ability - grows bigger after jam gets to top
+//NEXT: Add bg elements to show max vertical movement (i.e. a vineyard with wooden frames, and one of the wood planks extends horizontally where max Y is)
 //--dev complete--
 //TODO: Look into packaging for different platforms
 //TODO: Update Readme
