@@ -83,21 +83,22 @@ const int Game::GetLives(const FruitResults& results) const {
 
 void Game::Update() {
     if(state == END) return;
+    ClearBackground(BLACK);
 
-    stage.Update();
+    //stage.Update();   
 
-    if(IsMusicStreamPlaying(musicLevel)){
-        UpdateMusicStream(musicLevel);
-    }
+    // if(IsMusicStreamPlaying(musicLevel)){
+    //     UpdateMusicStream(musicLevel);
+    // }
 
-    if(IsMusicStreamPlaying(musicIntro)){
-        UpdateMusicStream(musicIntro);
-    }
+    // if(IsMusicStreamPlaying(musicIntro)){
+    //     UpdateMusicStream(musicIntro);
+    // }
 
     if(state == PAUSE) {
         if(IsKeyPressed(KEY_ESCAPE)){
             state = PLAY;
-            HideCursor();
+            // HideCursor();
             return;
         }
     }
@@ -123,6 +124,7 @@ void Game::Update() {
 
         lives += GetLives(results);
         score += GetScore(results);
+
         // Process jar
         bucket.Update(mousePosition, bucketResults);
         // Calculate time
@@ -197,15 +199,15 @@ void Game::Update() {
             level.Reset();
             bucket.Reset();
             bucket.Update(mousePosition, {false, false, false, WHITE});
-            HideCursor();
+            // HideCursor();
             timeStart = GetTime();
             timeReady = 0.0f;
             timeCount = 0.0f;
             points = 0;
             score = 0;
             lives = GAME_LIVES;
-            StopMusicStream(musicIntro);
-            PlayMusicStream(musicLevel);
+            // StopMusicStream(musicIntro);
+            // PlayMusicStream(musicLevel);
             return;
         }
         // Quit action
@@ -228,7 +230,7 @@ void Game::Update() {
 void Game::Render() const {
     if(state == END) return;
     
-    stage.Render();
+    //stage.Render();
 
     // PLAY || PAUSE || OVER || READY || WIN
     if(state != START && state != END) {
@@ -266,7 +268,7 @@ void Game::UpdateDebug() {
         debugCoordinates = GetMousePosition();
     }
     if(state != END){
-        stage.Update();
+        //stage.Update();
 
         fruits.UpdateDebug();
         bucket.UpdateDebug();
@@ -275,10 +277,39 @@ void Game::UpdateDebug() {
 
 void Game::RenderDebug() const {
     if(state != END){
-        stage.Render();
+        //stage.Render();
         fruits.RenderDebug();
         bucket.RenderDebug();
     }
     const char* coords = TextFormat("(%d,%d)", (int)debugCoordinates.x, (int)debugCoordinates.y);
     DrawText(coords, (int)debugCoordinates.x, (int)debugCoordinates.y, 33, BLACK);
+}
+
+void Game::Loop() {
+    Update();
+    PollInputEvents();
+    BeginDrawing();
+    Render();
+    EndDrawing();
+}
+
+
+void do_frame(void* void_fn_ptr) {
+    auto* fn_ptr = reinterpret_cast<std::function<void()>*>(void_fn_ptr);
+    if (fn_ptr) {
+        auto& fn = *fn_ptr;
+        fn();
+    }
+}
+
+void Game::Run(std::function<void()> fn){
+  #ifdef __EMSCRIPTEN__
+    // emscripten_set_main_loop(Loop, 0, 1);
+    emscripten_set_main_loop_arg(do_frame, &fn, 0, 1);
+  #else
+    SetTargetFPS(60);
+    while (!WindowShouldClose() && isRunning()) {
+        Loop();
+    }
+  #endif
 }

@@ -451,7 +451,7 @@ void Display::Render() const {
     if(displayFPS){
         const int fps = GetFPS();
         const char *fpsNum = TextFormat("%d", fps);
-        DrawText(fpsNum, 10, 10, 20, BLACK);
+        DrawText(fpsNum, 10, 10, 20, PINK);
     }
 }
 

@@ -41,7 +41,45 @@
 //--dev complete--
 //TODO: fix bugs
 ///// orange shows up in level 4???
-//TODO: Look into packaging for different platforms
-//TODO: Update Readme
-//TODO: Look into adding this to itch.io
-//TODO: Do Emscriptem build
+//WIP: Look into packaging for different platforms
+//WIP: Do Emscriptem build
+//NEXT: Update Readme
+//NEXT: Look into adding this to itch.io
+
+
+emcc -o jamslam.html game/src/main.cpp game/src/game.cpp game/src/display.cpp game/src/bucket.cpp game/src/fruits.cpp game/src/level.cpp game/src/stage.cpp staticLib/src/config.cpp staticLib/src/lib.cpp -Wall -std=c++17 -D_DEFAULT_SOURCE -Wno-missing-braces -Wunused-result -Os -I game/include -I staticLib/include -I C:/raylib/raylib/src -I C:/raylib/raylib/src/external -L staticLib/src -L game/src -L C:raylib/raylib/src -s USE_GLFW=3 -s ASYNCIFY -s TOTAL_MEMORY=67108864 -s FORCE_FILESYSTEM=1 --preload-file resources --shell-file C:/raylib/raylib/src/shell.html C:/raylib/raylib/src/web/libraylib.a -DPLATFORM_WEB -s 'EXPORTED_FUNCTIONS=["_free","_malloc","_main"]' -s EXPORTED_RUNTIME_METHODS=ccall
+
+emcc -o bin/jamslam.html game/src/main.cpp game/src/game.cpp game/src/display.cpp game/src/bucket.cpp game/src/fruits.cpp game/src/level.cpp game/src/stage.cpp staticLib/src/config.cpp staticLib/src/lib.cpp -Wall -std=c++17 -D_DEFAULT_SOURCE -Wno-missing-braces -Wunused-result -Os -I game/include -I staticLib/include -I C:/raylib/raylib/src -I C:/raylib/raylib/src/external -L. -L C:raylib/raylib/src -s USE_GLFW=3 -s ASYNCIFY -s TOTAL_MEMORY=67108864 -s FORCE_FILESYSTEM=1 --preload-file resources --preload-file game/jamslam.ini --shell-file C:/raylib/raylib/src/shell.html C:/raylib/raylib/src/web/libraylib.a -DPLATFORM_WEB -s EXPORTED_FUNCTIONS="['_free', '_malloc','_main']"
+
+emcc -o bin/jamslam.html game/src/main.cpp game/src/game.cpp game/src/display.cpp game/src/bucket.cpp game/src/fruits.cpp game/src/level.cpp game/src/stage.cpp staticLib/src/config.cpp staticLib/src/lib.cpp -Wall -std=c++17 -D_DEFAULT_SOURCE -Wno-missing-braces -Wunused-result -Os -I game/include -I staticLib/include -I C:/raylib/raylib/src -I C:/raylib/raylib/src/external -L. -L C:raylib/raylib/src/web -s USE_GLFW=3 -s ASYNCIFY -s TOTAL_MEMORY=67108864 -s FORCE_FILESYSTEM=1 --preload-file resources --preload-file game/jamslam.ini --shell-file C:/raylib/raylib/src/shell.html C:/raylib/raylib/src/web/libraylib.a -DPLATFORM_WEB -s DISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR=1 -s EXPORTED_FUNCTIONS='["_free","_malloc","_main"]' -sEXPORTED_RUNTIME_METHODS='["ccall","cwrap"]'
+
+emcc -o bin/jamslam.html 
+game/src/main.cpp 
+game/src/game.cpp 
+game/src/display.cpp
+game/src/bucket.cpp
+game/src/fruits.cpp
+game/src/level.cpp
+game/src/stage.cpp
+staticLib/src/config.cpp
+staticLib/src/lib.cpp
+-Wall 
+-std=c++17 
+-D_DEFAULT_SOURCE 
+-Wno-missing-braces 
+-Wunused-result 
+-Os 
+-I game/include -I staticLib/include -I C:/raylib/raylib/src -I C:/raylib/raylib/src/external 
+-L. -L C:raylib/raylib/src/web 
+-s USE_GLFW=3 -s ASYNCIFY -s TOTAL_MEMORY=67108864 -s FORCE_FILESYSTEM=1 
+--preload-file resources --preload-file game/jamslam.ini 
+--shell-file C:/raylib/raylib/src/shell.html 
+C:/raylib/raylib/src/web/libraylib.a -DPLATFORM_WEB 
+-s DISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR=1 
+-s EXPORTED_FUNCTIONS='["_free","_malloc","_main"]' 
+-sEXPORTED_RUNTIME_METHODS='["ccall","cwrap"]'
+
+emcc game/src/main.cpp game/src/game.cpp game/src/display.cpp game/src/bucket.cpp game/src/fruits.cpp game/src/level.cpp game/src/stage.cpp staticLib/src/config.cpp staticLib/src/lib.cpp -o bin/jamslam.html -Igame/include -IstaticLib/include -IC:\emsdk\upstream\emscripten\cache\sysroot\include\emscripten -IC:/raylib/raylib/src -IC:/raylib/raylib/src/external -Wall -std=c++17 -D_DEFAULT_SOURCE -Wno-missing-braces -Wunused-result -Os C:/raylib/raylib/src/web/libraylib.a -DPLATFORM_WEB -sWASM=0 -sUSE_GLFW=3 -sASYNCIFY -sEXPORT_ES6=1 -sTOTAL_MEMORY=67108864 -sFORCE_FILESYSTEM=1 --preload-file resources --preload-file game/jamslam.ini --shell-file C:/raylib/raylib/src/shell.html -sDISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR=1 -sEXPORTED_FUNCTIONS='["_free","_malloc","_main"]' -sEXPORTED_RUNTIME_METHODS='["ccall","cwrap","HEAPF32"]' --emrun
+
+
+emcc game/src/main.cpp game/src/game.cpp game/src/display.cpp game/src/bucket.cpp game/src/fruits.cpp game/src/level.cpp game/src/stage.cpp staticLib/src/config.cpp staticLib/src/lib.cpp C:/raylib/raylib/src/web/libraylib.a -o bin/jamslam.html -DPLATFORM_WEB -Igame/include -IstaticLib/include -IC:\emsdk\upstream\emscripten\cache\sysroot\include\emscripten -IC:/raylib/raylib/src -IC:/raylib/raylib/src/external -Wall -std=c++17 -D_DEFAULT_SOURCE -Wno-missing-braces -Wunused-result -Os -sWASM=1 -sUSE_GLFW=3 -sASYNCIFY -sEXPORT_ES6=1 -sTOTAL_MEMORY=67108864 -sFORCE_FILESYSTEM=1 --preload-file resources --preload-file game/jamslam.ini --shell-file C:/raylib/raylib/src/shell.html -sDISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR=1 --emrun

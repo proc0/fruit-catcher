@@ -16,18 +16,18 @@ showCollisions(config.debug.showCages) {
         }
     }
 
-    // sounds - todo try template function here
-    for(int i = 0; i < LENGTH_SOUND_SPLATS; i++){
-        char uriSplat[20];
-        URI_SOUND_SPLAT(uriSplat, i + 1);
-        soundSplat[i] = LoadSound(uriSplat);
-    }
+    // // sounds - todo try template function here
+    // for(int i = 0; i < LENGTH_SOUND_SPLATS; i++){
+    //     char uriSplat[22];
+    //     URI_SOUND_SPLAT(uriSplat, i+1);
+    //     soundSplat[i] = LoadSound(uriSplat);
+    // }
 
-    for(int i = 0; i < LENGTH_SOUND_THUMPS; i++){
-        char uriThump[20];
-        URI_SOUND_THUMP(uriThump, i + 1);
-        soundThump[i] = LoadSound(uriThump);
-    }
+    // for(int i = 0; i < LENGTH_SOUND_THUMPS; i++){
+    //     char uriThump[22];
+    //     URI_SOUND_THUMP(uriThump, i+1);
+    //     soundThump[i] = LoadSound(uriThump);
+    // }
 
     soundSpike = LoadSound(URI_SOUND_SPIKE_HIT);
     soundEgg = LoadSound(URI_SOUND_EGG_CATCH);
@@ -41,12 +41,12 @@ Fruits::~Fruits() {
     for (const auto& sprite : sprites) {
         UnloadTexture(sprite);
     }
-    for(int i = 0; i < LENGTH_SOUND_SPLATS; i++){
-        UnloadSound(soundSplat[i]);
-    }
-    for(int i = 0; i < LENGTH_SOUND_THUMPS; i++){
-        UnloadSound(soundThump[i]);
-    }
+    // for(int i = 0; i < LENGTH_SOUND_SPLATS; i++){
+    //     UnloadSound(soundSplat[i]);
+    // }
+    // for(int i = 0; i < LENGTH_SOUND_THUMPS; i++){
+    //     UnloadSound(soundThump[i]);
+    // }
     UnloadSound(soundSpike);
     UnloadSound(soundEgg);
 }
@@ -243,11 +243,11 @@ const FruitResults Fruits::Update(Rectangle bucketCollision) {
                 .bounced = false,
                 .isSpike = false,
             });
-
-            if(!isMute){
-                const int splatIdx = GetRandomValue(0, LENGTH_SOUND_SPLATS-1);
-                PlaySound(soundSplat[splatIdx]);
-            }
+            
+            // if(!isMute){
+            //     const int splatIdx = GetRandomValue(0, LENGTH_SOUND_SPLATS-1);
+            //     PlaySound(soundSplat[splatIdx]);
+            // }
             continue;
         }
         // fruit hits bucket
@@ -293,8 +293,8 @@ const FruitResults Fruits::Update(Rectangle bucketCollision) {
                 if(fruit.type == FruitType::EGG){
                     PlaySound(soundEgg);
                 } else {
-                    const int splatIdx = GetRandomValue(0, LENGTH_SOUND_THUMPS-1);
-                    PlaySound(soundThump[splatIdx]);
+                    // const int splatIdx = GetRandomValue(0, LENGTH_SOUND_THUMPS-1);
+                    // PlaySound(soundThump[splatIdx]);
                 }
 
                 UpdateMovementFruit(fruit);

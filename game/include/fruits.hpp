@@ -7,9 +7,9 @@
 #define URI_SOUND_SPIKE_HIT "resources/spike.wav"
 #define URI_SOUND_EGG_CATCH "resources/eggpop.wav"
 #define LENGTH_SOUND_SPLATS 5
-#define URI_SOUND_SPLAT(buf, idx) sprintf(buf, "resources/splat%d.wav", idx)
+#define URI_SOUND_SPLAT(buf, idx) sprintf(buf, "resources/splat%d.wav", (idx))
 #define LENGTH_SOUND_THUMPS 5
-#define URI_SOUND_THUMP(buf, idx) sprintf(buf, "resources/thump%d.wav", idx)
+#define URI_SOUND_THUMP(buf, idx) sprintf(buf, "resources/thump%d.wav", (idx))
 
 #define GRAVITY 982.0f
 

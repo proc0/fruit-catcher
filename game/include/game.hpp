@@ -1,5 +1,10 @@
 #pragma once
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+#include <functional>
+
 #include "bucket.hpp"
 #include "display.hpp"
 #include "level.hpp"
@@ -10,10 +15,10 @@
 
 class Game {
     Config config;
-    Level level;
-    Fruits fruits;
     Bucket bucket;
     Display display;
+    Level level;
+    Fruits fruits;
     Stage stage;
     Vector2 mousePosition;
     Vector2 debugCoordinates;
@@ -49,22 +54,24 @@ class Game {
     public:
         Game(const std::string& filepath): 
             config(filepath),
-            debug(config.GetData().debug.modeDebug),
             display(config.GetData()),
             level(config.GetData()),
-            fruits(config.GetData(), level.GetFruitLevelData()) {
-                musicLevel = LoadMusicStream(MUSIC_LEVEL_URI);
-                musicIntro = LoadMusicStream(MUSIC_INTRO_URI);
-                SetMusicVolume(musicLevel, 0.5f);
-                SetMusicVolume(musicIntro, 0.5f);
-                PlayMusicStream(musicIntro);
+            fruits(config.GetData(), level.GetFruitLevelData()),
+            debug(config.GetData().debug.modeDebug) {
+                // musicLevel = LoadMusicStream(MUSIC_LEVEL_URI);
+                // musicIntro = LoadMusicStream(MUSIC_INTRO_URI);
+                // SetMusicVolume(musicLevel, 0.5f);
+                // SetMusicVolume(musicIntro, 0.5f);
+                // PlayMusicStream(musicIntro);
             };
         ~Game() {
-            UnloadMusicStream(musicLevel);
-            UnloadMusicStream(musicIntro);
+            // UnloadMusicStream(musicLevel);
+            // UnloadMusicStream(musicIntro);
         };
         const bool isRunning() const;
         const bool isDebug() const;
+        void Loop();
+        void Run(std::function<void()>);
         void Update();
         void UpdateDebug();
         void Render() const;
