@@ -220,7 +220,7 @@ void Game::Update() {
             level.Reset();
             bucket.Reset();
             bucket.Update(mousePosition, {false, false, false, WHITE});
-            // HideCursor();
+            HideCursor();
             timeStart = GetTime();
             timeReady = 0.0f;
             timeCount = 0.0f;
@@ -308,8 +308,6 @@ void Game::RenderDebug() const {
 
 void Game::Loop() {
     Update();
-    PollInputEvents();
-
     BeginDrawing();
     Render();
     EndDrawing();
