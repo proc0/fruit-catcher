@@ -22,25 +22,23 @@ int main() {
   
   JamSlam.Load();
 
-  if(JamSlam.isDebug()){
-    while (!WindowShouldClose() && JamSlam.isRunning()) {
-      JamSlam.UpdateDebug();
-      BeginDrawing();
-      JamSlam.RenderDebug();
-      EndDrawing();
+  #ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop(main_loop, 0, 1);
+  #else
+    if(JamSlam.isDebug()){
+      while (!WindowShouldClose() && JamSlam.isRunning()) {
+        JamSlam.UpdateDebug();
+        BeginDrawing();
+        JamSlam.RenderDebug();
+        EndDrawing();
+      }
+    } else {
+      SetTargetFPS(120);
+      while (!WindowShouldClose() && JamSlam.isRunning()) {
+          JamSlam.Loop();
+      }
     }
-  } else {
-    while (!WindowShouldClose() && JamSlam.isRunning()) {
-      #ifdef __EMSCRIPTEN__
-        emscripten_set_main_loop(main_loop, 0, 1);
-      #else
-        SetTargetFPS(120);
-        while (!WindowShouldClose() && JamSlam.isRunning()) {
-            JamSlam.Loop();
-        }
-      #endif
-    }
-  }
+  #endif
 
   JamSlam.Unload();
   CloseAudioDevice();
