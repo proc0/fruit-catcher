@@ -7,8 +7,10 @@ class Stage {
     Texture2D cloudsForeground;
     Texture2D mountains;
     Texture2D sun;
+    RenderTexture2D cloudTexture;
     Rectangle cloudsBackgroundRect;
     Rectangle cloudsForegroundRect;
+    Rectangle cloudsTextureRect;
 
     public:
         Stage() = default;
