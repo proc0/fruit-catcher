@@ -2,7 +2,7 @@
 
 #include "lib.h"
 
-#define SOUND_CLINK_LENGTH 9
+#define SOUND_CLINK_LENGTH 8
 
 typedef struct BucketDisplayResult {
     const bool isCatch;
