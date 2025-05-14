@@ -42,9 +42,11 @@ class Bucket {
     bool isStunned = false;
         
     public:
-        Bucket();
-        ~Bucket();
+        Bucket() = default;
+        ~Bucket() = default;
         const Rectangle GetCollision() const;
+        void Load();
+        void Unload();
         void Reset();
         void Update(const Vector2 mousePosition, const BucketDisplayResult results);
         void UpdateDebug();

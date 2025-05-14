@@ -11,8 +11,10 @@ class Stage {
     Rectangle cloudsForegroundRect;
 
     public:
-        Stage();
-        ~Stage();
+        Stage() = default;
+        ~Stage() = default;
+        void Load();
+        void Unload();
         void Update();
         void Render() const;
 };

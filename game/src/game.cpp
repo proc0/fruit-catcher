@@ -2,6 +2,29 @@
 
 #define GAME_LEVEL_READY_TIME 1.25f
 
+void Game::Load() {
+    musicLevel = LoadMusicStream(MUSIC_LEVEL_URI);
+    musicIntro = LoadMusicStream(MUSIC_INTRO_URI);
+    SetMusicVolume(musicLevel, 0.5f);
+    SetMusicVolume(musicIntro, 0.5f);
+    PlayMusicStream(musicIntro);
+
+    stage.Load();
+    fruits.Load(config.GetData(), level.GetFruitLevelData());
+    bucket.Load();
+    display.Load(config.GetData());
+}
+
+void Game::Unload(){
+    UnloadMusicStream(musicLevel);
+    UnloadMusicStream(musicIntro);
+
+    display.Unload();
+    fruits.Unload();
+    bucket.Unload();
+    stage.Unload();
+}
+
 const bool Game::isDebug() const {
     return debug;
 }
@@ -197,7 +220,7 @@ void Game::Update() {
             level.Reset();
             bucket.Reset();
             bucket.Update(mousePosition, {false, false, false, WHITE});
-            HideCursor();
+            // HideCursor();
             timeStart = GetTime();
             timeReady = 0.0f;
             timeCount = 0.0f;
@@ -281,4 +304,13 @@ void Game::RenderDebug() const {
     }
     const char* coords = TextFormat("(%d,%d)", (int)debugCoordinates.x, (int)debugCoordinates.y);
     DrawText(coords, (int)debugCoordinates.x, (int)debugCoordinates.y, 33, BLACK);
+}
+
+void Game::Loop() {
+    Update();
+    PollInputEvents();
+
+    BeginDrawing();
+    Render();
+    EndDrawing();
 }

@@ -92,8 +92,10 @@ class Display {
     void MergeFruitResults(const FruitDisplayResults &results);
 
     public:
-        Display(const ConfigData& configData);
-        ~Display();
+        Display() = default;
+        ~Display() = default;
+        void Load(const ConfigData& configData);
+        void Unload();
         const bool isStartButtonClicked() const;
         const bool isQuitButtonClicked() const;
         void UpdateStartMenu(Vector2 mousePosition);

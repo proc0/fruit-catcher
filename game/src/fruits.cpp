@@ -1,9 +1,10 @@
 #include "fruits.hpp"
 
-Fruits::Fruits(const ConfigData& config, const FruitLevels& levels): 
-fruitLevels(levels),
-displayDebug(config.debug.modeDebug),
-showCollisions(config.debug.showCages) {
+void Fruits::Load(const ConfigData& config, const FruitLevels& levels) {
+    fruitLevels = levels;
+    displayDebug = config.debug.modeDebug;
+    showCollisions = config.debug.showCages;
+
     // textures
     for (const auto& fruitData : static_FruitDataMap) {
         try {
@@ -37,7 +38,7 @@ showCollisions(config.debug.showCages) {
     isMute = true;
 }
 
-Fruits::~Fruits() {
+void Fruits::Unload() {
     for (const auto& sprite : sprites) {
         UnloadTexture(sprite);
     }

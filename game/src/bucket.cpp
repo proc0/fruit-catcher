@@ -37,7 +37,7 @@
 
 #define SIZE_SCALE_BIG_JAR 1.1f
 
-Bucket::Bucket(){
+void Bucket::Load(){
     Image jarImage = LoadImage(URI_IMAGE_JAR);
     textureJar = LoadTextureFromImage(jarImage);
     Image imageJamTop = LoadImage(BUCKET_JAM_TOP_URI);
@@ -74,7 +74,7 @@ Bucket::Bucket(){
     collisionJar = { mousePosition.x - SIZE_COLLISION_JAR/2, BUCKET_POS_Y, SIZE_COLLISION_JAR, SIZE_COLLISION_JAR };
 }
 
-Bucket::~Bucket(void) {
+void Bucket::Unload() {
     UnloadTexture(textureJar);
     UnloadTexture(textureBigJar);
     UnloadTexture(textureJamTop);

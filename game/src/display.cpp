@@ -25,7 +25,7 @@ static const int FONTSIZE_SCORETEXT = 52;
 static constexpr int SCREEN_HALFWIDTH = SCREEN_WIDTH*0.5f;
 static constexpr int SCREEN_HALFHEIGHT = SCREEN_HEIGHT*0.5f;
 
-Display::Display(const ConfigData& configData) {
+void Display::Load(const ConfigData& configData) {
     panelStartMenu = LoadTexture(URI_PANEL_START_MENU);
     panelGameOver = LoadTexture(PANEL_GAME_OVER);
     fruitIcon = LoadTexture(FRUIT_ICON_URI);
@@ -160,7 +160,7 @@ Display::Display(const ConfigData& configData) {
     };
 }
 
-Display::~Display(void) {
+void Display::Unload() {
     UnloadTexture(panelStartMenu);
     UnloadTexture(fruitIcon);
     UnloadTexture(panelGameOver);

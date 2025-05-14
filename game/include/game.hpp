@@ -50,21 +50,13 @@ class Game {
         Game(const std::string& filepath): 
             config(filepath),
             debug(config.GetData().debug.modeDebug),
-            display(config.GetData()),
-            level(config.GetData()),
-            fruits(config.GetData(), level.GetFruitLevelData()) {
-                musicLevel = LoadMusicStream(MUSIC_LEVEL_URI);
-                musicIntro = LoadMusicStream(MUSIC_INTRO_URI);
-                SetMusicVolume(musicLevel, 0.5f);
-                SetMusicVolume(musicIntro, 0.5f);
-                PlayMusicStream(musicIntro);
-            };
-        ~Game() {
-            UnloadMusicStream(musicLevel);
-            UnloadMusicStream(musicIntro);
-        };
+            level(config.GetData()) {};
+        ~Game() = default;
+        void Load();
+        void Unload();
         const bool isRunning() const;
         const bool isDebug() const;
+        void Loop();
         void Update();
         void UpdateDebug();
         void Render() const;

@@ -1,6 +1,6 @@
 #include "stage.hpp"
 
-Stage::Stage() {
+void Stage::Load() {
     cloudsBackground = LoadTexture("resources/cloud_bg.png");
     cloudsForeground = LoadTexture("resources/cloud_fg.png");
     mountains = LoadTexture("resources/mountains.png");
@@ -11,7 +11,7 @@ Stage::Stage() {
     cloudsForegroundRect = { 0, 0, SCREEN_WIDTH, 296 };
 }
 
-Stage::~Stage() {
+void Stage::Unload() {
     UnloadTexture(cloudsBackground);
     UnloadTexture(cloudsForeground);
     UnloadTexture(mountains);

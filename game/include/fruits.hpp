@@ -159,8 +159,10 @@ class Fruits {
     void RenderFruit(const Fruit&) const;
     
     public:
-        Fruits(const ConfigData&, const FruitLevels&);
-        ~Fruits();
+        Fruits() = default;
+        ~Fruits() = default;
+        void Load(const ConfigData&, const FruitLevels&);
+        void Unload();        
         void Reset();
         void SetLevel(int level);
         const FruitResults Update(const Rectangle bucketCollision);
