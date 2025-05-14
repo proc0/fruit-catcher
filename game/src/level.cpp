@@ -43,16 +43,16 @@ Level::Level(const ConfigData &configData){
         }
 
         levels[level.id] = (LevelData){
-            id: level.id,
-            fruitLevelData: {
-                fruitSample: fruitSample,
-                levelSample: levelSample,
-                levelId: level.id,
-                minDropTime: level.minDropTime,
-                maxDropTime: level.maxDropTime,
-                density: level.density,
+            .id = level.id,
+            .fruitLevelData = {
+                .fruitSample = fruitSample,
+                .levelSample = levelSample,
+                .levelId = level.id,
+                .minDropTime = level.minDropTime,
+                .maxDropTime = level.maxDropTime,
+                .density = level.density,
             },
-            duration: level.duration,
+            .duration = level.duration,
         };
     }
 

@@ -7,7 +7,7 @@
 #define BUCKET_JAM_MIDDLE_URI "resources/jam-middle.png"
 #define BUCKET_JAM_BOTTOM_URI "resources/jam-bottom.png"
 #define BUCKET_FRUIT_CATCH_EFFECT "resources/fruit-catch.png"
-#define BUCKET_SOUND_FRUIT_CLINK(buf, idx) sprintf(buf, "resources/clink%d.wav", idx)
+#define BUCKET_SOUND_FRUIT_CLINK(buf, idx) sprintf(buf, "resources/clink%d.wav", (idx))
 #define BUCKET_SOURCE_WIDTH 131
 #define BUCKET_SOURCE_HEIGHT 160
 #define WIDTH_TEXTURE_BIG_JAR 144
@@ -31,10 +31,6 @@
 #define JAM_MIDDLE_SOURCE_RECTANGLE(jamHeight) CLITERAL(Rectangle){0, 0, JAM_MIDDLE_SOURCE_WIDTH, jamHeight}
 #define JAM_BOTTOM_SOURCE_RECTANGLE CLITERAL(Rectangle){0, 0, JAM_BOTTOM_SOURCE_WIDTH, JAM_BOTTOM_SOURCE_HEIGHT}
 
-// #define JAM_TOP_POS_Y(jamHeight) BUCKET_POS_Y + JAM_OFFSET_Y - JAM_TOP_SOURCE_HEIGHT - jamHeight
-// #define JAM_MIDDLE_POS_Y(jamHeight) BUCKET_POS_Y + JAM_OFFSET_Y - jamHeight
-// #define JAM_BOTTOM_POS_Y BUCKET_POS_Y + JAM_OFFSET_Y
-
 #define JAM_TOP_MOUSE_POS_Y(jamHeight) JAM_OFFSET_Y - JAM_TOP_SOURCE_HEIGHT - jamHeight
 #define JAM_MIDDLE_MOUSE_POS_Y(jamHeight) JAM_OFFSET_Y - jamHeight
 #define JAM_BOTTOM_MOUSE_POS_Y JAM_OFFSET_Y
@@ -42,54 +38,39 @@
 #define SIZE_SCALE_BIG_JAR 1.1f
 
 Bucket::Bucket(){
-    const Image jarImage = LoadImage(URI_IMAGE_JAR);
-    Image bigJarImage = ImageCopy(jarImage);
-    const Image imageJamTop = LoadImage(BUCKET_JAM_TOP_URI);
-    Image imageBigJamTop = ImageCopy(imageJamTop);
-    const Image imageJamMiddle = LoadImage(BUCKET_JAM_MIDDLE_URI);
-    Image imageBigJamMiddle = ImageCopy(imageJamMiddle);
-    const Image imageJamBottom = LoadImage(BUCKET_JAM_BOTTOM_URI);
-    Image imageBigJamBottom = ImageCopy(imageJamBottom);
-
-    ImageResize(&bigJarImage, bigJarImage.width*SIZE_SCALE_BIG_JAR, bigJarImage.height*SIZE_SCALE_BIG_JAR);
-    ImageResize(&imageBigJamTop, imageBigJamTop.width*SIZE_SCALE_BIG_JAR, imageBigJamTop.height*SIZE_SCALE_BIG_JAR);
-    ImageResize(&imageBigJamMiddle, imageBigJamMiddle.width*SIZE_SCALE_BIG_JAR, imageBigJamMiddle.height*SIZE_SCALE_BIG_JAR);
-    ImageResize(&imageBigJamBottom, imageBigJamBottom.width*SIZE_SCALE_BIG_JAR, imageBigJamBottom.height*SIZE_SCALE_BIG_JAR);
-
-    textureBigJar = LoadTextureFromImage(bigJarImage);
+    Image jarImage = LoadImage(URI_IMAGE_JAR);
     textureJar = LoadTextureFromImage(jarImage);
+    Image imageJamTop = LoadImage(BUCKET_JAM_TOP_URI);
     textureJamTop = LoadTextureFromImage(imageJamTop);
-    textureBigJamTop = LoadTextureFromImage(imageBigJamTop);
+    Image imageJamMiddle = LoadImage(BUCKET_JAM_MIDDLE_URI);
     textureJamMiddle = LoadTextureFromImage(imageJamMiddle);
-    textureBigJamMiddle = LoadTextureFromImage(imageBigJamMiddle);
+    Image imageJamBottom = LoadImage(BUCKET_JAM_BOTTOM_URI);
     textureJamBottom = LoadTextureFromImage(imageJamBottom);
-    textureBigJamBottom = LoadTextureFromImage(imageBigJamBottom);
+
+    ImageResize(&jarImage, jarImage.width*SIZE_SCALE_BIG_JAR, jarImage.height*SIZE_SCALE_BIG_JAR);
+    textureBigJar = LoadTextureFromImage(jarImage);
+    ImageResize(&imageJamTop, imageJamTop.width*SIZE_SCALE_BIG_JAR, imageJamTop.height*SIZE_SCALE_BIG_JAR);
+    textureBigJamTop = LoadTextureFromImage(imageJamTop);
+    ImageResize(&imageJamMiddle, imageJamMiddle.width*SIZE_SCALE_BIG_JAR, imageJamMiddle.height*SIZE_SCALE_BIG_JAR);
+    textureBigJamMiddle = LoadTextureFromImage(imageJamMiddle);
+    ImageResize(&imageJamBottom, imageJamBottom.width*SIZE_SCALE_BIG_JAR, imageJamBottom.height*SIZE_SCALE_BIG_JAR);
+    textureBigJamBottom = LoadTextureFromImage(imageJamBottom);
 
     UnloadImage(jarImage);
-    UnloadImage(bigJarImage);
     UnloadImage(imageJamTop);
-    UnloadImage(imageBigJamTop);
     UnloadImage(imageJamMiddle);
-    UnloadImage(imageBigJamMiddle);
     UnloadImage(imageJamBottom);
-    UnloadImage(imageBigJamBottom);
 
     textureCatchEffect = LoadTexture(BUCKET_FRUIT_CATCH_EFFECT);
 
     for(int j = 0; j < SOUND_CLINK_LENGTH; j++){
         const int _idx = j + 1;
-        char _uri[20];
+        char _uri[22];
         BUCKET_SOUND_FRUIT_CLINK(_uri, _idx);
         soundClinks[j] = LoadSound(_uri);
     }
 
     Vector2 mousePosition = GetMousePosition();
-    // const float bucketPosX = mousePosition.x - textureJar.width/2;
-    // const float jamPosX = bucketPosX + JAM_OFFSET_X;
-    // position = { bucketPosX, BUCKET_POS_Y * 1.18 };
-    // jamTopPosition = { jamPosX, JAM_TOP_POS_Y(0) };
-    // jamMiddlePosition = { jamPosX, JAM_MIDDLE_POS_Y(0) };
-    // jamBottomPosition = { jamPosX, JAM_BOTTOM_POS_Y };
     collisionJar = { mousePosition.x - SIZE_COLLISION_JAR/2, BUCKET_POS_Y, SIZE_COLLISION_JAR, SIZE_COLLISION_JAR };
 }
 

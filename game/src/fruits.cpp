@@ -18,13 +18,13 @@ showCollisions(config.debug.showCages) {
 
     // sounds - todo try template function here
     for(int i = 0; i < LENGTH_SOUND_SPLATS; i++){
-        char uriSplat[20];
+        char uriSplat[22];
         URI_SOUND_SPLAT(uriSplat, i + 1);
         soundSplat[i] = LoadSound(uriSplat);
     }
 
     for(int i = 0; i < LENGTH_SOUND_THUMPS; i++){
-        char uriThump[20];
+        char uriThump[22];
         URI_SOUND_THUMP(uriThump, i + 1);
         soundThump[i] = LoadSound(uriThump);
     }
