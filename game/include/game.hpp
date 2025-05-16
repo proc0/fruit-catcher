@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 #include "bucket.hpp"
 #include "display.hpp"
 #include "level.hpp"
@@ -57,6 +61,7 @@ class Game {
         const bool isRunning() const;
         const bool isDebug() const;
         void Loop();
+        void LoopDebug();
         void Update();
         void UpdateDebug();
         void Render() const;

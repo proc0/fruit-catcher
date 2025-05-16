@@ -98,12 +98,12 @@ class Display {
         void Unload();
         const bool isStartButtonClicked() const;
         const bool isQuitButtonClicked() const;
-        void UpdateStartMenu(Vector2 mousePosition);
-        void RenderStartMenu() const;
+        void UpdateMenu(Vector2 mousePosition);
         void Update(const DisplayStats stats, const FruitDisplayResults results);
         void Render() const;
         void RenderReady() const;
         void UpdateOnce(int score, float timeEnd, float timeStart);
-        void RenderGameOver() const;
-        void RenderWin() const;
+        void RenderStartMenu() const;
+        void RenderOverMenu() const;
+        void RenderWinMenu() const;
 };

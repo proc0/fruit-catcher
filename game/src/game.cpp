@@ -117,25 +117,29 @@ void Game::Update() {
         UpdateMusicStream(musicIntro);
     }
 
-    if(state == PAUSE) {
-        if(IsKeyPressed(KEY_ESCAPE)){
+    // using P key for pause because browsers set ESC key to unlock the mouse (when DisableCursor is called)
+    // if Hide/ShowCursor is used instead, ESC can be used, but that is blocked (see below)
+    if(IsKeyPressed(KEY_P)){
+        if(state == PAUSE) {
             state = PLAY;
-            HideCursor();
+            DisableCursor();
+            return;
+        }
+        
+        if(state == PLAY || state == READY) {
+            state = PAUSE;
+            EnableCursor();
             return;
         }
     }
-    
-    if(IsKeyPressed(KEY_ESCAPE)) {
-        if(state == WIN || state == START){
-            state = END;
-        } else {
-            state = PAUSE;
-            ShowCursor();
-        }
-        return;
-    }
 
-    mousePosition = GetMousePosition();
+    // using Enable/DisableCursor instead of Hide/ShowCursor because Raylib and/or Emsripten is locking mouse with Hide/Show
+    // working around this by using GetMouseDelta when mouse locked (disabled). Raylib ticket: https://github.com/raysan5/raylib/issues/4940
+    if(IsCursorHidden()){
+        mousePosition += GetMouseDelta();
+    } else {
+        mousePosition = GetMousePosition();
+    }
 
     if(state == PLAY) {
         // Process fruits
@@ -161,7 +165,7 @@ void Game::Update() {
             state = OVER;
             timeEnd = GetTime();
             display.UpdateOnce(score, timeEnd, timeStart);
-            ShowCursor();
+            EnableCursor();
             return;
         }
         // Progress
@@ -173,7 +177,7 @@ void Game::Update() {
                 level.Reset();
                 fruits.SetLevel(0);
                 display.UpdateOnce(score, timeEnd, timeStart);
-                ShowCursor();
+                EnableCursor();
                 return;                
             } else {
                 level.NextLevel();
@@ -210,7 +214,7 @@ void Game::Update() {
 
     // UI
     if(state == OVER || state == PAUSE || state == START || state == WIN) {
-        display.UpdateStartMenu(mousePosition);
+        display.UpdateMenu(mousePosition);
         // Start or Restart action
         if(display.isStartButtonClicked() || IsKeyPressed(KEY_R)){
             state = READY;
@@ -220,7 +224,7 @@ void Game::Update() {
             level.Reset();
             bucket.Reset();
             bucket.Update(mousePosition, {false, false, false, WHITE});
-            HideCursor();
+            DisableCursor();
             timeStart = GetTime();
             timeReady = 0.0f;
             timeCount = 0.0f;
@@ -261,7 +265,7 @@ void Game::Render() const {
     }
 
     if(state == OVER) {
-        display.RenderGameOver();
+        display.RenderOverMenu();
         return;
     }
 
@@ -280,8 +284,15 @@ void Game::Render() const {
     }
     
     if(state == WIN) {
-        display.RenderWin();
+        display.RenderWinMenu();
     }
+}
+
+void Game::Loop() {
+    Update();
+    BeginDrawing();
+    Render();
+    EndDrawing();
 }
 
 void Game::UpdateDebug() {
@@ -306,9 +317,9 @@ void Game::RenderDebug() const {
     DrawText(coords, (int)debugCoordinates.x, (int)debugCoordinates.y, 33, BLACK);
 }
 
-void Game::Loop() {
-    Update();
+void Game::LoopDebug() {
+    UpdateDebug();
     BeginDrawing();
-    Render();
+    RenderDebug();
     EndDrawing();
 }

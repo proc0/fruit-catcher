@@ -1,6 +1,3 @@
-#ifdef __EMSCRIPTEN__
-#include <emscripten.h>
-#endif
 #include "game.hpp"
 
 #define GAME_CONFIG_URI "game/jamslam.ini"
@@ -18,24 +15,20 @@ int main() {
   
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_GAME_TITLE);
   InitAudioDevice();
-  SetExitKey(KEY_NULL);
-  
   JamSlam.Load();
 
   #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop, 0, 1);
   #else
+    SetTargetFPS(120);
+    
     if(JamSlam.isDebug()){
       while (!WindowShouldClose() && JamSlam.isRunning()) {
-        JamSlam.UpdateDebug();
-        BeginDrawing();
-        JamSlam.RenderDebug();
-        EndDrawing();
+        JamSlam.LoopDebug();
       }
     } else {
-      SetTargetFPS(120);
       while (!WindowShouldClose() && JamSlam.isRunning()) {
-          JamSlam.Loop();
+        JamSlam.Loop();
       }
     }
   #endif
