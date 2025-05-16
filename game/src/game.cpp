@@ -104,20 +104,6 @@ const int Game::GetLives(const FruitResults& results) const {
     return lives;
 }
 
-void Game::Pause(){
-    if(state == PAUSE) {
-        state = PLAY;
-        DisableCursor();
-        return;
-    }
-    
-    if(state == PLAY || state == READY) {
-        state = PAUSE;
-        EnableCursor();
-        return;
-    }
-}
-
 void Game::Update() {
     if(state == END) return;
 
@@ -131,28 +117,26 @@ void Game::Update() {
         UpdateMusicStream(musicIntro);
     }
 
-    #ifndef __EMSCRIPTEN__
-    if(IsKeyPressed(KEY_ESCAPE)){
-        Pause();
-        return;
+    // using P key for pause because browsers set ESC key to unlock the mouse (when DisableCursor is called)
+    // if Hide/ShowCursor is used instead, ESC can be used, but that is blocked (see below)
+    if(IsKeyPressed(KEY_P)){
+        if(state == PAUSE) {
+            state = PLAY;
+            DisableCursor();
+            return;
+        }
+        
+        if(state == PLAY || state == READY) {
+            state = PAUSE;
+            EnableCursor();
+            return;
+        }
     }
-    #endif
-    // if(state == PAUSE && IsKeyPressed(KEY_SPACE)) {
-    //     state = PLAY;
-    //     DisableCursor();
-    //     return;
-    // }
-    
-    // if((state == PLAY || state == READY) && IsKeyPressed(KEY_SPACE)) {
-    //     state = PAUSE;
-    //     EnableCursor();
-    //     return;
-    // }
 
+    // using Enable/DisableCursor instead of Hide/ShowCursor because Raylib and/or Emsripten is locking mouse with Hide/Show
+    // working around this by using GetMouseDelta when mouse locked (disabled). Raylib ticket: https://github.com/raysan5/raylib/issues/4940
     if(IsCursorHidden()){
-        const Vector2 mouseDelta = GetMouseDelta();
-        mousePosition.x += mouseDelta.x;
-        mousePosition.y += mouseDelta.y;
+        mousePosition += GetMouseDelta();
     } else {
         mousePosition = GetMousePosition();
     }
@@ -230,7 +214,7 @@ void Game::Update() {
 
     // UI
     if(state == OVER || state == PAUSE || state == START || state == WIN) {
-        display.UpdateStartMenu(mousePosition);
+        display.UpdateMenu(mousePosition);
         // Start or Restart action
         if(display.isStartButtonClicked() || IsKeyPressed(KEY_R)){
             state = READY;
@@ -281,7 +265,7 @@ void Game::Render() const {
     }
 
     if(state == OVER) {
-        display.RenderGameOver();
+        display.RenderOverMenu();
         return;
     }
 
@@ -300,7 +284,7 @@ void Game::Render() const {
     }
     
     if(state == WIN) {
-        display.RenderWin();
+        display.RenderWinMenu();
     }
 }
 
@@ -331,4 +315,11 @@ void Game::RenderDebug() const {
     }
     const char* coords = TextFormat("(%d,%d)", (int)debugCoordinates.x, (int)debugCoordinates.y);
     DrawText(coords, (int)debugCoordinates.x, (int)debugCoordinates.y, 33, BLACK);
+}
+
+void Game::LoopDebug() {
+    UpdateDebug();
+    BeginDrawing();
+    RenderDebug();
+    EndDrawing();
 }

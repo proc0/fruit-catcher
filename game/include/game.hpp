@@ -2,8 +2,6 @@
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
-#include <html5.h>
-#include <functional>
 #endif
 
 #include "bucket.hpp"
@@ -63,7 +61,7 @@ class Game {
         const bool isRunning() const;
         const bool isDebug() const;
         void Loop();
-        void Pause();
+        void LoopDebug();
         void Update();
         void UpdateDebug();
         void Render() const;

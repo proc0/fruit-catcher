@@ -177,7 +177,7 @@ const bool Display::isQuitButtonClicked(void) const {
     return quitButtonState == CLICKED;
 }
 
-void Display::UpdateStartMenu(Vector2 mousePosition) {
+void Display::UpdateMenu(Vector2 mousePosition) {
     if (CheckCollisionPointRec(mousePosition, startButtonCollision)) {
         startButtonState = HOVER;
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -271,7 +271,7 @@ void Display::UpdateOnce(int score, float timeEnd, float timeStart) {
     hudScoreFrameIdx = 0;
 }
 
-void Display::RenderGameOver() const {
+void Display::RenderOverMenu() const {
     const TextureParams& panel = panelTextureParams.at("gameOverPanel");
     DrawTexture(panel.texture, panel.x, panel.y, panel.color);
 
@@ -286,7 +286,7 @@ void Display::RenderGameOver() const {
     }
 }
 
-void Display::RenderWin() const {
+void Display::RenderWinMenu() const {
     for(const auto& textParams : gameEndTextParams) {
         const TextParams& entry = textParams.second;
         DrawTextEx(subFont, entry.text, { (float)entry.x, (float)entry.y }, entry.fontSize, 1.0f, entry.color);

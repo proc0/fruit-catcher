@@ -37,16 +37,16 @@
 //TODO: [design] introduce spikes earlier x
 //TODO: [design] subtract density from level 4, make it easier, make level 6 easier (less density, separate banana from coconut) x
 //TODO: [design] review score numbers and multiplers (should it be x10 or x100, how big does score get until end?)]
+//DONE: [bug] Fix HideCursor bug - Raylib ticket - https://github.com/raysan5/raylib/issues/4940
 
 //NEXT: add effect for filling jam to the top 
 //NEXT: Add bg elements to show max vertical movement (i.e. a vineyard with wooden frames, and one of the wood planks extends horizontally where max Y is)
 //--dev complete--
 
+//WIP: fix bugs
+//WIP: [bug] orange shows up in level 4???
+//WIP: [bug] EM build does not load levels correctly
 //TODO: add emscripten functions to handle quitting game so it doesn't freeze when hitting quit (or handle quit for web)
-//TODO: fix bugs
-//TODO: [bug] orange shows up in level 4???
-//NEXT: [bug] EM build does not load levels correctly
-//NEXT: [bug] Fix HideCursor bug
 //TODO: Update Readme
 //TODO: Look into adding this to itch.io
 
