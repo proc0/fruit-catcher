@@ -104,6 +104,20 @@ const int Game::GetLives(const FruitResults& results) const {
     return lives;
 }
 
+void Game::Pause(){
+    if(state == PAUSE) {
+        state = PLAY;
+        DisableCursor();
+        return;
+    }
+    
+    if(state == PLAY || state == READY) {
+        state = PAUSE;
+        EnableCursor();
+        return;
+    }
+}
+
 void Game::Update() {
     if(state == END) return;
 
@@ -117,25 +131,31 @@ void Game::Update() {
         UpdateMusicStream(musicIntro);
     }
 
-    if(state == PAUSE) {
-        if(IsKeyPressed(KEY_ESCAPE)){
-            state = PLAY;
-            HideCursor();
-            return;
-        }
-    }
-    
-    if(IsKeyPressed(KEY_ESCAPE)) {
-        if(state == WIN || state == START){
-            state = END;
-        } else {
-            state = PAUSE;
-            ShowCursor();
-        }
+    #ifndef __EMSCRIPTEN__
+    if(IsKeyPressed(KEY_ESCAPE)){
+        Pause();
         return;
     }
+    #endif
+    // if(state == PAUSE && IsKeyPressed(KEY_SPACE)) {
+    //     state = PLAY;
+    //     DisableCursor();
+    //     return;
+    // }
+    
+    // if((state == PLAY || state == READY) && IsKeyPressed(KEY_SPACE)) {
+    //     state = PAUSE;
+    //     EnableCursor();
+    //     return;
+    // }
 
-    mousePosition = GetMousePosition();
+    if(IsCursorHidden()){
+        const Vector2 mouseDelta = GetMouseDelta();
+        mousePosition.x += mouseDelta.x;
+        mousePosition.y += mouseDelta.y;
+    } else {
+        mousePosition = GetMousePosition();
+    }
 
     if(state == PLAY) {
         // Process fruits
@@ -161,7 +181,7 @@ void Game::Update() {
             state = OVER;
             timeEnd = GetTime();
             display.UpdateOnce(score, timeEnd, timeStart);
-            ShowCursor();
+            EnableCursor();
             return;
         }
         // Progress
@@ -173,7 +193,7 @@ void Game::Update() {
                 level.Reset();
                 fruits.SetLevel(0);
                 display.UpdateOnce(score, timeEnd, timeStart);
-                ShowCursor();
+                EnableCursor();
                 return;                
             } else {
                 level.NextLevel();
@@ -220,7 +240,7 @@ void Game::Update() {
             level.Reset();
             bucket.Reset();
             bucket.Update(mousePosition, {false, false, false, WHITE});
-            HideCursor();
+            DisableCursor();
             timeStart = GetTime();
             timeReady = 0.0f;
             timeCount = 0.0f;
@@ -284,6 +304,13 @@ void Game::Render() const {
     }
 }
 
+void Game::Loop() {
+    Update();
+    BeginDrawing();
+    Render();
+    EndDrawing();
+}
+
 void Game::UpdateDebug() {
     if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
         debugCoordinates = GetMousePosition();
@@ -304,11 +331,4 @@ void Game::RenderDebug() const {
     }
     const char* coords = TextFormat("(%d,%d)", (int)debugCoordinates.x, (int)debugCoordinates.y);
     DrawText(coords, (int)debugCoordinates.x, (int)debugCoordinates.y, 33, BLACK);
-}
-
-void Game::Loop() {
-    Update();
-    BeginDrawing();
-    Render();
-    EndDrawing();
 }

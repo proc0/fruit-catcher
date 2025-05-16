@@ -42,6 +42,7 @@
 //NEXT: Add bg elements to show max vertical movement (i.e. a vineyard with wooden frames, and one of the wood planks extends horizontally where max Y is)
 //--dev complete--
 
+//TODO: add emscripten functions to handle quitting game so it doesn't freeze when hitting quit (or handle quit for web)
 //TODO: fix bugs
 //TODO: [bug] orange shows up in level 4???
 //NEXT: [bug] EM build does not load levels correctly
