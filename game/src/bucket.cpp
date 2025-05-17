@@ -13,7 +13,7 @@
 #define WIDTH_TEXTURE_BIG_JAR 144
 #define HEIGHT_TEXTURE_BIG_JAR 176
 #define SIZE_COLLISION_JAR 120
-#define SIZE_COLLISION_BIG_JAR 160
+#define SIZE_COLLISION_BIG_JAR 150
 #define RECTANGLE_JAR CLITERAL(Rectangle){0, 0, BUCKET_SOURCE_WIDTH, BUCKET_SOURCE_HEIGHT}
 #define RECTANGLE_BIG_JAR CLITERAL(Rectangle){0, 0, WIDTH_TEXTURE_BIG_JAR, HEIGHT_TEXTURE_BIG_JAR}
 #define BUCKET_POS_Y SCREEN_HEIGHT - BUCKET_SOURCE_HEIGHT
@@ -93,6 +93,7 @@ void Bucket::Unload() {
 void Bucket::Reset(void) {
     jamHeight = 0;
     jarState = SMALL;
+    collisionJar.width = SIZE_COLLISION_JAR;
     jamColor = WHITE;
 }
 
@@ -132,6 +133,8 @@ void Bucket::Update(const Vector2 mousePosition, const BucketDisplayResult resul
         isStunned = true;
         jamHeight *= 0.3f;
         jarState = SMALL;
+        collisionJar.width = SIZE_COLLISION_JAR;
+
     } else if(result.isBounce){
         const int randomSoundIdx = GetRandomValue(0, SOUND_CLINK_LENGTH-1);
         PlaySound(soundClinks[randomSoundIdx]);
@@ -156,6 +159,7 @@ void Bucket::Update(const Vector2 mousePosition, const BucketDisplayResult resul
         jamHeight++;
         if(jamHeight > 80){
             jarState = BIG;
+            collisionJar.width = SIZE_COLLISION_BIG_JAR;
             jamHeight = 0;
             return;
         }

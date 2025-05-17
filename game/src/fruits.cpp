@@ -60,7 +60,7 @@ void Fruits::Reset(void){
 }
 
 void Fruits::SetLevel(int level){
-    assert(level < fruitLevels.size()-1);
+    assert(level < fruitLevels.size());
     currentLevel = level;
 }
 

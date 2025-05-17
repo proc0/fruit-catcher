@@ -43,6 +43,10 @@
 //DONE: fix bugs
 
 //NEXT: add effect for filling jam to the top 
+//TODO: make jar growth on mouse click
+//TODO: tighten the collision between big and small jar to magnify effect and make growing the jar easier
+//TODO: update big jar art to something better
+//TODO: add ending celebration music and sound effect
 //NEXT: Add bg elements to show max vertical movement (i.e. a vineyard with wooden frames, and one of the wood planks extends horizontally where max Y is)
 
 //--dev complete--
@@ -52,5 +56,8 @@
 EXPLORE:
 //TODO: add emscripten functions to handle quitting game so it doesn't freeze when hitting quit (or handle quit for web)
 //TODO: game mode where you pause to first move the jar in anticipation of where fruit will fall. (play the game with hidecursor bug and try to move jar by pausing). Could be game mode, i.e. turn based mode catch.
+
+THOUGHTS:
+// there could be powerup for big jar (instead of collecting fruits?)
 
 emcc game/src/main.cpp game/src/game.cpp game/src/display.cpp game/src/bucket.cpp game/src/fruits.cpp game/src/level.cpp game/src/stage.cpp staticLib/src/config.cpp staticLib/src/lib.cpp -o bin/jamslam.html -Igame/include -IstaticLib/include -IC:\emsdk\upstream\emscripten\cache\sysroot\include\emscripten -IC:/raylib/raylib/src -IC:/raylib/raylib/src/external -Wall -std=c++17 -D_DEFAULT_SOURCE -Wno-missing-braces -Wunused-result -Os C:/raylib/raylib/src/web/libraylib.a -DPLATFORM_WEB -sWASM=0 -sUSE_GLFW=3 -sASYNCIFY -sEXPORT_ES6=1 -sFULL_ES3 -sTOTAL_MEMORY=67108864 -sFORCE_FILESYSTEM=1 --preload-file resources --preload-file game/jamslam.ini --shell-file C:/raylib/raylib/src/shell.html -sDISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR=1 -sEXPORTED_FUNCTIONS='["_free","_malloc","_main"]' -sEXPORTED_RUNTIME_METHODS='["ccall","cwrap","HEAPF32"]' --emrun
