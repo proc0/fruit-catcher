@@ -7,10 +7,13 @@ Config::Config(const std::string& filepath) {
     std::ifstream file(filepath);
     assert(file && file.is_open());
 
+    SectionLevel level {};
+    
+    std::string currentSection = "";
+    std::string previousSection = "";
+    bool isNewSection = false;
+    
     std::string line;
-    std::string section;
-    SectionLevel level = {};
-
     while (std::getline(file, line)) {
         // remove comments
         size_t commentSymbol = line.find(';');
@@ -25,16 +28,27 @@ Config::Config(const std::string& filepath) {
 
         // check for section header
         if (line[0] == '[' && line.back() == ']') {
-            section = line.substr(1, line.length() - 2);
+            currentSection = line.substr(1, line.length() - 2);
+            isNewSection = true;
             continue;
         }
 
+        if(isNewSection){
+            if(previousSection == "Level"){
+                data.levels.push_back(level);
+            }
+            
+            if(currentSection == "Level"){
+                level = {};
+            }
+        }
+        
         std::string key;
         std::string value;
         std::istringstream streamLine(line);
 
         if (std::getline(streamLine, key, '=') && std::getline(streamLine, value)) {
-            if (section == "Debug") {
+            if (currentSection == "Debug") {
                 if (key == "showCages") {
                     data.debug.showCages = value == "true" ? true : false;
                 } else if (key == "showFPS") {
@@ -42,17 +56,19 @@ Config::Config(const std::string& filepath) {
                 } else if (key == "modeDebug") {
                     data.debug.modeDebug = value == "true" ? true : false;
                 } else {
-                    std::cerr << "Unknown key in debug section: " << key << std::endl;
+                    std::cerr << "Unknown key in debug currentSection: " << key << std::endl;
                     continue;
                 }
             }
 
-            if (section == "Level") {
+            if (currentSection == "Level") {
+
                 if (key == "id") {
                     level.id = std::stoi(value);
                 } else if (key == "sample") {
                     std::istringstream streamValue(value);
                     std::string fruitString;
+
                     while(std::getline(streamValue, fruitString, ',')){
                         try {
                             const int splitSymbol = fruitString.find(':');
@@ -61,7 +77,7 @@ Config::Config(const std::string& filepath) {
 
                             level.sample[fruitName] = frequency;
                         } catch (const std::exception& e) {
-                            std::cerr << "Incorrect format for sample.: " << e.what() << std::endl;
+                            std::cerr << "Incorrect format for fruit sample settings: " << e.what() << std::endl;
                             break;
                         }
                     }
@@ -74,13 +90,18 @@ Config::Config(const std::string& filepath) {
                 } else if (key == "duration") {
                     level.duration = std::stoi(value);
                 } else {
-                    std::cerr << "Unknown key in level section: " << key << std::endl;
+                    std::cerr << "Unknown key in level settings: " << key << std::endl;
                     continue;
                 }
-
-                data.levels.push_back(level);
             }
         }
+
+        previousSection = currentSection;
+        isNewSection = false;
+    }
+
+    if(previousSection == "Level"){
+        data.levels.push_back(level);
     }
 
     file.close();

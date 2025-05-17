@@ -70,8 +70,8 @@ void Bucket::Load(){
         soundClinks[j] = LoadSound(_uri);
     }
 
-    Vector2 mousePosition = GetMousePosition();
-    collisionJar = { mousePosition.x - SIZE_COLLISION_JAR/2, BUCKET_POS_Y, SIZE_COLLISION_JAR, SIZE_COLLISION_JAR };
+    // only place where collision width/height is set
+    collisionJar = { SCREEN_WIDTH/2 - SIZE_COLLISION_JAR/2, BUCKET_POS_Y, SIZE_COLLISION_JAR, SIZE_COLLISION_JAR };
 }
 
 void Bucket::Unload() {
@@ -190,6 +190,7 @@ void Bucket::Update(const Vector2 mousePosition, const BucketDisplayResult resul
 void Bucket::UpdateDebug(void) {
     const float bucketPosX = SCREEN_WIDTH/2 - textureJar.width/2;
     position.x = bucketPosX;
+    position.y = BUCKET_POS_Y;
     jamTopPosition.x = bucketPosX + JAM_OFFSET_X;
     jamMiddlePosition.x = bucketPosX + JAM_OFFSET_X;
     jamBottomPosition.x = bucketPosX + JAM_OFFSET_X;
