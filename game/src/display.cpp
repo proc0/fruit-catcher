@@ -42,19 +42,19 @@ void Display::Load(const ConfigData& configData) {
     const int startMenuPanelX = SCREEN_HALFWIDTH - panelStartMenu.width/2;
     const int startMenuPanelY = SCREEN_HALFHEIGHT;
     panelTextureParams["startMenuPanel"] = {
-        texture: panelStartMenu,
-        color: WHITE,
-        x: startMenuPanelX,
-        y: startMenuPanelY,
+        .texture = panelStartMenu,
+        .color = WHITE,
+        .x = startMenuPanelX,
+        .y = startMenuPanelY,
     };
 
     const int gameOverPanelX = SCREEN_HALFWIDTH - panelGameOver.width/2;
     const int gameOverPanelY = SCREEN_HEIGHT/2 - panelGameOver.height/2;
     panelTextureParams["gameOverPanel"] = {
-        texture: panelGameOver,
-        color: WHITE,
-        x: gameOverPanelX,
-        y: gameOverPanelY,
+        .texture = panelGameOver,
+        .color = WHITE,
+        .x = gameOverPanelX,
+        .y = gameOverPanelY,
     };
 
     // Start Menu
@@ -63,11 +63,11 @@ void Display::Load(const ConfigData& configData) {
     const int startMenuTitleX = SCREEN_HALFWIDTH - fontTitleXY.x*0.5f;
     const int startMenuTitleY = SCREEN_HALFHEIGHT - fontTitleXY.y - 10;
     startMenuTextParams["startMenuTitle"] = {
-        text: textStartMenuTitle,
-        color: titleColor,
-        fontSize: FONTSIZE_TITLE,
-        x: startMenuTitleX,
-        y: startMenuTitleY,
+        .text = textStartMenuTitle,
+        .color = titleColor,
+        .fontSize = FONTSIZE_TITLE,
+        .x = startMenuTitleX,
+        .y = startMenuTitleY,
     };
 
     // Button Collisions - using the same buttons for Start, Pause, and Game Over screens
@@ -77,11 +77,11 @@ void Display::Load(const ConfigData& configData) {
     startButtonCollision = { startButtonX, startButtonY, startButtonWidth, FONTSIZE_MENUTEXT };
 
     startMenuTextParams["startMenuStartButton"] = {
-        text: textStart,
-        color: BLACK,
-        fontSize: FONTSIZE_MENUTEXT,
-        x: int(startButtonX),
-        y: int(startButtonY),
+        .text = textStart,
+        .color = BLACK,
+        .fontSize = FONTSIZE_MENUTEXT,
+        .x = int(startButtonX),
+        .y = int(startButtonY),
     };
 
     const float quitButtonY = SCREEN_HALFHEIGHT + 80.0f;
@@ -89,11 +89,11 @@ void Display::Load(const ConfigData& configData) {
     quitButtonCollision = { startButtonX, quitButtonY, quitButtonWidth, FONTSIZE_MENUTEXT };
 
     startMenuTextParams["startMenuQuitButton"] = {
-        text: textQuit,
-        color: BLACK,
-        fontSize: FONTSIZE_MENUTEXT,
-        x: int(startButtonX),
-        y: int(quitButtonY),
+        .text = textQuit,
+        .color = BLACK,
+        .fontSize = FONTSIZE_MENUTEXT,
+        .x = int(startButtonX),
+        .y = int(quitButtonY),
     };
 
     // Level Ready
@@ -102,49 +102,49 @@ void Display::Load(const ConfigData& configData) {
     const int textReadyX = SCREEN_HALFWIDTH - textReadyXY.x*0.5f;
     const int textReadyY = SCREEN_HALFHEIGHT - textReadyXY.y;
     gamePlayTextParams["startLevelReady"] = {
-        text: textLevel,
-        color: WHITE,
-        fontSize: FONTSIZE_TITLE,
-        x: textReadyX,
-        y: textReadyY,
+        .text = textLevel,
+        .color = WHITE,
+        .fontSize = FONTSIZE_TITLE,
+        .x = textReadyX,
+        .y = textReadyY,
     };
 
     // Game End
     const int gameOverTitleX = SCREEN_HALFWIDTH - MeasureText(textGameOver, FONTSIZE_MENUTEXT)*0.5f;
     const int gameOverTitleY = SCREEN_HALFHEIGHT - 100;
     gameOverTextParams["gameOverTitle"] = {
-        text: textGameOver,
-        color: BLACK,
-        fontSize: FONTSIZE_MENUTEXT,
-        x: gameOverTitleX,
-        y: gameOverTitleY,
+        .text = textGameOver,
+        .color = BLACK,
+        .fontSize = FONTSIZE_MENUTEXT,
+        .x = gameOverTitleX,
+        .y = gameOverTitleY,
     };
 
     const int restartButtonX = SCREEN_HALFWIDTH - MeasureText(textRestart, FONTSIZE_MENUTEXT)*0.6f;
     gameEndTextParams["gameEndRestartButton"] = {
-        text: textRestart,
-        color: BLACK,
-        fontSize: FONTSIZE_MENUTEXT,
-        x: restartButtonX,
-        y: int(startButtonY),
+        .text = textRestart,
+        .color = BLACK,
+        .fontSize = FONTSIZE_MENUTEXT,
+        .x = restartButtonX,
+        .y = int(startButtonY),
     };
 
     gameEndTextParams["gameEndQuitButton"] = {
-        text: textQuit,
-        color: BLACK,
-        fontSize: FONTSIZE_MENUTEXT,
-        x: restartButtonX,
-        y: int(quitButtonY),
+        .text = textQuit,
+        .color = BLACK,
+        .fontSize = FONTSIZE_MENUTEXT,
+        .x = restartButtonX,
+        .y = int(quitButtonY),
     };
 
     const int restartMessageX = SCREEN_HALFWIDTH - MeasureText(textRestartMessage, FONTSIZE_SUBTITLE)*0.5f;
     const int restartMessageY = SCREEN_HEIGHT*0.75f;
     gameEndTextParams["gameEndRestartMessage"] = {
-        text: textRestartMessage,
-        color: DARKGRAY,
-        fontSize: FONTSIZE_SUBTITLE,
-        x: restartMessageX,
-        y: int(restartMessageY),
+        .text = textRestartMessage,
+        .color = DARKGRAY,
+        .fontSize = FONTSIZE_SUBTITLE,
+        .x = restartMessageX,
+        .y = int(restartMessageY),
     };
 
     // Game Win
@@ -152,11 +152,11 @@ void Display::Load(const ConfigData& configData) {
     const int gameWinTitleX = SCREEN_HALFWIDTH - gameWinXY.x*0.5f;
     const int gameWinTitleY = SCREEN_HALFHEIGHT - gameWinXY.y;
     gameWinTextParams["gameWinTitle"] = {
-        text: textGameWin,
-        color: titleColor,
-        fontSize: FONTSIZE_TITLE,
-        x: gameWinTitleX,
-        y: gameWinTitleY,
+        .text = textGameWin,
+        .color = titleColor,
+        .fontSize = FONTSIZE_TITLE,
+        .x = gameWinTitleX,
+        .y = gameWinTitleY,
     };
 }
 
@@ -245,11 +245,11 @@ void Display::UpdateOnce(int score, float timeEnd, float timeStart) {
     const int scoreTextX = SCREEN_HALFWIDTH - MeasureText(textScore, FONTSIZE_SCORETEXT)/2;
     const int scoreTextY = SCREEN_HEIGHT*0.22f;
     gameEndTextParams["gameEndScore"] = {
-        text: textScore,
-        color: GOLD,
-        fontSize: FONTSIZE_SCORETEXT,
-        x: scoreTextX,
-        y: scoreTextY,
+        .text = textScore,
+        .color = GOLD,
+        .fontSize = FONTSIZE_SCORETEXT,
+        .x = scoreTextX,
+        .y = scoreTextY,
     };
 
     const int totalMinutes = (int)(timeEnd - timeStart)/60;
@@ -258,11 +258,11 @@ void Display::UpdateOnce(int score, float timeEnd, float timeStart) {
     // const char *textTime = TextFormat(textTimePlayed, totalMinutes, totalSeconds);
     const int timeTextX = SCREEN_HALFWIDTH - MeasureText(textTime, FONTSIZE_SUBTITLE)/2;
     gameEndTextParams["gameEndTime"] = {
-        text: textTime,
-        color: DARKGRAY,
-        fontSize: FONTSIZE_SUBTITLE,
-        x: timeTextX,
-        y: scoreTextY + 60,
+        .text = textTime,
+        .color = DARKGRAY,
+        .fontSize = FONTSIZE_SUBTITLE,
+        .x = timeTextX,
+        .y = scoreTextY + 60,
     };
     // reset HUD
     livesChanged = false;

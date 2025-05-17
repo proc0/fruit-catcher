@@ -157,7 +157,6 @@ void Bucket::Update(const Vector2 mousePosition, const BucketDisplayResult resul
         if(jamHeight > 80){
             jarState = BIG;
             jamHeight = 0;
-            jamColor = jamColor;
             return;
         }
     }

@@ -53,8 +53,8 @@ class Game {
     public:
         Game(const std::string& filepath): 
             config(filepath),
-            debug(config.GetData().debug.modeDebug),
-            level(config.GetData()) {};
+            level(config.GetData()),
+            debug(config.GetData().debug.modeDebug) {};
         ~Game() = default;
         void Load();
         void Unload();

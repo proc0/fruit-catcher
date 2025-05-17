@@ -39,7 +39,7 @@
     FRUIT("SPIKE", SPIKE, "resources/fruits/spike.png", 0.0f, 0.0f, BLACK, 1.0f) 
 
 typedef enum class FruitType {
-#define FRUIT(STRING, ENUM, URI, OFFSETX, OFFSETY, COLOR, RATING) ENUM,
+#define FRUIT(NAME, ENUM, URI, OFFSETX, OFFSETY, COLOR, RATING) ENUM,
     FRUITS
 #undef FRUIT
 } FruitType;
@@ -52,16 +52,16 @@ typedef struct FruitData {
     const FruitType type;
 } FruitData;
 
-static const std::unordered_map<FruitType, FruitData> static_FruitDataMap = {
-#define FRUIT(STRING, ENUM, URI, OFFSETX, OFFSETY, COLOR, RATING) { FruitType::ENUM, \
-    { uri: URI, color: COLOR, offset: { OFFSETX, OFFSETY }, rating: RATING, type: FruitType::ENUM }},
+static inline const std::unordered_map<FruitType, FruitData> static_FruitDataMap = {
+#define FRUIT(NAME, ENUM, URI, OFFSETX, OFFSETY, COLOR, RATING) { FruitType::ENUM, \
+    { .uri = URI, .color = COLOR, .offset = { OFFSETX, OFFSETY }, .rating = RATING, .type = FruitType::ENUM }},
     FRUITS
 #undef FRUIT
 };
 
-static const FruitType static_StringToFruit(const std::string& fruitString) {
+static inline const FruitType static_StringToFruit(const std::string& fruitString) {
     static const std::unordered_map<std::string, FruitType> fruitMap = {
-#define FRUIT(STRING, ENUM, URI, OFFSETX, OFFSETY, COLOR, RATING) { STRING, FruitType::ENUM },
+#define FRUIT(NAME, ENUM, URI, OFFSETX, OFFSETY, COLOR, RATING) { NAME, FruitType::ENUM },
     FRUITS
 #undef FRUIT
     };
@@ -69,9 +69,9 @@ static const FruitType static_StringToFruit(const std::string& fruitString) {
     return fruitMap.at(fruitString);
 }
 
-static const char* static_FruitToString(const FruitType fruitType) {
+static inline const char* static_FruitToString(const FruitType fruitType) {
     static const char* fruitArray[] = {
-#define FRUIT(STRING, ENUM, URI, OFFSETX, OFFSETY, COLOR, RATING) STRING,
+#define FRUIT(NAME, ENUM, URI, OFFSETX, OFFSETY, COLOR, RATING) NAME,
     FRUITS
 #undef FRUIT
     };

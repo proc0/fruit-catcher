@@ -77,12 +77,10 @@ class Display {
     ButtonState startButtonLastState = NONE;
     ButtonState quitButtonLastState = NONE;
     FruitDisplayResults fruitDisplayResults;
-    Vector2 fruitCenter;
     int score = 0;
     int level = 0;
     int lives = 0;
     int time = 0;
-    int fruitScore = 0;
     int hudScoreFrameIdx = 0;
     int hudLivesFrameIdx = 0;
     bool scoreChanged = false;

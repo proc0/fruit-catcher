@@ -80,8 +80,8 @@ void Fruits::CreateFruit(Fruit &fruit, int index) {
     const float ratio = longSide / SIZE_FRUIT_TEXTURE;
     
     fruit.collision = { 
-        offset: fruitData.offset,
-        radius: SIZE_FRUIT_COLLISION * ratio 
+        .offset = fruitData.offset,
+        .radius = SIZE_FRUIT_COLLISION * ratio 
     };
     fruit.bounces = 1;
     fruit.mass = ratio;
