@@ -11,7 +11,6 @@ Config::Config(const std::string& filepath) {
     
     std::string currentSection = "";
     std::string previousSection = "";
-    bool isNewSection = false;
     
     std::string line;
     while (std::getline(file, line)) {
@@ -28,20 +27,21 @@ Config::Config(const std::string& filepath) {
 
         // check for section header
         if (line[0] == '[' && line.back() == ']') {
+            previousSection = currentSection;
             currentSection = line.substr(1, line.length() - 2);
-            isNewSection = true;
+            
+            if(previousSection == "Level"){
+                // store processed level section
+                data.levels.push_back(level);
+            }
+
+            if(currentSection == "Level"){
+                // clear level cache
+                level = {};
+            }
             continue;
         }
 
-        if(isNewSection){
-            if(previousSection == "Level"){
-                data.levels.push_back(level);
-            }
-            
-            if(currentSection == "Level"){
-                level = {};
-            }
-        }
         
         std::string key;
         std::string value;
@@ -56,7 +56,7 @@ Config::Config(const std::string& filepath) {
                 } else if (key == "modeDebug") {
                     data.debug.modeDebug = value == "true" ? true : false;
                 } else {
-                    std::cerr << "Unknown key in debug currentSection: " << key << std::endl;
+                    std::cerr << "Unknown key in [Debug]: " << key << std::endl;
                     continue;
                 }
             }
@@ -77,7 +77,7 @@ Config::Config(const std::string& filepath) {
 
                             level.sample[fruitName] = frequency;
                         } catch (const std::exception& e) {
-                            std::cerr << "Incorrect format for fruit sample settings: " << e.what() << std::endl;
+                            std::cerr << "Error parsing [Level] sample: " << e.what() << std::endl;
                             break;
                         }
                     }
@@ -90,17 +90,15 @@ Config::Config(const std::string& filepath) {
                 } else if (key == "duration") {
                     level.duration = std::stoi(value);
                 } else {
-                    std::cerr << "Unknown key in level settings: " << key << std::endl;
+                    std::cerr << "Unknown key in [Level]: " << key << std::endl;
                     continue;
                 }
             }
         }
-
-        previousSection = currentSection;
-        isNewSection = false;
     }
 
     if(previousSection == "Level"){
+        // store last level section
         data.levels.push_back(level);
     }
 
