@@ -29,18 +29,18 @@
 //DONE: update Start menu layout, make game name have transparent background (only start, quit buttons have panel)
 //DONE: Do Emscriptem build
 //DONE: Look into packaging for different platforms
-
-//WIP: add more levels, and test for balance
-//WIP: iterate until it's fun
-//TODO: [design] make bananas one of the harder fruits? x
-//TODO: [design] increase pear difficulty rating x
-//TODO: [design] introduce spikes earlier x
-//TODO: [design] subtract density from level 4, make it easier, make level 6 easier (less density, separate banana from coconut) x
-//TODO: [design] review score numbers and multiplers (should it be x10 or x100, how big does score get until end?)]
 //DONE: [bug] Fix HideCursor bug - Raylib ticket - https://github.com/raysan5/raylib/issues/4940
 //DONE: [bug] EM build does not load levels correctly
 //DONE: [bug] orange shows up in level 4???
 //DONE: fix bugs
+
+//WIP: add more levels, and test for balance
+//WIP: iterate until it's fun
+//DONE: [design] make bananas one of the harder fruits? x
+//DONE: [design] increase pear difficulty rating x
+//DONE: [design] introduce spikes earlier x
+//DONE: [design] subtract density from level 4, make it easier, make level 6 easier (less density, separate banana from coconut) x
+//TODO: [design] review score numbers and multiplers (should it be x10 or x100, how big does score get until end?)]
 
 //NEXT: add effect for filling jam to the top 
 //TODO: make jar growth on mouse click
@@ -48,6 +48,8 @@
 //TODO: update big jar art to something better
 //TODO: add ending celebration music and sound effect
 //NEXT: Add bg elements to show max vertical movement (i.e. a vineyard with wooden frames, and one of the wood planks extends horizontally where max Y is)
+//TODO: [design] too many eggs, adjust number of eggs per level
+//TODO: [design] add multiple stages before growing jar?
 
 //--dev complete--
 //TODO: Update Readme
@@ -59,5 +61,6 @@ EXPLORE:
 
 THOUGHTS:
 // there could be powerup for big jar (instead of collecting fruits?)
-
+// add physics to the jam, make it a liquid, and you have to catch and balance the liquid inside
+// a physics based, fluid based version of jam slam, all falling objects have physics, collide with each, and add brick breaker mechanics
 emcc game/src/main.cpp game/src/game.cpp game/src/display.cpp game/src/bucket.cpp game/src/fruits.cpp game/src/level.cpp game/src/stage.cpp staticLib/src/config.cpp staticLib/src/lib.cpp -o bin/jamslam.html -Igame/include -IstaticLib/include -IC:\emsdk\upstream\emscripten\cache\sysroot\include\emscripten -IC:/raylib/raylib/src -IC:/raylib/raylib/src/external -Wall -std=c++17 -D_DEFAULT_SOURCE -Wno-missing-braces -Wunused-result -Os C:/raylib/raylib/src/web/libraylib.a -DPLATFORM_WEB -sWASM=0 -sUSE_GLFW=3 -sASYNCIFY -sEXPORT_ES6=1 -sFULL_ES3 -sTOTAL_MEMORY=67108864 -sFORCE_FILESYSTEM=1 --preload-file resources --preload-file game/jamslam.ini --shell-file C:/raylib/raylib/src/shell.html -sDISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR=1 -sEXPORTED_FUNCTIONS='["_free","_malloc","_main"]' -sEXPORTED_RUNTIME_METHODS='["ccall","cwrap","HEAPF32"]' --emrun

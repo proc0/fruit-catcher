@@ -5,8 +5,8 @@
 void Game::Load() {
     musicLevel = LoadMusicStream(MUSIC_LEVEL_URI);
     musicIntro = LoadMusicStream(MUSIC_INTRO_URI);
-    SetMusicVolume(musicLevel, 0.5f);
-    SetMusicVolume(musicIntro, 0.5f);
+    SetMusicVolume(musicLevel, 0.4f);
+    SetMusicVolume(musicIntro, 0.4f);
     PlayMusicStream(musicIntro);
 
     stage.Load();
