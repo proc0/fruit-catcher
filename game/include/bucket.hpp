@@ -13,13 +13,9 @@ typedef struct BucketDisplayResult {
 
 class Bucket {
     Texture2D textureJar;
-    Texture2D textureBigJar;
     Texture2D textureJamTop;
-    Texture2D textureBigJamTop;
     Texture2D textureJamMiddle;
-    Texture2D textureBigJamMiddle;
     Texture2D textureJamBottom;
-    Texture2D textureBigJamBottom;
     Texture2D textureCatchEffect;
     Sound soundClinks[SOUND_CLINK_LENGTH];
     Rectangle collisionJar;
@@ -28,11 +24,7 @@ class Bucket {
     Vector2 jamTopPosition;
     Vector2 jamMiddlePosition;
     Vector2 jamBottomPosition;
-    enum JarState {
-        SMALL,
-        BIG
-    };
-    JarState jarState = SMALL;
+
     int stunLock[30] = {0,1,2,6,10,12,14,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,14,10,8,4,1,0};
     int stunLockIdx = 0;
     int jamHeight = 0;

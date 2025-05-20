@@ -42,20 +42,24 @@
 //DONE: [design] subtract density from level 4, make it easier, make level 6 easier (less density, separate banana from coconut) x
 //TODO: [design] review score numbers and multiplers (should it be x10 or x100, how big does score get until end?)]
 
-//NEXT: add effect for filling jam to the top 
-//TODO: make jar growth on mouse click
-//TODO: tighten the collision between big and small jar to magnify effect and make growing the jar easier
-//TODO: update big jar art to something better
+//----: add effect for filling jam to the top 
+//----: make jar growth on mouse click
+//----: tighten the collision between big and small jar to magnify effect and make growing the jar easier
+//----: update big jar art to something better
 //TODO: add ending celebration music and sound effect
 //NEXT: Add bg elements to show max vertical movement (i.e. a vineyard with wooden frames, and one of the wood planks extends horizontally where max Y is)
 //TODO: [design] too many eggs, adjust number of eggs per level
 //TODO: [design] add multiple stages before growing jar?
+//TODO: add losing and winning sound effect
+//TODO: add tutorial text in menu and on the bottom right (fades)
+//TODO: make jar shoot JAM !
 
 //--dev complete--
 //TODO: Update Readme
 //TODO: Look into adding this to itch.io
 
 EXPLORE:
+//TODO: add music volume control in menu
 //TODO: add emscripten functions to handle quitting game so it doesn't freeze when hitting quit (or handle quit for web)
 //TODO: game mode where you pause to first move the jar in anticipation of where fruit will fall. (play the game with hidecursor bug and try to move jar by pausing). Could be game mode, i.e. turn based mode catch.
 

@@ -283,7 +283,7 @@ const FruitResults Fruits::Update(Rectangle bucketCollision) {
                     .color = fruitColor,
                     .location = fruitCenter,
                     .id = fruit.id,
-                    .score = (int)(static_FruitDataMap.at(fruit.type).rating * 10.0f * multiplier),
+                    .score = (int)(static_FruitDataMap.at(fruit.type).rating * 100.0f * multiplier),
                     .lives = (int)(fruit.type == FruitType::EGG),
                     .bounces = fruit.bounces,
                     .isCatch = true,

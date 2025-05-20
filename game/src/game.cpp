@@ -231,7 +231,12 @@ void Game::Update() {
             points = 0;
             score = 0;
             lives = GAME_LIVES;
-            StopMusicStream(musicIntro);
+            if(IsMusicStreamPlaying(musicIntro)){
+                StopMusicStream(musicIntro);
+            }
+            if(IsMusicStreamPlaying(musicLevel)){
+                StopMusicStream(musicLevel);
+            }
             PlayMusicStream(musicLevel);
             return;
         }
