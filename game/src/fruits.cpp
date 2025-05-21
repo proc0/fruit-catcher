@@ -197,7 +197,7 @@ void Fruits::UpdateMovementFruit(Fruit &fruit) {
 
 }
 
-const FruitResults Fruits::Update(Rectangle bucketCollision) {
+const FruitResults Fruits::Update(Rectangle bucketCollision, std::vector<Vector2> projectiles) {
 
     FruitResults results = {};
 
@@ -223,6 +223,17 @@ const FruitResults Fruits::Update(Rectangle bucketCollision) {
 
         const Vector2 fruitCenter = { fruit.position.x + fruit.collision.offset.x, fruit.position.y + fruit.collision.offset.y };
         const Color fruitColor = static_FruitDataMap.at(fruit.type).color;
+
+
+        for( auto &projectile : projectiles ){
+            if(CheckCollisionCircles(fruitCenter, fruit.collision.radius, projectile, 20)){
+                fruit.active = false;
+                currentFruits--;
+                const int splatIdx = GetRandomValue(0, LENGTH_SOUND_SPLATS-1);
+                PlaySound(soundSplat[splatIdx]);
+                continue;
+            }
+        }
 
         // fruit hits bottom
         if(fruit.position.y > SCREEN_HEIGHT) {

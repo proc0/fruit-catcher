@@ -165,7 +165,7 @@ class Fruits {
         void Unload();        
         void Reset();
         void SetLevel(int level);
-        const FruitResults Update(const Rectangle bucketCollision);
+        const FruitResults Update(const Rectangle bucketCollision, const std::vector<Vector2> projectiles);
         void Mute();
         const bool IsMute() const;
         void Unmute();

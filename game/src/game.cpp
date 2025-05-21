@@ -144,7 +144,8 @@ void Game::Update() {
     if(state == PLAY) {
         // Process fruits
         const Rectangle bucketCollision = bucket.GetCollision();
-        const FruitResults results = fruits.Update(bucketCollision);
+        const std::vector<Vector2> projectiles = bucket.GetProjectiles();
+        const FruitResults results = fruits.Update(bucketCollision, projectiles);
         const FruitDisplayResults displayResults = DisplayFruitResults(results);
         const BucketDisplayResult bucketResults = DisplayBucketResult(results);
 
@@ -191,7 +192,8 @@ void Game::Update() {
     if(state == READY){
         // Input
         const Rectangle bucketCollision = bucket.GetCollision();
-        const FruitResults results = fruits.Update(bucketCollision);
+        const std::vector<Vector2> projectiles = bucket.GetProjectiles();
+        const FruitResults results = fruits.Update(bucketCollision, projectiles);
         const FruitDisplayResults displayResults = DisplayFruitResults(results);
         const BucketDisplayResult bucketResults = DisplayBucketResult(results);
         
@@ -249,7 +251,7 @@ void Game::Update() {
 
     if(state == START){
         // intro fruits
-        fruits.Update({ 0, 0, 0, 0 });
+        fruits.Update({ 0, 0, 0, 0 }, std::vector<Vector2>());
     }
 
     if(state == WIN){
