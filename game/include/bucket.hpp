@@ -25,6 +25,7 @@ class Bucket {
     Texture2D textureJamMiddle;
     Texture2D textureJamBottom;
     Texture2D textureCatchEffect;
+    Texture2D textureProjectile;
     Rectangle collisionJar;
     Color jamColor = WHITE;
     Vector2 position;

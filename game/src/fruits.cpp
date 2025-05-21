@@ -226,7 +226,7 @@ const FruitResults Fruits::Update(Rectangle bucketCollision, std::vector<Vector2
 
 
         for( auto &projectile : projectiles ){
-            if(CheckCollisionCircles(fruitCenter, fruit.collision.radius, projectile, 20)){
+            if(CheckCollisionCircles(fruitCenter, fruit.collision.radius, projectile, 50)){
                 fruit.active = false;
                 currentFruits--;
                 const int splatIdx = GetRandomValue(0, LENGTH_SOUND_SPLATS-1);

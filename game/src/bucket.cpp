@@ -8,6 +8,7 @@
 #define BUCKET_JAM_BOTTOM_URI "resources/jam-bottom-v2.png"
 #define BUCKET_FRUIT_CATCH_EFFECT "resources/fruit-catch.png"
 #define SOUND_POP "resources/pop.wav"
+#define URI_PROJECTILE "resources/projectile.png"
 #define BUCKET_SOUND_FRUIT_CLINK(buf, idx) sprintf(buf, "resources/clink%d.wav", (idx))
 #define BUCKET_SOURCE_WIDTH 130
 #define BUCKET_SOURCE_HEIGHT 215
@@ -47,7 +48,8 @@ void Bucket::Load(){
     textureJamMiddle = LoadTexture(BUCKET_JAM_MIDDLE_URI);
     textureJamBottom = LoadTexture(BUCKET_JAM_BOTTOM_URI);
     textureCatchEffect = LoadTexture(BUCKET_FRUIT_CATCH_EFFECT);
-    
+    textureProjectile = LoadTexture(URI_PROJECTILE);
+
     for(int j = 0; j < SOUND_CLINK_LENGTH; j++){
         const int _idx = j + 1;
         char _uri[22];
@@ -66,7 +68,7 @@ void Bucket::Unload() {
     UnloadTexture(textureJamMiddle);
     UnloadTexture(textureJamBottom);
     UnloadTexture(textureCatchEffect);
-
+    UnloadTexture(textureProjectile);
     for(int j = 0; j < SOUND_CLINK_LENGTH; j++){
         UnloadSound(soundClinks[j]);
     }
@@ -251,7 +253,7 @@ void Bucket::Render(void) const {
 
     for( auto &projectile : projectiles){
         if(projectile.active){
-            DrawCircleV(projectile.position, 20, jamColor);
+            DrawTexture(textureProjectile, projectile.position.x, projectile.position.y, jamColor);
         }
     }
 }
