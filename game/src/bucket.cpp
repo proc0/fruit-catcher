@@ -100,6 +100,10 @@ const std::vector<Vector2> Bucket::GetProjectiles() const {
     return projectilePos;
 }
 
+const int Bucket::GetProjectileNumber() const {
+    return (int)jamHeight/5;
+}
+
 void Bucket::ProjectileUpdate(){
     for( auto &projectile : projectiles ){
         if(!projectile.active){

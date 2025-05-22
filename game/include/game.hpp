@@ -11,6 +11,7 @@
 
 #define MUSIC_LEVEL_URI "resources/music-level.mp3"
 #define MUSIC_INTRO_URI "resources/music-intro.mp3"
+#define URI_SOUND_CHEERS "resources/cheers.wav"
 
 class Game {
     Config config;
@@ -33,6 +34,7 @@ class Game {
     State state = START;
     Music musicLevel;
     Music musicIntro;
+    Sound soundCheers;
     float timeEnd = 0.0f;
     float timeCount = 0.0f;
     float timeStart = 0.0f;
@@ -42,7 +44,8 @@ class Game {
     int score = 0;
     int timeLeft = 0;
     bool debug = false;
-    
+    bool hasCheersPlayed = false;
+
     const FruitDisplayResult DisplayFruitResult(const FruitResult& results) const;
     const FruitDisplayResults DisplayFruitResults(const FruitResults& results) const;
     const BucketDisplayResult DisplayBucketResult(const FruitResults& results) const;

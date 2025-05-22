@@ -19,7 +19,7 @@
 #define TEXT_LIVES "LIVES"
 
 #define GAME_LIVES 3
-#define LEVEL_COUNT 15
+#define LEVEL_COUNT 20
 #define MAX_FRUIT_BOUNCES 13
 
 static constexpr int SCREEN_WIDTH = 1280;

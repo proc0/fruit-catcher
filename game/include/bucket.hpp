@@ -54,6 +54,7 @@ class Bucket {
         ~Bucket() = default;
         const Rectangle GetCollision() const;
         const std::vector<Vector2> GetProjectiles() const;
+        const int GetProjectileNumber() const;
         void Load();
         void Unload();
         void Reset();

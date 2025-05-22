@@ -5,6 +5,7 @@
 #define HUD_PANEL "resources/hud_panel.png"
 #define FRUIT_ICON_URI "resources/fruit_icon.png"
 #define URI_ICON_HEART "resources/heart.png"
+#define URI_PROJECTILE_ICON "resources/projectile-icon.png"
 
 static const char *textGameOver = TEXT_GAME_OVER;
 static const char *textLevel = TEXT_LEVEL;
@@ -30,7 +31,8 @@ void Display::Load(const ConfigData& configData) {
     panelGameOver = LoadTexture(PANEL_GAME_OVER);
     fruitIcon = LoadTexture(FRUIT_ICON_URI);
     heartIcon = LoadTexture(URI_ICON_HEART);
-    
+    projectileIcon = LoadTexture(URI_PROJECTILE_ICON);
+
     mainFont = LoadFontEx("resources/Lacquer-Regular.ttf", FONTSIZE_TITLE, 0, 0);
     subFont = LoadFontEx("resources/Jua-Regular.ttf", FONTSIZE_TITLE, 0, 0);
     SetTextureFilter(mainFont.texture, TEXTURE_FILTER_BILINEAR);
@@ -165,6 +167,7 @@ void Display::Unload() {
     UnloadTexture(fruitIcon);
     UnloadTexture(panelGameOver);
     UnloadTexture(heartIcon);
+    UnloadTexture(projectileIcon);
     UnloadFont(mainFont);
     UnloadFont(subFont);
 }
@@ -351,6 +354,7 @@ void Display::Update(const DisplayStats stats, const FruitDisplayResults results
     scoreChanged = stats.score != score;
     time = stats.time;
     level = stats.level + 1;
+    projectiles = stats.projectiles;
 
     if(livesChanged || scoreChanged){
         score = stats.score;
@@ -389,7 +393,7 @@ void Display::Render() const {
     DrawTexture(heartIcon, 30, 640, WHITE);
     DrawText("x", 90, 645, 32, WHITE);
     const char *livesNum = TextFormat("%d", lives);
-    const int livesFontsize = 72 + hudAnimation[hudLivesFrameIdx];
+    const int livesFontsize = 68 + hudAnimation[hudLivesFrameIdx];
     const Color livesColor = hudLivesFrameIdx != 0 ? RED : WHITE;
     // text stroke
     DrawText(livesNum, 115, 630 + 2, livesFontsize, BLACK);
@@ -447,6 +451,15 @@ void Display::Render() const {
             }
         }
     }
+
+    DrawTexture(projectileIcon, 1110, 640, RED);
+    DrawText("x", 1170, 645, 32, WHITE);
+    const char *projectileNumber = TextFormat("%d", projectiles);
+    DrawText(projectileNumber, 1200, 632, 68, BLACK);
+    DrawText(projectileNumber, 1200, 628, 68, BLACK);
+    DrawText(projectileNumber, 1202, 630, 68, BLACK);
+    DrawText(projectileNumber, 1198, 630, 68, BLACK);
+    DrawText(projectileNumber, 1200, 630, 68, WHITE);
 
     if(displayFPS){
         const int fps = GetFPS();

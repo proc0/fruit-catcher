@@ -5,9 +5,12 @@
 void Game::Load() {
     musicLevel = LoadMusicStream(MUSIC_LEVEL_URI);
     musicIntro = LoadMusicStream(MUSIC_INTRO_URI);
+
     SetMusicVolume(musicLevel, 0.4f);
     SetMusicVolume(musicIntro, 0.4f);
     PlayMusicStream(musicIntro);
+
+    soundCheers = LoadSound(URI_SOUND_CHEERS);
 
     stage.Load();
     fruits.Load(config.GetData(), level.GetFruitLevelData());
@@ -16,6 +19,7 @@ void Game::Load() {
 }
 
 void Game::Unload(){
+    UnloadSound(soundCheers);
     UnloadMusicStream(musicLevel);
     UnloadMusicStream(musicIntro);
 
@@ -158,8 +162,9 @@ void Game::Update() {
         const int currentLevel = level.GetCurrentLevel().id;
         timeCount += GetFrameTime();
         timeLeft = duration - timeCount;
+        const int projectilesNumber = bucket.GetProjectileNumber();
         // Update UI and HUD effects
-        const DisplayStats stats = { lives, score, timeLeft, currentLevel };
+        const DisplayStats stats = { lives, score, timeLeft, currentLevel, projectiles: projectilesNumber };
         display.Update(stats, displayResults);
         // Game Over
         if(lives <= 0) {
@@ -233,6 +238,7 @@ void Game::Update() {
             points = 0;
             score = 0;
             lives = GAME_LIVES;
+            hasCheersPlayed = false;
             if(IsMusicStreamPlaying(musicIntro)){
                 StopMusicStream(musicIntro);
             }
@@ -255,6 +261,10 @@ void Game::Update() {
     }
 
     if(state == WIN){
+        if(!hasCheersPlayed){
+            PlaySound(soundCheers);
+            hasCheersPlayed = true;
+        }
         fruits.UpdateWin();
     }
 }

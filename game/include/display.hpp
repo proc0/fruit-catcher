@@ -24,6 +24,7 @@ typedef struct DisplayStats {
     const int score;
     const int time;
     const int level;
+    const int projectiles;
 } DisplayStats;
 
 typedef struct ScorePopup {
@@ -53,6 +54,7 @@ class Display {
     Texture2D panelGameOver;
     Texture2D fruitIcon;
     Texture2D heartIcon;
+    Texture2D projectileIcon;
     Font mainFont;
     Font subFont;
     std::unordered_map<std::string, TextParams> startMenuTextParams;
@@ -81,6 +83,7 @@ class Display {
     int level = 0;
     int lives = 0;
     int time = 0;
+    int projectiles = 0;
     int hudScoreFrameIdx = 0;
     int hudLivesFrameIdx = 0;
     bool scoreChanged = false;
